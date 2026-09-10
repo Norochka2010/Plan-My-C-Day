@@ -1,0 +1,752 @@
+[
+  {
+    "content_id": "8c2513ca-e294-509d-b878-f34785edd138",
+    "content_type": "QUICK_LEARN",
+    "title": "Your Backup Plan Doesn't Mean You Failed",
+    "subtitle": "A backup gives you options when Plan A doesn't work.",
+    "domain": "MANAGE",
+    "topic": null,
+    "interaction_type": "KNOWLEDGE",
+    "difficulty": null,
+    "estimated_minutes": 2,
+    "intro": null,
+    "content_body": {
+      "format": "quick_learn_v1",
+      "content_id": "QL_006",
+      "cards": [
+        {
+          "title": "1 | Why backups help",
+          "body": "Plans change. Restaurants run out of things. Parties are unpredictable. A backup can keep one food problem from taking over the whole event."
+        },
+        {
+          "title": "2 | Backups can look different",
+          "body": "A backup might be a snack, food you brought, eating before an event, a second restaurant option, or knowing you can participate without eating."
+        },
+        {
+          "title": "3 | Backup ≠ failure",
+          "body": "Using your backup means the plan worked exactly as a backup is supposed to work."
+        }
+      ],
+      "related_practice_id": "PRACTICE_012",
+      "source_evidence": "Celiac Disease Foundation; Meyer & Naveh self-management framework",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_id": "QL_006",
+        "content_type": "QUICK_LEARN",
+        "domain": "MANAGE",
+        "subtitle": "A backup gives you options when Plan A doesn't work.",
+        "estimated_minutes": "2 min",
+        "xp_value": "+5",
+        "related_practice_id": "PRACTICE_012",
+        "review_status": "expert_review",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "content_version": "1.0",
+        "active": "true",
+        "title": "Your Backup Plan Doesn't Mean You Failed",
+        "source_type": null,
+        "key_takeaway": "A backup is a tool for flexibility, not evidence that you failed.",
+        "try_this": "For your next event, name one Plan A and one easy backup.",
+        "source_evidence": "Celiac Disease Foundation; Meyer & Naveh self-management framework",
+        "related_practice": "PRACTICE_012 — Road Trip, Nothing Nearby",
+        "source_url": "https://celiac.org/dining-and-social-eating/",
+        "review_note": "Keep this lesson flagged for expert review before public release. The lesson translates evidence and/or teen lived experience into teen-facing self-management content.",
+        "clinical_safety_note": null
+      }
+    },
+    "choices": [],
+    "feedback": {},
+    "teaching_point": "A backup is a tool for flexibility, not evidence that you failed.",
+    "next_step": "For your next event, name one Plan A and one easy backup.",
+    "related_content_ids": [
+      "252835c7-0b38-52d2-a405-804979b4d391"
+    ],
+    "xp_value": 5,
+    "source_type": "EDITORIAL",
+    "source_organization": null,
+    "source_title": null,
+    "source_url": "https://celiac.org/dining-and-social-eating/",
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "78bc8dd3-a073-56c7-9db0-8d69a73f8eb4",
+    "content_type": "QUICK_LEARN",
+    "title": "Planning Without Spending Forever Planning",
+    "subtitle": "Good planning should help you live—not take over your life.",
+    "domain": "MANAGE",
+    "topic": null,
+    "interaction_type": "KNOWLEDGE",
+    "difficulty": null,
+    "estimated_minutes": 3,
+    "intro": null,
+    "content_body": {
+      "format": "quick_learn_v1",
+      "content_id": "QL_007",
+      "cards": [
+        {
+          "title": "1 | Planning has a purpose",
+          "body": "Planning ahead can make daily activities easier and support decision-making, flexibility, and problem-solving."
+        },
+        {
+          "title": "2 | Use a minimum useful plan",
+          "body": "Ask: Where am I going? What food question actually matters? Who can help? What's my backup? You may not need to research every possible detail."
+        },
+        {
+          "title": "3 | Know when to stop",
+          "body": "Once you have enough information for your decision and a backup if needed, more searching may not add much. Your goal is to get back to the activity."
+        }
+      ],
+      "related_practice_id": "PRACTICE_014",
+      "source_evidence": "Meyer & Naveh (2021) self-management framework; teen-facing extension",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_id": "QL_007",
+        "content_type": "QUICK_LEARN",
+        "domain": "MANAGE",
+        "subtitle": "Good planning should help you live—not take over your life.",
+        "estimated_minutes": "2–3 min",
+        "xp_value": "+5",
+        "related_practice_id": "PRACTICE_014",
+        "review_status": "expert_review",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "content_version": "1.0",
+        "active": "true",
+        "title": "Planning Without Spending Forever Planning",
+        "source_type": null,
+        "key_takeaway": "Plan enough to be prepared—then go live the plan.",
+        "try_this": "Set yourself a short planning window for one low-stakes event and identify the three things you actually need to know.",
+        "source_evidence": "Meyer & Naveh (2021) self-management framework; teen-facing extension",
+        "related_practice": "PRACTICE_014 — Everyone Changed Restaurants",
+        "source_url": "https://doi.org/10.3390/nu13051401",
+        "review_note": "Keep this lesson flagged for expert review before public release. The lesson translates evidence and/or teen lived experience into teen-facing self-management content.",
+        "clinical_safety_note": null
+      }
+    },
+    "choices": [],
+    "feedback": {},
+    "teaching_point": "Plan enough to be prepared—then go live the plan.",
+    "next_step": "Set yourself a short planning window for one low-stakes event and identify the three things you actually need to know.",
+    "related_content_ids": [
+      "2e2e2694-889d-53fd-a23f-f599f0b35b22"
+    ],
+    "xp_value": 5,
+    "source_type": "EDITORIAL",
+    "source_organization": null,
+    "source_title": null,
+    "source_url": "https://doi.org/10.3390/nu13051401",
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "8a6fb397-7115-565e-82e2-c277c6269321",
+    "content_type": "QUICK_LEARN",
+    "title": "How to Explain Celiac in 20 Seconds",
+    "subtitle": "Clear beats complicated.",
+    "domain": "SPEAK",
+    "topic": null,
+    "interaction_type": "KNOWLEDGE",
+    "difficulty": null,
+    "estimated_minutes": 2,
+    "intro": null,
+    "content_body": {
+      "format": "quick_learn_v1",
+      "content_id": "QL_008",
+      "cards": [
+        {
+          "title": "1 | Start with the essential point",
+          "body": "You can say: “I have celiac disease, so I need to eat gluten-free for medical reasons.”"
+        },
+        {
+          "title": "2 | Add what matters for the situation",
+          "body": "At a restaurant you might add: “I also need to avoid cross-contact during preparation.” With a friend, you may only need the first sentence."
+        },
+        {
+          "title": "3 | You control the length",
+          "body": "You can give the 10-second version, explain more, or say you don't want to get into it. Self-advocacy does not require telling your whole medical story."
+        }
+      ],
+      "related_practice_id": "PRACTICE_010",
+      "source_evidence": "NIDDK factual basis + teen self-advocacy extension",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_id": "QL_008",
+        "content_type": "QUICK_LEARN",
+        "domain": "SPEAK",
+        "subtitle": "Clear beats complicated.",
+        "estimated_minutes": "2 min",
+        "xp_value": "+5",
+        "related_practice_id": "PRACTICE_010",
+        "review_status": "expert_review",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "content_version": "1.0",
+        "active": "true",
+        "title": "How to Explain Celiac in 20 Seconds",
+        "source_type": null,
+        "key_takeaway": "Explain enough to communicate what you need. The rest is your choice.",
+        "try_this": "Write your own 10–20 second celiac explanation in words that sound like you.",
+        "source_evidence": "NIDDK factual basis + teen self-advocacy extension",
+        "related_practice": "PRACTICE_010 — How Much Do I Have to Explain?",
+        "source_url": "https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease",
+        "review_note": "Keep this lesson flagged for expert review before public release. The lesson translates evidence and/or teen lived experience into teen-facing self-management content.",
+        "clinical_safety_note": null
+      }
+    },
+    "choices": [],
+    "feedback": {},
+    "teaching_point": "Explain enough to communicate what you need. The rest is your choice.",
+    "next_step": "Write your own 10–20 second celiac explanation in words that sound like you.",
+    "related_content_ids": [
+      "cb10e2e5-7e72-58f8-8b4b-ad5a14fe2e5a"
+    ],
+    "xp_value": 5,
+    "source_type": "EDITORIAL",
+    "source_organization": null,
+    "source_title": null,
+    "source_url": "https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease",
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "5958f945-d7ae-54a6-ba39-42cfd527736f",
+    "content_type": "QUICK_LEARN",
+    "title": "Asking Without Apologizing",
+    "subtitle": "A medical need is not a personal inconvenience you created.",
+    "domain": "SPEAK",
+    "topic": null,
+    "interaction_type": "KNOWLEDGE",
+    "difficulty": null,
+    "estimated_minutes": 2,
+    "intro": null,
+    "content_body": {
+      "format": "quick_learn_v1",
+      "content_id": "QL_009",
+      "cards": [
+        {
+          "title": "1 | Notice the apology reflex",
+          "body": "It can be easy to start with “Sorry, but...” when asking about food. You can be courteous without apologizing for having celiac disease."
+        },
+        {
+          "title": "2 | Try neutral language",
+          "body": "Examples: “Could you tell me how this is prepared?” “I have celiac disease and need this to be gluten-free.” “Could we check one thing before I order?”"
+        },
+        {
+          "title": "3 | Clear + kind works",
+          "body": "Being assertive does not mean being rude. Clear information can make it easier for other people to help."
+        }
+      ],
+      "related_practice_id": "PRACTICE_006",
+      "source_evidence": "Celiac Disease Foundation dining guidance + teen self-advocacy extension",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_id": "QL_009",
+        "content_type": "QUICK_LEARN",
+        "domain": "SPEAK",
+        "subtitle": "A medical need is not a personal inconvenience you created.",
+        "estimated_minutes": "2 min",
+        "xp_value": "+5",
+        "related_practice_id": "PRACTICE_006",
+        "review_status": "expert_review",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "content_version": "1.0",
+        "active": "true",
+        "title": "Asking Without Apologizing",
+        "source_type": null,
+        "key_takeaway": "You can be polite, clear, and unapologetic about a medical need.",
+        "try_this": "Replace one “Sorry...” script with a neutral question you could actually use.",
+        "source_evidence": "Celiac Disease Foundation dining guidance + teen self-advocacy extension",
+        "related_practice": "PRACTICE_006 — Your Friend's Mom Cooked for You",
+        "source_url": "https://celiac.org/dining-and-social-eating/",
+        "review_note": "Keep this lesson flagged for expert review before public release. The lesson translates evidence and/or teen lived experience into teen-facing self-management content.",
+        "clinical_safety_note": null
+      }
+    },
+    "choices": [],
+    "feedback": {},
+    "teaching_point": "You can be polite, clear, and unapologetic about a medical need.",
+    "next_step": "Replace one “Sorry...” script with a neutral question you could actually use.",
+    "related_content_ids": [
+      "3f076ccb-6266-5cb7-ad14-5772e7b9e213"
+    ],
+    "xp_value": 5,
+    "source_type": "EDITORIAL",
+    "source_organization": null,
+    "source_title": null,
+    "source_url": "https://celiac.org/dining-and-social-eating/",
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "8836e66d-b2d9-56ed-992e-051c618d9751",
+    "content_type": "QUICK_LEARN",
+    "title": "It's Gluten-Free, But Do I Have Enough Information?",
+    "subtitle": "“GF ingredients” and “enough information for me to decide” are different questions.",
+    "domain": "TRUST",
+    "topic": null,
+    "interaction_type": "KNOWLEDGE",
+    "difficulty": null,
+    "estimated_minutes": 3,
+    "intro": null,
+    "content_body": {
+      "format": "quick_learn_v1",
+      "content_id": "QL_010",
+      "cards": [
+        {
+          "title": "1 | Start with what you know",
+          "body": "Maybe the host says the ingredients are gluten-free. That's useful information."
+        },
+        {
+          "title": "2 | Ask what's still unknown",
+          "body": "Do you need to know how it was prepared? Whether utensils or serving areas were shared? Whether there is a package or another reliable source? The missing information depends on the situation."
+        },
+        {
+          "title": "3 | Make your decision",
+          "body": "You can ask more, choose a different option, use a backup, or decide not to eat. The app should help you identify information—not pressure you toward a particular food choice."
+        }
+      ],
+      "related_practice_id": "PRACTICE_021",
+      "source_evidence": "Beyond Celiac cross-contact guidance + teen lived-experience extension",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_id": "QL_010",
+        "content_type": "QUICK_LEARN",
+        "domain": "TRUST",
+        "subtitle": "“GF ingredients” and “enough information for me to decide” are different questions.",
+        "estimated_minutes": "3 min",
+        "xp_value": "+5",
+        "related_practice_id": "PRACTICE_021",
+        "review_status": "expert_review",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "content_version": "1.0",
+        "active": "true",
+        "title": "It's Gluten-Free, But Do I Have Enough Information?",
+        "source_type": null,
+        "key_takeaway": "Trust is not blind reassurance. It's having a process for deciding what information you need.",
+        "try_this": "Practice the sentence: “Thanks. Can I ask how it was prepared?”",
+        "source_evidence": "Beyond Celiac cross-contact guidance + teen lived-experience extension",
+        "related_practice": "PRACTICE_021 — It's Gluten-Free, But I Don't Feel Safe",
+        "source_url": "https://www.beyondceliac.org/gluten-free-diet/cross-contact/",
+        "review_note": "Keep this lesson flagged for expert review before public release. The lesson translates evidence and/or teen lived experience into teen-facing self-management content.",
+        "clinical_safety_note": null
+      }
+    },
+    "choices": [],
+    "feedback": {},
+    "teaching_point": "Trust is not blind reassurance. It's having a process for deciding what information you need.",
+    "next_step": "Practice the sentence: “Thanks. Can I ask how it was prepared?”",
+    "related_content_ids": [
+      "06e79ecb-5cf9-5147-bf70-a80c7cc37762"
+    ],
+    "xp_value": 5,
+    "source_type": "EDITORIAL",
+    "source_organization": null,
+    "source_title": null,
+    "source_url": "https://www.beyondceliac.org/gluten-free-diet/cross-contact/",
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "32952693-e1c7-5074-9903-2811bb919dba",
+    "content_type": "QUICK_LEARN",
+    "title": "When You've Asked the Questions and Still Feel Unsure",
+    "subtitle": "Information and feelings can both be part of the moment.",
+    "domain": "TRUST",
+    "topic": null,
+    "interaction_type": "KNOWLEDGE",
+    "difficulty": null,
+    "estimated_minutes": 3,
+    "intro": null,
+    "content_body": {
+      "format": "quick_learn_v1",
+      "content_id": "QL_011",
+      "cards": [
+        {
+          "title": "1 | Check for a real information gap",
+          "body": "Is there a specific unanswered question about ingredients, preparation, or serving? If yes, you can ask it."
+        },
+        {
+          "title": "2 | Notice if the information question is finished",
+          "body": "Sometimes you have received the information you wanted and still feel nervous. Noticing that difference can help you understand what you're dealing with."
+        },
+        {
+          "title": "3 | You still own the choice",
+          "body": "You can choose another food, use a backup, not eat, or make the decision that feels appropriate to you. My C-Day should never make eating the “brave” answer."
+        }
+      ],
+      "related_practice_id": "PRACTICE_024",
+      "source_evidence": "Teen lived-experience synthesis; clinical/expert review required",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_id": "QL_011",
+        "content_type": "QUICK_LEARN",
+        "domain": "TRUST",
+        "subtitle": "Information and feelings can both be part of the moment.",
+        "estimated_minutes": "3 min",
+        "xp_value": "+5",
+        "related_practice_id": "PRACTICE_024",
+        "review_status": "clinical_review",
+        "expert_reviewed": "false",
+        "medical_review_required": "true",
+        "content_version": "1.0",
+        "active": "true",
+        "title": "When You've Asked the Questions and Still Feel Unsure",
+        "source_type": null,
+        "key_takeaway": "Confidence is not forcing yourself to eat. It's being able to notice what you know, what you don't know, and what you want to do next.",
+        "try_this": "Ask yourself: “Am I missing information, or am I feeling uncertain even though I have the information?”",
+        "source_evidence": "Teen lived-experience synthesis; clinical/expert review required",
+        "related_practice": "PRACTICE_024 — I Asked Everything—and I'm Still Nervous",
+        "source_url": null,
+        "review_note": "Keep this lesson flagged for expert review before public release. The lesson translates evidence and/or teen lived experience into teen-facing self-management content.",
+        "clinical_safety_note": "Do not diagnose anxiety, disordered eating, or another condition. Do not pressure exposure or eating. Preserve the gentle referral language when distress or restriction is significant."
+      }
+    },
+    "choices": [],
+    "feedback": {},
+    "teaching_point": "Confidence is not forcing yourself to eat. It's being able to notice what you know, what you don't know, and what you want to do next.",
+    "next_step": "Ask yourself: “Am I missing information, or am I feeling uncertain even though I have the information?”",
+    "related_content_ids": [
+      "7b172bbc-678f-5a2f-a028-d66759ed5400"
+    ],
+    "xp_value": 5,
+    "source_type": "EDITORIAL",
+    "source_organization": null,
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": true,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "995b79fc-ee5e-5937-bbb1-c33d2ccc8e8d",
+    "content_type": "QUICK_LEARN",
+    "title": "When Food Feels Different After Diagnosis",
+    "subtitle": "Your relationship with food can change, not just your grocery list.",
+    "domain": "LIVE",
+    "topic": null,
+    "interaction_type": "KNOWLEDGE",
+    "difficulty": null,
+    "estimated_minutes": 3,
+    "intro": null,
+    "content_body": {
+      "format": "quick_learn_v1",
+      "content_id": "QL_012",
+      "cards": [
+        {
+          "title": "1 | Food can carry new meaning",
+          "body": "A food you once loved may now look unappealing, feel risky, or remind you of something you cannot safely eat."
+        },
+        {
+          "title": "2 | Don't turn the reaction into a score",
+          "body": "You do not need to want gluten-containing food, and the app should not make “overcoming” disgust or worry into a challenge."
+        },
+        {
+          "title": "3 | Pay attention to your overall eating and well-being",
+          "body": "The goal is to have enough foods you can enjoy and to feel supported. If food-related fear or avoidance is significantly limiting eating or causing substantial distress, talk with a parent/caregiver and your celiac healthcare team."
+        }
+      ],
+      "related_practice_id": "PRACTICE_025",
+      "source_evidence": "Teen lived-experience synthesis; clinical review required",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_id": "QL_012",
+        "content_type": "QUICK_LEARN",
+        "domain": "LIVE",
+        "subtitle": "Your relationship with food can change, not just your grocery list.",
+        "estimated_minutes": "2–3 min",
+        "xp_value": "+5",
+        "related_practice_id": "PRACTICE_025",
+        "review_status": "clinical_review",
+        "expert_reviewed": "false",
+        "medical_review_required": "true",
+        "content_version": "1.0",
+        "active": "true",
+        "title": "When Food Feels Different After Diagnosis",
+        "source_type": null,
+        "key_takeaway": "Adjustment to celiac can be emotional as well as practical.",
+        "try_this": "Name one gluten-free food or meal that feels enjoyable, easy, or normal to you now.",
+        "source_evidence": "Teen lived-experience synthesis; clinical review required",
+        "related_practice": "PRACTICE_025 — Food I Used to Love Looks Gross Now",
+        "source_url": null,
+        "review_note": "Keep this lesson flagged for expert review before public release. The lesson translates evidence and/or teen lived experience into teen-facing self-management content.",
+        "clinical_safety_note": "Do not diagnose anxiety, disordered eating, or another condition. Do not pressure exposure or eating. Preserve the gentle referral language when distress or restriction is significant."
+      }
+    },
+    "choices": [],
+    "feedback": {},
+    "teaching_point": "Adjustment to celiac can be emotional as well as practical.",
+    "next_step": "Name one gluten-free food or meal that feels enjoyable, easy, or normal to you now.",
+    "related_content_ids": [
+      "08faa2e2-500e-53fd-b5bf-59792d5df000"
+    ],
+    "xp_value": 5,
+    "source_type": "EDITORIAL",
+    "source_organization": null,
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": true,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "338f77b9-dbd3-50c1-9840-bd2983215ce2",
+    "content_type": "QUICK_LEARN",
+    "title": "I Feel Like a Burden",
+    "subtitle": "Needing consideration isn't the same as causing a problem.",
+    "domain": "LIVE",
+    "topic": null,
+    "interaction_type": "KNOWLEDGE",
+    "difficulty": null,
+    "estimated_minutes": 3,
+    "intro": null,
+    "content_body": {
+      "format": "quick_learn_v1",
+      "content_id": "QL_013",
+      "cards": [
+        {
+          "title": "1 | Why the feeling can show up",
+          "body": "Restaurant choices, parties, travel, and group food plans may sometimes change because you need a gluten-free option. That can create guilt even when nobody is blaming you."
+        },
+        {
+          "title": "2 | Look at what your friends are actually doing",
+          "body": "Friends who help choose a workable restaurant or ask what you need may be trying to include you—not telling you that you are difficult."
+        },
+        {
+          "title": "3 | You still have choices",
+          "body": "Sometimes you'll suggest a different place. Sometimes you'll eat beforehand. Sometimes you'll ask the group to help. There is no single correct social strategy."
+        }
+      ],
+      "related_practice_id": "PRACTICE_017",
+      "source_evidence": "Teen lived-experience synthesis; expert review required",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_id": "QL_013",
+        "content_type": "QUICK_LEARN",
+        "domain": "LIVE",
+        "subtitle": "Needing consideration isn't the same as causing a problem.",
+        "estimated_minutes": "2–3 min",
+        "xp_value": "+5",
+        "related_practice_id": "PRACTICE_017",
+        "review_status": "expert_review",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "content_version": "1.0",
+        "active": "true",
+        "title": "I Feel Like a Burden",
+        "source_type": null,
+        "key_takeaway": "Your needs are real. Inclusion is not something you have to earn by making yourself invisible.",
+        "try_this": "Think of one person you could tell: “Here's what actually makes food plans easier for me.”",
+        "source_evidence": "Teen lived-experience synthesis; expert review required",
+        "related_practice": "PRACTICE_017 — Everyone Always Chooses Where I Can Eat",
+        "source_url": null,
+        "review_note": "Keep this lesson flagged for expert review before public release. The lesson translates evidence and/or teen lived experience into teen-facing self-management content.",
+        "clinical_safety_note": null
+      }
+    },
+    "choices": [],
+    "feedback": {},
+    "teaching_point": "Your needs are real. Inclusion is not something you have to earn by making yourself invisible.",
+    "next_step": "Think of one person you could tell: “Here's what actually makes food plans easier for me.”",
+    "related_content_ids": [
+      "1e73b6de-bb0d-5274-9fc8-33a3a6af9ed5"
+    ],
+    "xp_value": 5,
+    "source_type": "EDITORIAL",
+    "source_organization": null,
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "abbe40a9-fbf5-5c5b-a966-0f2f7bf28252",
+    "content_type": "QUICK_LEARN",
+    "title": "Celiac Fatigue Is Different From Not Knowing What to Do",
+    "subtitle": "You can know exactly what to do and still be tired of doing it.",
+    "domain": "LIVE",
+    "topic": null,
+    "interaction_type": "KNOWLEDGE",
+    "difficulty": null,
+    "estimated_minutes": 3,
+    "intro": null,
+    "content_body": {
+      "format": "quick_learn_v1",
+      "content_id": "QL_014",
+      "cards": [
+        {
+          "title": "1 | The work adds up",
+          "body": "Checking labels, researching restaurants, explaining celiac, planning backups, and thinking ahead can take mental energy."
+        },
+        {
+          "title": "2 | Skill doesn't erase effort",
+          "body": "Being experienced with celiac doesn't mean every decision becomes effortless. You can be good at self-management and still be tired of managing."
+        },
+        {
+          "title": "3 | Reduce the load when you can",
+          "body": "Use familiar options, repeat plans that work, ask other people to help, or choose a lower-effort strategy when appropriate."
+        }
+      ],
+      "related_practice_id": "PRACTICE_020",
+      "source_evidence": "Teen lived-experience synthesis; expert review required",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_id": "QL_014",
+        "content_type": "QUICK_LEARN",
+        "domain": "LIVE",
+        "subtitle": "You can know exactly what to do and still be tired of doing it.",
+        "estimated_minutes": "2–3 min",
+        "xp_value": "+5",
+        "related_practice_id": "PRACTICE_020",
+        "review_status": "expert_review",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "content_version": "1.0",
+        "active": "true",
+        "title": "Celiac Fatigue Is Different From Not Knowing What to Do",
+        "source_type": null,
+        "key_takeaway": "Planning fatigue is not the same as failure.",
+        "try_this": "Identify one celiac task someone else could help you with this week.",
+        "source_evidence": "Teen lived-experience synthesis; expert review required",
+        "related_practice": "PRACTICE_020 — I'm Just Tired of Thinking About Celiac",
+        "source_url": null,
+        "review_note": "Keep this lesson flagged for expert review before public release. The lesson translates evidence and/or teen lived experience into teen-facing self-management content.",
+        "clinical_safety_note": null
+      }
+    },
+    "choices": [],
+    "feedback": {},
+    "teaching_point": "Planning fatigue is not the same as failure.",
+    "next_step": "Identify one celiac task someone else could help you with this week.",
+    "related_content_ids": [
+      "2e67569d-a3ca-530e-9f28-6b7c43a2d810"
+    ],
+    "xp_value": 5,
+    "source_type": "EDITORIAL",
+    "source_organization": null,
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "59f84298-c5d8-5f4d-8e00-e00b714e48e8",
+    "content_type": "QUICK_LEARN",
+    "title": "From Speaking Up to Advocating",
+    "subtitle": "Advocacy can be small, practical, and optional.",
+    "domain": "LEAD",
+    "topic": null,
+    "interaction_type": "KNOWLEDGE",
+    "difficulty": null,
+    "estimated_minutes": 3,
+    "intro": null,
+    "content_body": {
+      "format": "quick_learn_v1",
+      "content_id": "QL_015",
+      "cards": [
+        {
+          "title": "1 | Start with self-advocacy",
+          "body": "Self-advocacy is asking for the information, accommodations, or support you need."
+        },
+        {
+          "title": "2 | Advocacy can grow outward",
+          "body": "You might suggest that school event food information be shared earlier, help a friend understand cross-contact, correct a myth, or support someone newly diagnosed."
+        },
+        {
+          "title": "3 | You don't owe the world a lesson",
+          "body": "Having celiac does not make you responsible for educating everyone. Choosing not to advocate in a particular moment is also a valid choice."
+        }
+      ],
+      "related_practice_id": "PRACTICE_028",
+      "source_evidence": "Meyer & Naveh self-management framework + teen-facing advocacy extension",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_id": "QL_015",
+        "content_type": "QUICK_LEARN",
+        "domain": "LEAD",
+        "subtitle": "Advocacy can be small, practical, and optional.",
+        "estimated_minutes": "3 min",
+        "xp_value": "+5",
+        "related_practice_id": "PRACTICE_028",
+        "review_status": "expert_review",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "content_version": "1.0",
+        "active": "true",
+        "title": "From Speaking Up to Advocating",
+        "source_type": null,
+        "key_takeaway": "Leadership can mean making something better—but advocacy is an option, not another celiac obligation.",
+        "try_this": "Think of one small change that would make a place you spend time more celiac-inclusive. You do not have to act on it today.",
+        "source_evidence": "Meyer & Naveh self-management framework + teen-facing advocacy extension",
+        "related_practice": "PRACTICE_028 — Make School Better",
+        "source_url": "https://doi.org/10.3390/nu13051401",
+        "review_note": "Keep this lesson flagged for expert review before public release. The lesson translates evidence and/or teen lived experience into teen-facing self-management content.",
+        "clinical_safety_note": null
+      }
+    },
+    "choices": [],
+    "feedback": {},
+    "teaching_point": "Leadership can mean making something better—but advocacy is an option, not another celiac obligation.",
+    "next_step": "Think of one small change that would make a place you spend time more celiac-inclusive. You do not have to act on it today.",
+    "related_content_ids": [
+      "cbfd3d5a-c688-5b19-b455-700abf875fe2"
+    ],
+    "xp_value": 5,
+    "source_type": "EDITORIAL",
+    "source_organization": null,
+    "source_title": null,
+    "source_url": "https://doi.org/10.3390/nu13051401",
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  }
+]

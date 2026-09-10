@@ -1,0 +1,1324 @@
+[
+  {
+    "content_id": "e89ac77c-c973-5b2a-a87a-ffcb5d05ba01",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "I Don't Want to Be the Difficult Friend",
+    "subtitle": null,
+    "domain": "LIVE, SPEAK",
+    "topic": "Belonging / self-advocacy",
+    "interaction_type": "CHOICE",
+    "difficulty": "Medium",
+    "estimated_minutes": null,
+    "intro": "Your friends choose a restaurant where you don't feel comfortable eating. You don't want everyone to change plans because of you.",
+    "content_body": {
+      "scenario_id": "PRACTICE_016",
+      "category": "Belong & Cope",
+      "setting": "Friends choosing a restaurant",
+      "prompt": "What feels right for this situation?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_016",
+        "category": "Belong & Cope",
+        "domain": "LIVE, SPEAK",
+        "skill": "Belonging / self-advocacy",
+        "difficulty": "Medium",
+        "interaction_type": "CHOICE",
+        "setting": "Friends choosing a restaurant",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release."
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Suggest one or two alternatives."
+      },
+      {
+        "id": "B",
+        "label": "Eat beforehand or use a backup and still join them."
+      },
+      {
+        "id": "C",
+        "label": "Ask everyone to help find somewhere that works."
+      },
+      {
+        "id": "D",
+        "label": "Decide based on how much energy you have today."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "Your needs can be part of the group's planning.",
+        "B": "That may work when the social part matters most to you.",
+        "C": "You don't have to carry all the planning yourself.",
+        "D": "Your strategy doesn't have to be identical every time."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "Your needs deserve consideration, and you get to decide how much energy you want to spend on a particular situation.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "Teen lived-experience synthesis; expert review required",
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "1e73b6de-bb0d-5274-9fc8-33a3a6af9ed5",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "Everyone Always Chooses Where I Can Eat",
+    "subtitle": null,
+    "domain": "LIVE",
+    "topic": "Belonging / guilt",
+    "interaction_type": "REFLECTION",
+    "difficulty": "Medium",
+    "estimated_minutes": null,
+    "intro": "A friend says, “Let's just go wherever you can eat.” Instead of feeling relieved, you feel guilty.",
+    "content_body": {
+      "scenario_id": "PRACTICE_017",
+      "category": "Belong & Cope",
+      "setting": "With friends",
+      "prompt": "What's closest to what you're feeling?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_017",
+        "category": "Belong & Cope",
+        "domain": "LIVE",
+        "skill": "Belonging / guilt",
+        "difficulty": "Medium",
+        "interaction_type": "REFLECTION",
+        "setting": "With friends",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release."
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "I appreciate them, but I feel guilty."
+      },
+      {
+        "id": "B",
+        "label": "I'm tired of being the reason."
+      },
+      {
+        "id": "C",
+        "label": "I'm glad they want me included."
+      },
+      {
+        "id": "D",
+        "label": "It's complicated—I feel more than one of these."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "It's possible to appreciate accommodation and still have complicated feelings about needing it.",
+        "B": "That feeling can be real even when your friends genuinely want you included.",
+        "C": "It's okay to accept support.",
+        "D": "More than one feeling can be true at the same time."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "Being included isn't the same as being a burden.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "Teen lived-experience synthesis; expert review required",
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "0bdf9f5b-701a-556c-9bdc-7e3858b001b8",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "I'm Tired of Bringing My Own Food",
+    "subtitle": null,
+    "domain": "LIVE, MANAGE",
+    "topic": "Planning fatigue / flexible coping",
+    "interaction_type": "REFLECTION",
+    "difficulty": "Medium",
+    "estimated_minutes": null,
+    "intro": "You've brought your own food to events for years. You're tired of it.",
+    "content_body": {
+      "scenario_id": "PRACTICE_018",
+      "category": "Belong & Cope",
+      "setting": "Social events",
+      "prompt": "What matters most today?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_018",
+        "category": "Belong & Cope",
+        "domain": "LIVE, MANAGE",
+        "skill": "Planning fatigue / flexible coping",
+        "difficulty": "Medium",
+        "interaction_type": "REFLECTION",
+        "setting": "Social events",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release."
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "I want to eat with everyone."
+      },
+      {
+        "id": "B",
+        "label": "I mostly want to be there."
+      },
+      {
+        "id": "C",
+        "label": "I want other people to help plan."
+      },
+      {
+        "id": "D",
+        "label": "I have zero energy for this today."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "You might explore whether there's an option you feel comfortable with.",
+        "B": "Eating beforehand may be a reasonable strategy for you.",
+        "C": "You can practice asking others to share the planning work.",
+        "D": "A low-effort plan can still be good self-management."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "Good self-management doesn't have to look identical every time.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "Teen lived-experience synthesis; expert review required",
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "1f0aaa13-a620-5dcf-92a9-ce545aa7b2b8",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "Why Can't We Just Be Spontaneous?",
+    "subtitle": null,
+    "domain": "LIVE, MANAGE",
+    "topic": "Spontaneity / flexibility",
+    "interaction_type": "CHOICE",
+    "difficulty": "Medium",
+    "estimated_minutes": null,
+    "intro": "School ends and friends say, “Let's go get food!” Nobody has picked a place.",
+    "content_body": {
+      "scenario_id": "PRACTICE_019",
+      "category": "Belong & Cope",
+      "setting": "After school",
+      "prompt": "What sounds right today?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_019",
+        "category": "Belong & Cope",
+        "domain": "LIVE, MANAGE",
+        "skill": "Spontaneity / flexibility",
+        "difficulty": "Medium",
+        "interaction_type": "CHOICE",
+        "setting": "After school",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release."
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "QUICK: Suggest one of your known places."
+      },
+      {
+        "id": "B",
+        "label": "EXPLORE: Help find somewhere new and do a focused check."
+      },
+      {
+        "id": "C",
+        "label": "BACKUP: Use food you already have and join socially."
+      },
+      {
+        "id": "D",
+        "label": "TOGETHER: Ask the group to help find somewhere workable."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "A trusted option can keep the plan moving.",
+        "B": "Trying a new option can be reasonable when you have the time and energy to assess it.",
+        "C": "You can preserve the social part without making food the whole event.",
+        "D": "Spontaneity doesn't mean you have to do all the planning."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "Spontaneity with celiac may sometimes mean having flexible strategies—not having zero planning.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "Teen lived-experience synthesis; expert review required",
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "2e67569d-a3ca-530e-9f28-6b7c43a2d810",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "I'm Just Tired of Thinking About Celiac",
+    "subtitle": null,
+    "domain": "LIVE",
+    "topic": "Planning fatigue / mental load",
+    "interaction_type": "REFLECTION",
+    "difficulty": "Medium",
+    "estimated_minutes": null,
+    "intro": "You've been checking, researching, explaining and planning for a long time. Today you're simply tired of thinking about it.",
+    "content_body": {
+      "scenario_id": "PRACTICE_020",
+      "category": "Belong & Cope",
+      "setting": "Everyday life",
+      "prompt": "What would help most right now?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_020",
+        "category": "Belong & Cope",
+        "domain": "LIVE",
+        "skill": "Planning fatigue / mental load",
+        "difficulty": "Medium",
+        "interaction_type": "REFLECTION",
+        "setting": "Everyday life",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release."
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Make the decision simpler."
+      },
+      {
+        "id": "B",
+        "label": "Use something I already trust."
+      },
+      {
+        "id": "C",
+        "label": "Ask someone to help."
+      },
+      {
+        "id": "D",
+        "label": "Take a break from dealing with food if I can."
+      },
+      {
+        "id": "E",
+        "label": "I'm not sure—I just want someone to get it."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "Using a familiar or low-effort option can reduce the mental load.",
+        "B": "You don't always have to investigate something new.",
+        "C": "Support can include sharing the planning work.",
+        "D": "Sometimes the social activity matters more than solving a food problem right now.",
+        "E": "Feeling understood can matter too."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "Knowing what to do doesn't mean it never gets exhausting. Reducing the mental workload can itself be useful.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "Teen lived-experience synthesis; expert review required",
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "06e79ecb-5cf9-5147-bf70-a80c7cc37762",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "It's Gluten-Free, But I Don't Feel Safe",
+    "subtitle": null,
+    "domain": "TRUST, MANAGE",
+    "topic": "Information gathering / boundaries",
+    "interaction_type": "CHOICE",
+    "difficulty": "Hard",
+    "estimated_minutes": null,
+    "intro": "You're told several dishes are gluten-free, but you don't know enough about how they were prepared.",
+    "content_body": {
+      "scenario_id": "PRACTICE_021",
+      "category": "Trust & Confidence",
+      "setting": "Party",
+      "prompt": "What could you do?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_021",
+        "category": "Trust & Confidence",
+        "domain": "TRUST, MANAGE",
+        "skill": "Information gathering / boundaries",
+        "difficulty": "Hard",
+        "interaction_type": "CHOICE",
+        "setting": "Party",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release.",
+      "clinical_safety_note": null
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Ask a few focused questions."
+      },
+      {
+        "id": "B",
+        "label": "Look for packaged or separate options."
+      },
+      {
+        "id": "C",
+        "label": "Decide not to eat."
+      },
+      {
+        "id": "D",
+        "label": "Use something you brought or eat later."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "That may give you the missing information.",
+        "B": "That may reduce uncertainty about ingredients and handling.",
+        "C": "You are allowed to decide you don't have enough information or don't feel comfortable.",
+        "D": "A backup is another valid strategy."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "“The ingredients are gluten-free” and “I have enough information to feel comfortable eating this” aren't always the same decision.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "Beyond Celiac cross-contact guidance; teen lived-experience extension",
+    "source_title": null,
+    "source_url": "https://www.beyondceliac.org/gluten-free-diet/cross-contact/",
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "7d9933ea-6cf0-5d6e-9442-6def4da78099",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "The Host Keeps Trying to Feed Me",
+    "subtitle": null,
+    "domain": "TRUST, SPEAK, LIVE",
+    "topic": "Gracious boundary-setting",
+    "interaction_type": "CHOICE",
+    "difficulty": "Medium",
+    "estimated_minutes": null,
+    "intro": "You decide not to eat. The host notices and says, “Oh no! Is there nothing you like? Let me find you something!”",
+    "content_body": {
+      "scenario_id": "PRACTICE_022",
+      "category": "Trust & Confidence",
+      "setting": "Party",
+      "prompt": "What could you say?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_022",
+        "category": "Trust & Confidence",
+        "domain": "TRUST, SPEAK, LIVE",
+        "skill": "Gracious boundary-setting",
+        "difficulty": "Medium",
+        "interaction_type": "CHOICE",
+        "setting": "Party",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release.",
+      "clinical_safety_note": null
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Thank you so much. It's not that I don't like it—I just have to be careful about how food is prepared."
+      },
+      {
+        "id": "B",
+        "label": "I'm totally okay. Please don't worry about me. I'm having a good time."
+      },
+      {
+        "id": "C",
+        "label": "Could I see the package or ask how this was made?"
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "This explains the situation without criticizing the host.",
+        "B": "You can reassure the host and keep the focus on being together.",
+        "C": "If you want more information, it's reasonable to ask."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "You can appreciate someone's hospitality without feeling obligated to eat.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "Teen lived-experience synthesis; expert review required",
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "a54dd31e-0359-5903-8d80-0b32a47c4c8b",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "Everyone Says It's Fine",
+    "subtitle": null,
+    "domain": "TRUST",
+    "topic": "Distinguish reassurance from information",
+    "interaction_type": "CHOICE",
+    "difficulty": "Hard",
+    "estimated_minutes": null,
+    "intro": "Friends tell you, “Everyone said it's gluten-free. You're fine!” But nobody actually knows how it was prepared.",
+    "content_body": {
+      "scenario_id": "PRACTICE_023",
+      "category": "Trust & Confidence",
+      "setting": "Social gathering",
+      "prompt": "What information would help you decide?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_023",
+        "category": "Trust & Confidence",
+        "domain": "TRUST",
+        "skill": "Distinguish reassurance from information",
+        "difficulty": "Hard",
+        "interaction_type": "CHOICE",
+        "setting": "Social gathering",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release.",
+      "clinical_safety_note": null
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Who made it and what ingredients were used?"
+      },
+      {
+        "id": "B",
+        "label": "How was it prepared and served?"
+      },
+      {
+        "id": "C",
+        "label": "Whether there is packaging or another reliable source of information."
+      },
+      {
+        "id": "D",
+        "label": "Any combination of these."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "Knowing the source and ingredients can help.",
+        "B": "Preparation and serving can matter for cross-contact.",
+        "C": "A label or direct source may reduce uncertainty.",
+        "D": "Exactly. Your decision can be based on the information relevant to the situation."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "Reassurance and information aren't the same thing.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "Beyond Celiac cross-contact guidance",
+    "source_title": null,
+    "source_url": "https://www.beyondceliac.org/gluten-free-diet/cross-contact/",
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "7b172bbc-678f-5a2f-a028-d66759ed5400",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "I Asked Everything—and I'm Still Nervous",
+    "subtitle": null,
+    "domain": "TRUST, LIVE",
+    "topic": "Residual uncertainty / self-awareness",
+    "interaction_type": "REFLECTION",
+    "difficulty": "Hard",
+    "estimated_minutes": null,
+    "intro": "You asked about ingredients and preparation and received answers. You still feel uneasy.",
+    "content_body": {
+      "scenario_id": "PRACTICE_024",
+      "category": "Trust & Confidence",
+      "setting": "Restaurant or social event",
+      "prompt": "What sounds most like you?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_024",
+        "category": "Trust & Confidence",
+        "domain": "TRUST, LIVE",
+        "skill": "Residual uncertainty / self-awareness",
+        "difficulty": "Hard",
+        "interaction_type": "REFLECTION",
+        "setting": "Restaurant or social event",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release.",
+      "clinical_safety_note": null
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "I need another piece of information."
+      },
+      {
+        "id": "B",
+        "label": "I have enough information, but I'm still nervous."
+      },
+      {
+        "id": "C",
+        "label": "I'd rather choose something else."
+      },
+      {
+        "id": "D",
+        "label": "I don't want to eat right now."
+      },
+      {
+        "id": "E",
+        "label": "I'm not sure."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "If something specific is unanswered, you can identify and ask about it.",
+        "B": "Sometimes the information question and the feeling question are different.",
+        "C": "You can make a different choice even after asking questions.",
+        "D": "You don't have to override discomfort to complete the situation.",
+        "E": "It's okay not to have an immediate answer."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "My C-Day helps you notice whether you're missing information, experiencing uncertainty, or choosing not to eat. It does not decide whether you should eat something.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "Teen lived-experience synthesis; expert review required",
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "08faa2e2-500e-53fd-b5bf-59792d5df000",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "Food I Used to Love Looks Gross Now",
+    "subtitle": null,
+    "domain": "TRUST, LIVE",
+    "topic": "Emotional adjustment to diagnosis",
+    "interaction_type": "REFLECTION",
+    "difficulty": "Hard",
+    "estimated_minutes": null,
+    "intro": "A year ago, a croissant might have looked delicious. Now it may look unappealing, unsafe, or completely different from how you remember it.",
+    "content_body": {
+      "scenario_id": "PRACTICE_025",
+      "category": "Trust & Confidence",
+      "setting": "Everyday food environment",
+      "prompt": "Does any of this sound familiar?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_025",
+        "category": "Trust & Confidence",
+        "domain": "TRUST, LIVE",
+        "skill": "Emotional adjustment to diagnosis",
+        "difficulty": "Hard",
+        "interaction_type": "REFLECTION",
+        "setting": "Everyday food environment",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "true",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release.",
+      "clinical_safety_note": "Do not frame the goal as overcoming disgust or persuading the teen to eat. If food-related fear/avoidance substantially interferes with eating or causes significant distress, the app may gently suggest talking with a parent/caregiver and the teen's celiac healthcare team."
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Foods with gluten don't appeal to me anymore."
+      },
+      {
+        "id": "B",
+        "label": "They actually look gross to me."
+      },
+      {
+        "id": "C",
+        "label": "Cross-contact worries me more than the gluten food itself."
+      },
+      {
+        "id": "D",
+        "label": "Eating around gluten changes how I feel."
+      },
+      {
+        "id": "E",
+        "label": "Not really."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "You don't need to want foods that contain gluten.",
+        "B": "Your feelings about foods can change after diagnosis.",
+        "C": "That distinction can be useful to notice.",
+        "D": "Food environments can carry new meaning after diagnosis.",
+        "E": "That's okay too. People adjust differently."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "Your relationship with food can feel different after a major dietary change. What matters is having enough foods you can enjoy and support for managing celiac.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "Teen lived-experience synthesis; clinical review required",
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": true,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "03989702-44c9-5e6f-acf5-6ecb48b8e28e",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "Going Somewhere Without Mom or Dad",
+    "subtitle": null,
+    "domain": "MANAGE, LEAD",
+    "topic": "Independent self-management",
+    "interaction_type": "CHOICE",
+    "difficulty": "Medium",
+    "estimated_minutes": null,
+    "intro": "You're going on an outing without the person who usually helps ask food questions.",
+    "content_body": {
+      "scenario_id": "PRACTICE_026",
+      "category": "Independence & Advocacy",
+      "setting": "Independent outing",
+      "prompt": "What could help you feel ready?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_026",
+        "category": "Independence & Advocacy",
+        "domain": "MANAGE, LEAD",
+        "skill": "Independent self-management",
+        "difficulty": "Medium",
+        "interaction_type": "CHOICE",
+        "setting": "Independent outing",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release.",
+      "clinical_safety_note": null
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Research one or two options."
+      },
+      {
+        "id": "B",
+        "label": "Save the questions you want to ask."
+      },
+      {
+        "id": "C",
+        "label": "Bring a backup."
+      },
+      {
+        "id": "D",
+        "label": "Ask for help if you need it."
+      },
+      {
+        "id": "E",
+        "label": "Combine these."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "A little preparation can increase independence.",
+        "B": "Having your own script can make speaking up easier.",
+        "C": "Independence can include preparing for uncertainty.",
+        "D": "Being independent doesn't mean refusing support.",
+        "E": "You can build a plan that fits the situation."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "Independence doesn't mean never needing support. It means building the skills to make more of your own decisions.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "Meyer & Naveh self-management framework; expert review required",
+    "source_title": null,
+    "source_url": "https://doi.org/10.3390/nu13051401",
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "1db9c8ad-257c-5d33-9d1b-8791e915db3d",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "My Friend Wants to Help",
+    "subtitle": null,
+    "domain": "SPEAK, LIVE, LEAD",
+    "topic": "Build a support network",
+    "interaction_type": "REFLECTION",
+    "difficulty": "Medium",
+    "estimated_minutes": null,
+    "intro": "A close friend asks, “What can I actually do that makes this easier for you?”",
+    "content_body": {
+      "scenario_id": "PRACTICE_027",
+      "category": "Independence & Advocacy",
+      "setting": "With a close friend",
+      "prompt": "What would help you most?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_027",
+        "category": "Independence & Advocacy",
+        "domain": "SPEAK, LIVE, LEAD",
+        "skill": "Build a support network",
+        "difficulty": "Medium",
+        "interaction_type": "REFLECTION",
+        "setting": "With a close friend",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release.",
+      "clinical_safety_note": null
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Help me check places before we go."
+      },
+      {
+        "id": "B",
+        "label": "Don't make a big deal if I don't eat."
+      },
+      {
+        "id": "C",
+        "label": "Ask me rather than assuming what's safe."
+      },
+      {
+        "id": "D",
+        "label": "Learn what cross-contact means."
+      },
+      {
+        "id": "E",
+        "label": "Honestly, just treat it normally."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "Sharing the planning work can help.",
+        "B": "Support can mean keeping the social situation comfortable.",
+        "C": "Letting you make the final decision respects your independence.",
+        "D": "A friend who understands the basics may be more helpful.",
+        "E": "Sometimes normalcy is the support you want."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "Support doesn't have to come only from adults. You can tell friends what actually helps.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "Teen lived-experience synthesis; expert review required",
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "cbfd3d5a-c688-5b19-b455-700abf875fe2",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "Make School Better",
+    "subtitle": null,
+    "domain": "LEAD, SPEAK",
+    "topic": "Constructive advocacy",
+    "interaction_type": "CHOICE",
+    "difficulty": "Hard",
+    "estimated_minutes": null,
+    "intro": "School events regularly include food but rarely give students with celiac enough information to plan.",
+    "content_body": {
+      "scenario_id": "PRACTICE_028",
+      "category": "Independence & Advocacy",
+      "setting": "School",
+      "prompt": "What could you do?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_028",
+        "category": "Independence & Advocacy",
+        "domain": "LEAD, SPEAK",
+        "skill": "Constructive advocacy",
+        "difficulty": "Hard",
+        "interaction_type": "CHOICE",
+        "setting": "School",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release.",
+      "clinical_safety_note": null
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Talk with a teacher or advisor."
+      },
+      {
+        "id": "B",
+        "label": "Suggest that food information be shared beforehand."
+      },
+      {
+        "id": "C",
+        "label": "Ask whether packaged GF options could be available."
+      },
+      {
+        "id": "D",
+        "label": "Work with other students to suggest improvements."
+      },
+      {
+        "id": "E",
+        "label": "Decide this isn't something you want to take on right now."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "Starting with one supportive adult may help.",
+        "B": "A small systems change could make planning easier.",
+        "C": "A concrete suggestion may be easier to act on.",
+        "D": "Advocacy can be collaborative.",
+        "E": "Having celiac does not obligate you to become an advocate."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "Advocacy is an option—not another obligation created by having celiac.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "Expert review required; teen self-management extension",
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "1c61a1cb-e3ba-5a8d-85bf-cf1f41452410",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "Correct the Myth—or Let It Go?",
+    "subtitle": null,
+    "domain": "LEAD, SPEAK",
+    "topic": "Choose when to advocate",
+    "interaction_type": "CHOICE",
+    "difficulty": "Medium",
+    "estimated_minutes": null,
+    "intro": "Someone says, “Gluten-free is basically just a diet trend.”",
+    "content_body": {
+      "scenario_id": "PRACTICE_029",
+      "category": "Independence & Advocacy",
+      "setting": "Conversation",
+      "prompt": "What do you want to do?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_029",
+        "category": "Independence & Advocacy",
+        "domain": "LEAD, SPEAK",
+        "skill": "Choose when to advocate",
+        "difficulty": "Medium",
+        "interaction_type": "CHOICE",
+        "setting": "Conversation",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release.",
+      "clinical_safety_note": null
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Explain briefly that celiac disease is an autoimmune disease."
+      },
+      {
+        "id": "B",
+        "label": "Say, “It's actually medically necessary for me,” and move on."
+      },
+      {
+        "id": "C",
+        "label": "Don't engage."
+      },
+      {
+        "id": "D",
+        "label": "Share an expert resource if they're genuinely interested."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "A short factual correction can be enough.",
+        "B": "You can correct the part that affects you without giving a lecture.",
+        "C": "You are not responsible for educating everyone.",
+        "D": "A trusted resource can be useful when someone wants to learn."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "Advocacy includes deciding when you want to educate someone—and when you don't.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "NIDDK; expert review required",
+    "source_title": null,
+    "source_url": "https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease",
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "8f76d348-a2da-5199-a9dd-e3ff67ce53a8",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "Help a Newly Diagnosed Teen",
+    "subtitle": null,
+    "domain": "LEAD, LIVE",
+    "topic": "Peer mentorship",
+    "interaction_type": "REFLECTION",
+    "difficulty": "Hard",
+    "estimated_minutes": null,
+    "intro": "A younger teen tells you, “I was just diagnosed. I feel like I'm never going to be able to do anything normally again.”",
+    "content_body": {
+      "scenario_id": "PRACTICE_030",
+      "category": "Independence & Advocacy",
+      "setting": "Peer support",
+      "prompt": "What might you want them to know?",
+      "expert_reviewed": false,
+      "original_metadata": {
+        "content_type": "PRACTICE",
+        "scenario_id": "PRACTICE_030",
+        "category": "Independence & Advocacy",
+        "domain": "LEAD, LIVE",
+        "skill": "Peer mentorship",
+        "difficulty": "Hard",
+        "interaction_type": "REFLECTION",
+        "setting": "Peer support",
+        "xp": "+10",
+        "preferred_choice": "null",
+        "expert_reviewed": "false",
+        "medical_review_required": "false",
+        "review_status": "expert_review",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": "This scenario translates teen lived experience into educational/self-management content. Keep it flagged for expert review before public release.",
+      "clinical_safety_note": null
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "It gets easier as you learn what works for you."
+      },
+      {
+        "id": "B",
+        "label": "You don't have to figure everything out immediately."
+      },
+      {
+        "id": "C",
+        "label": "Ask for help. You don't have to do this alone."
+      },
+      {
+        "id": "D",
+        "label": "You'll find your own ways of handling social situations."
+      },
+      {
+        "id": "E",
+        "label": "Some parts can still be hard—and that's okay to talk about."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "Your lived experience may offer hope without pretending everything is easy.",
+        "B": "Learning can happen over time.",
+        "C": "Support is part of self-management.",
+        "D": "There isn't one perfect way to live with celiac.",
+        "E": "Honesty can be supportive too."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "Lived experience can become a source of support for someone else. What do you wish someone had told you?",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": "Teen lived-experience synthesis; expert review required",
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": false,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  },
+  {
+    "content_id": "da61fac0-c620-53a1-8360-c366ffe10d25",
+    "content_type": "PRACTICE_A_SKILL",
+    "title": "I Think I Already Ate Gluten",
+    "subtitle": null,
+    "domain": "MANAGE, TRUST, LIVE",
+    "topic": null,
+    "interaction_type": "REFLECTION",
+    "difficulty": "Hard",
+    "estimated_minutes": null,
+    "intro": "After eating, you realize the food may have contained gluten.",
+    "content_body": {
+      "scenario_id": "PRACTICE_031",
+      "category": "Resilience / Support",
+      "setting": null,
+      "prompt": "What do you need right now?",
+      "expert_reviewed": null,
+      "original_metadata": {
+        "scenario_id": "PRACTICE_031",
+        "category": "Resilience / Support",
+        "domain": "MANAGE, TRUST, LIVE",
+        "difficulty": "Hard",
+        "interaction_type": "REFLECTION",
+        "medical_review_required": "true",
+        "review_status": "clinical_review",
+        "xp": "+10",
+        "content_version": "1.0",
+        "active": "true"
+      },
+      "review_note": null,
+      "clinical_safety_note": null,
+      "programming_rule": "Do not provide medication, dosing, detoxification, or exposure-treatment instructions. This scenario requires clinical review before public release."
+    },
+    "choices": [
+      {
+        "id": "A",
+        "label": "Pause and avoid blaming yourself."
+      },
+      {
+        "id": "B",
+        "label": "Tell a parent/caregiver or trusted adult if appropriate."
+      },
+      {
+        "id": "C",
+        "label": "Follow the care guidance you already have from your healthcare team."
+      },
+      {
+        "id": "D",
+        "label": "Seek appropriate medical care if you are seriously unwell."
+      },
+      {
+        "id": "E",
+        "label": "Later, reflect on what information might help next time."
+      }
+    ],
+    "feedback": {
+      "by_choice_id": {
+        "A": "Mistakes and uncertain situations can happen. Focus on what you need now.",
+        "B": "Support can be useful, especially if you feel unwell or unsure what to do.",
+        "C": "My C-Day should not create a new treatment plan for an exposure.",
+        "D": "For urgent or severe symptoms, use appropriate medical/emergency care rather than relying on the app.",
+        "E": "Reflection can help future planning without turning the event into blame."
+      },
+      "preferred_choice": null,
+      "safety_issues": null
+    },
+    "teaching_point": "Focus on support, existing care guidance, and learning—not blame or a treatment algorithm.",
+    "next_step": null,
+    "related_content_ids": null,
+    "xp_value": 10,
+    "source_type": "EDITORIAL",
+    "source_organization": null,
+    "source_title": null,
+    "source_url": null,
+    "author": null,
+    "review_status": "IN_REVIEW",
+    "expert_reviewer": null,
+    "medical_review_required": true,
+    "content_version": 1,
+    "last_reviewed": null,
+    "active": true
+  }
+]
