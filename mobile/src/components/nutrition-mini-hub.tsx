@@ -1,3 +1,4 @@
+import { ProductCheckerEntry } from './product-checker';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Fonts } from '@/constants/theme';
@@ -47,6 +48,7 @@ export function NutritionMiniHub() {
         <View style={s.itemText}><Text style={s.heading}>{item.title}</Text>{!!item.qualifier && <Text style={s.small}>{item.qualifier}</Text>}{!!item.uncertaintyLabel && <Text style={s.small}>{item.uncertaintyLabel}</Text>}</View><Text style={s.arrow}>›</Text>
       </Pressable>)}
     </View>}
+    <ProductCheckerEntry />
   </View>;
 }
 const s = StyleSheet.create({

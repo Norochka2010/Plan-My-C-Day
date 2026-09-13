@@ -8,7 +8,8 @@
     "scheme": "mobile",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.norochka2010.mobile"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,6 +32,22 @@
           "backgroundColor": "#208AEF",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Plan My C-Day to scan a product barcode. No photo is saved or uploaded.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "barcodeScannerEnabled": true
+        }
+      ],
+      [
+        "expo-calendar",
+
+        {
+          "calendarPermission": "Allow Plan My C-Day to add and update your planned actions in your calendar."
         }
       ]
     ],

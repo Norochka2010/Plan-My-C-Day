@@ -1,0 +1,2887 @@
+[
+  {
+    "content_id": "c83886c4-9e1c-5a1b-8e74-57f48b55f848",
+    "challenge_id": "RLC_001",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": false,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_001",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "KNOW",
+      "skill": "Label reading",
+      "difficulty": "Easy",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_003",
+      "related_practice_id": "PRACTICE_003",
+      "source_type": "authoritative_guidance",
+      "review_status": "approved_for_build",
+      "expert_reviewed": "not required for coding",
+      "medical_review_required": "false",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Label Detective",
+      "instruction": "Choose one unfamiliar packaged food and practice your label-checking process.",
+      "safety_note": "You do not need to eat or buy the product to complete this challenge.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "FDA; NIDDK",
+      "steps": [
+        "Read the package information instead of judging only by the front.",
+        "Look for a gluten-free claim and relevant ingredient information.",
+        "If you still cannot tell, stop at “I need more information” rather than guessing."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": "https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease/eating-diet-nutrition"
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_001_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_001_V2_OPEN",
+          "type": "opening",
+          "text": "You pick up an unfamiliar packaged food. The front of the package looks promising, but you have not checked the details yet.",
+          "next_node_id": "RLC_001_V2_D1"
+        },
+        {
+          "id": "RLC_001_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You turn the package around and find the ingredient and label information.",
+          "next_node_id": "RLC_001_V2_D2"
+        },
+        {
+          "id": "RLC_001_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You find a claim on the package, but you still want to understand the rest of the information.",
+          "next_node_id": "RLC_001_V2_D2"
+        },
+        {
+          "id": "RLC_001_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You pause instead of guessing. You can still decide what information would help.",
+          "next_node_id": "RLC_001_V2_D2"
+        },
+        {
+          "id": "RLC_001_V2_D1",
+          "type": "decision",
+          "text": "What do you want to look at first?",
+          "choices": [
+            {
+              "id": "RLC_001_V2_D1_C1",
+              "text": "Read the package information",
+              "next_node_id": "RLC_001_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_001_V2_D1_C2",
+              "text": "Look for a gluten-free claim",
+              "next_node_id": "RLC_001_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_001_V2_D1_C3",
+              "text": "Decide you need more information",
+              "next_node_id": "RLC_001_V2_D1_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_001_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You gather what the package itself tells you.",
+          "next_node_id": "RLC_001_V2_END"
+        },
+        {
+          "id": "RLC_001_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "You decide to get another source of information.",
+          "next_node_id": "RLC_001_V2_END"
+        },
+        {
+          "id": "RLC_001_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You decide uncertainty is enough reason to pause. No food decision is required.",
+          "next_node_id": "RLC_001_V2_END"
+        },
+        {
+          "id": "RLC_001_V2_D2",
+          "type": "decision",
+          "text": "You still have a question. What next?",
+          "choices": [
+            {
+              "id": "RLC_001_V2_D2_C1",
+              "text": "Read more of the current package information",
+              "next_node_id": "RLC_001_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_001_V2_D2_C2",
+              "text": "Look for a trusted source or manufacturer information",
+              "next_node_id": "RLC_001_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_001_V2_D2_C3",
+              "text": "Stop at “I need more information”",
+              "next_node_id": "RLC_001_V2_D2_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_001_V2_END",
+          "type": "ending",
+          "text": "You practiced checking information instead of judging a food only by the front of the package.",
+          "skill_tags": [
+            "KNOW",
+            "CHECK",
+            "TRUST"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "content_id": "033b7751-4b02-52f3-887a-079931799cdb",
+    "challenge_id": "RLC_002",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": false,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_002",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "KNOW",
+      "skill": "Cross-contact awareness",
+      "difficulty": "Easy",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_001",
+      "related_practice_id": "PRACTICE_005",
+      "source_type": "authoritative_guidance",
+      "review_status": "approved_for_build",
+      "expert_reviewed": "not required for coding",
+      "medical_review_required": "false",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Cross-Contact Spotter",
+      "instruction": "Notice one possible cross-contact point in a real food situation.",
+      "safety_note": "You never need to eat anything uncertain to complete this challenge.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "NIDDK; Beyond Celiac",
+      "steps": [
+        "Look at how food is prepared, handled, or served.",
+        "Examples could include shared serving utensils, preparation areas, or cooking equipment.",
+        "Your job is only to notice and identify the question—not to prove that cross-contact occurred."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": "https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease/eating-diet-nutrition"
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_002_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_002_V2_OPEN",
+          "type": "opening",
+          "text": "You are watching food being prepared or served and notice that several foods share the same space.",
+          "next_node_id": "RLC_002_V2_D1"
+        },
+        {
+          "id": "RLC_002_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You notice the same utensil may be moving between foods.",
+          "next_node_id": "RLC_002_V2_D2"
+        },
+        {
+          "id": "RLC_002_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You notice foods are being prepared close together.",
+          "next_node_id": "RLC_002_V2_D2"
+        },
+        {
+          "id": "RLC_002_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You notice the same equipment may be used for different foods.",
+          "next_node_id": "RLC_002_V2_D2"
+        },
+        {
+          "id": "RLC_002_V2_D1_AFTER4",
+          "type": "consequence",
+          "text": "You identify your own possible cross-contact question.",
+          "next_node_id": "RLC_002_V2_D2"
+        },
+        {
+          "id": "RLC_002_V2_D1",
+          "type": "decision",
+          "text": "What catches your attention?",
+          "choices": [
+            {
+              "id": "RLC_002_V2_D1_C1",
+              "text": "A shared serving utensil",
+              "next_node_id": "RLC_002_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_002_V2_D1_C2",
+              "text": "A shared preparation area",
+              "next_node_id": "RLC_002_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_002_V2_D1_C3",
+              "text": "Shared cooking equipment",
+              "next_node_id": "RLC_002_V2_D1_AFTER3"
+            },
+            {
+              "id": "RLC_002_V2_D1_C4",
+              "text": "Something else",
+              "next_node_id": "RLC_002_V2_D1_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_002_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You turn the observation into a specific question.",
+          "next_node_id": "RLC_002_V2_END"
+        },
+        {
+          "id": "RLC_002_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "You gather more context before deciding whether you need to ask.",
+          "next_node_id": "RLC_002_V2_END"
+        },
+        {
+          "id": "RLC_002_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You stop without trying to prove whether cross-contact occurred.",
+          "next_node_id": "RLC_002_V2_END"
+        },
+        {
+          "id": "RLC_002_V2_D2",
+          "type": "decision",
+          "text": "What do you want to do with that observation?",
+          "choices": [
+            {
+              "id": "RLC_002_V2_D2_C1",
+              "text": "Ask a question",
+              "next_node_id": "RLC_002_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_002_V2_D2_C2",
+              "text": "Keep observing",
+              "next_node_id": "RLC_002_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_002_V2_D2_C3",
+              "text": "Decide you do not have enough information",
+              "next_node_id": "RLC_002_V2_D2_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_002_V2_END",
+          "type": "ending",
+          "text": "You practiced noticing a possible cross-contact point and identifying the question that matters.",
+          "skill_tags": [
+            "KNOW",
+            "CHECK"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "content_id": "a4d04575-03d2-55d9-af48-d61793754b76",
+    "challenge_id": "RLC_003",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": false,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_003",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "MANAGE",
+      "skill": "Planning / flexibility",
+      "difficulty": "Easy",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_006",
+      "related_practice_id": "PRACTICE_012",
+      "source_type": "behavioral_extension",
+      "review_status": "expert_review",
+      "expert_reviewed": "false",
+      "medical_review_required": "false",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Build One Backup Plan",
+      "instruction": "Pick one upcoming activity and make one simple backup plan.",
+      "safety_note": "Using the backup counts as the plan working—not failing.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "Meyer & Naveh self-management framework; Celiac Disease Foundation",
+      "steps": [
+        "Name your Plan A.",
+        "Choose one realistic Plan B: a snack, food from home, eating beforehand, another location, or another strategy that works for you.",
+        "Keep it simple enough that you would actually use it."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": "https://doi.org/10.3390/nu13051401",
+      "review_note": "Keep this challenge flagged for expert review before public release. It translates evidence and/or teen lived experience into a real-world self-management activity."
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_003_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_003_V2_OPEN",
+          "type": "opening",
+          "text": "You have an upcoming activity involving food. You have a Plan A, but you do not know exactly how everything will go.",
+          "next_node_id": "RLC_003_V2_D1"
+        },
+        {
+          "id": "RLC_003_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You now know you have something available if Plan A does not work.",
+          "next_node_id": "RLC_003_V2_D2"
+        },
+        {
+          "id": "RLC_003_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You reduce how much the event depends on finding food there.",
+          "next_node_id": "RLC_003_V2_D2"
+        },
+        {
+          "id": "RLC_003_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You build flexibility into the plan itself.",
+          "next_node_id": "RLC_003_V2_D2"
+        },
+        {
+          "id": "RLC_003_V2_D1_AFTER4",
+          "type": "consequence",
+          "text": "You choose a realistic Plan B that fits your situation.",
+          "next_node_id": "RLC_003_V2_D2"
+        },
+        {
+          "id": "RLC_003_V2_D1",
+          "type": "decision",
+          "text": "What kind of backup would make the event easier?",
+          "choices": [
+            {
+              "id": "RLC_003_V2_D1_C1",
+              "text": "Bring a snack or food from home",
+              "next_node_id": "RLC_003_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_003_V2_D1_C2",
+              "text": "Eat beforehand",
+              "next_node_id": "RLC_003_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_003_V2_D1_C3",
+              "text": "Choose another location or option",
+              "next_node_id": "RLC_003_V2_D1_AFTER3"
+            },
+            {
+              "id": "RLC_003_V2_D1_C4",
+              "text": "Use another backup that works for you",
+              "next_node_id": "RLC_003_V2_D1_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_003_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You switch plans without treating it as a failure.",
+          "next_node_id": "RLC_003_V2_D3"
+        },
+        {
+          "id": "RLC_003_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "You gather one piece of information before deciding.",
+          "next_node_id": "RLC_003_V2_D3"
+        },
+        {
+          "id": "RLC_003_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You keep both options open.",
+          "next_node_id": "RLC_003_V2_D3"
+        },
+        {
+          "id": "RLC_003_V2_D2",
+          "type": "decision",
+          "text": "Later, Plan A starts to feel uncertain. What do you do?",
+          "choices": [
+            {
+              "id": "RLC_003_V2_D2_C1",
+              "text": "Use the backup",
+              "next_node_id": "RLC_003_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_003_V2_D2_C2",
+              "text": "Ask one more question first",
+              "next_node_id": "RLC_003_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_003_V2_D2_C3",
+              "text": "Stay with Plan A for now but keep the backup available",
+              "next_node_id": "RLC_003_V2_D2_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_003_V2_D3_AFTER1",
+          "type": "consequence",
+          "text": "You frame flexibility as part of planning.",
+          "next_node_id": "RLC_003_V2_END"
+        },
+        {
+          "id": "RLC_003_V2_D3_AFTER2",
+          "type": "consequence",
+          "text": "You do not have to explain more than you want.",
+          "next_node_id": "RLC_003_V2_END"
+        },
+        {
+          "id": "RLC_003_V2_D3_AFTER3",
+          "type": "consequence",
+          "text": "You turn the moment into useful information for the future.",
+          "next_node_id": "RLC_003_V2_END"
+        },
+        {
+          "id": "RLC_003_V2_D3",
+          "type": "decision",
+          "text": "A friend says, “Sorry the original plan didn’t work.” What feels right?",
+          "choices": [
+            {
+              "id": "RLC_003_V2_D3_C1",
+              "text": "“It’s okay — this was my backup plan.”",
+              "next_node_id": "RLC_003_V2_D3_AFTER1"
+            },
+            {
+              "id": "RLC_003_V2_D3_C2",
+              "text": "Keep it low-key and move on",
+              "next_node_id": "RLC_003_V2_D3_AFTER2"
+            },
+            {
+              "id": "RLC_003_V2_D3_C3",
+              "text": "Tell them what would help next time",
+              "next_node_id": "RLC_003_V2_D3_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_003_V2_END",
+          "type": "ending",
+          "text": "Your backup was part of the plan, not evidence that the plan failed.",
+          "skill_tags": [
+            "MANAGE",
+            "PREPARE",
+            "TRUST"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "content_id": "9cd832de-83ec-5b80-9da4-a03f989f8df1",
+    "challenge_id": "RLC_004",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": false,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_004",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "MANAGE",
+      "skill": "Focused planning",
+      "difficulty": "Medium",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_007",
+      "related_practice_id": "PRACTICE_014",
+      "source_type": "behavioral_extension",
+      "review_status": "expert_review",
+      "expert_reviewed": "false",
+      "medical_review_required": "false",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Make a 5-Minute Restaurant Plan",
+      "instruction": "Choose one restaurant situation and see whether you can make a useful plan without researching forever.",
+      "safety_note": "This challenge is about practicing focused planning, not proving that five minutes is always enough for every restaurant.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "Meyer & Naveh self-management framework; NIDDK dining guidance",
+      "steps": [
+        "Set a short planning window—about five minutes for this challenge.",
+        "Check the restaurant/menu and identify the one or two questions that matter most.",
+        "Choose a backup if you need one, then stop researching."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": "https://doi.org/10.3390/nu13051401",
+      "review_note": "Keep this challenge flagged for expert review before public release. It translates evidence and/or teen lived experience into a real-world self-management activity."
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_004_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_004_V2_OPEN",
+          "type": "opening",
+          "text": "Friends suggest a restaurant you have not planned for. You want enough information to make a useful plan without researching forever.",
+          "next_node_id": "RLC_004_V2_D1"
+        },
+        {
+          "id": "RLC_004_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You quickly identify what the restaurant says about its food.",
+          "next_node_id": "RLC_004_V2_D2"
+        },
+        {
+          "id": "RLC_004_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You narrow the task instead of trying to investigate everything.",
+          "next_node_id": "RLC_004_V2_D2"
+        },
+        {
+          "id": "RLC_004_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You make sure the evening can still work if the food information stays unclear.",
+          "next_node_id": "RLC_004_V2_D2"
+        },
+        {
+          "id": "RLC_004_V2_D1",
+          "type": "decision",
+          "text": "You start a short planning window. What do you focus on first?",
+          "choices": [
+            {
+              "id": "RLC_004_V2_D1_C1",
+              "text": "Restaurant/menu information",
+              "next_node_id": "RLC_004_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_004_V2_D1_C2",
+              "text": "The one or two questions that matter most",
+              "next_node_id": "RLC_004_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_004_V2_D1_C3",
+              "text": "A backup plan",
+              "next_node_id": "RLC_004_V2_D1_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_004_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You focus on the missing information.",
+          "next_node_id": "RLC_004_V2_D3"
+        },
+        {
+          "id": "RLC_004_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "You use the rest of your planning window for a targeted check.",
+          "next_node_id": "RLC_004_V2_D3"
+        },
+        {
+          "id": "RLC_004_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You decide you have reached your planning limit for now.",
+          "next_node_id": "RLC_004_V2_D3"
+        },
+        {
+          "id": "RLC_004_V2_D2_AFTER4",
+          "type": "consequence",
+          "text": "You separate joining the event from making the food decision now.",
+          "next_node_id": "RLC_004_V2_D3"
+        },
+        {
+          "id": "RLC_004_V2_D2",
+          "type": "decision",
+          "text": "You find a gluten-free option listed, but preparation details are unclear. What next?",
+          "choices": [
+            {
+              "id": "RLC_004_V2_D2_C1",
+              "text": "Ask about preparation",
+              "next_node_id": "RLC_004_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_004_V2_D2_C2",
+              "text": "Check one more trusted source or restaurant detail",
+              "next_node_id": "RLC_004_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_004_V2_D2_C3",
+              "text": "Keep your backup and stop researching",
+              "next_node_id": "RLC_004_V2_D2_AFTER3"
+            },
+            {
+              "id": "RLC_004_V2_D2_C4",
+              "text": "Decide about food when you have more information later",
+              "next_node_id": "RLC_004_V2_D2_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_004_V2_D3_AFTER1",
+          "type": "consequence",
+          "text": "You stop researching and carry a flexible plan forward.",
+          "next_node_id": "RLC_004_V2_END"
+        },
+        {
+          "id": "RLC_004_V2_D3_AFTER2",
+          "type": "consequence",
+          "text": "You leave one question for the real situation.",
+          "next_node_id": "RLC_004_V2_END"
+        },
+        {
+          "id": "RLC_004_V2_D3_AFTER3",
+          "type": "consequence",
+          "text": "You decide the available information is not enough for this plan.",
+          "next_node_id": "RLC_004_V2_END"
+        },
+        {
+          "id": "RLC_004_V2_D3",
+          "type": "decision",
+          "text": "Your planning time is up and you still do not have perfect certainty. What do you do?",
+          "choices": [
+            {
+              "id": "RLC_004_V2_D3_C1",
+              "text": "Use the plan and backup you made",
+              "next_node_id": "RLC_004_V2_D3_AFTER1"
+            },
+            {
+              "id": "RLC_004_V2_D3_C2",
+              "text": "Ask when you arrive before deciding",
+              "next_node_id": "RLC_004_V2_D3_AFTER2"
+            },
+            {
+              "id": "RLC_004_V2_D3_C3",
+              "text": "Choose another option",
+              "next_node_id": "RLC_004_V2_D3_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_004_V2_END",
+          "type": "ending",
+          "text": "You practiced focused planning: identify what matters, make a backup if useful, and know when to stop researching.",
+          "skill_tags": [
+            "MANAGE",
+            "CHECK",
+            "PREPARE",
+            "TRUST"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "content_id": "9a57283f-319b-518e-ae8a-13c0b2c63632",
+    "challenge_id": "RLC_005",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": false,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_005",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "MANAGE",
+      "skill": "Planning ahead",
+      "difficulty": "Medium",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_005",
+      "related_practice_id": "PRACTICE_011",
+      "source_type": "peer_reviewed",
+      "review_status": "expert_review",
+      "expert_reviewed": "false",
+      "medical_review_required": "false",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Plan One Social Event",
+      "instruction": "Use My C-Day skills for one real upcoming event involving food.",
+      "safety_note": "The goal is preparation and participation—not a perfect event.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "Meyer & Naveh (2021) Plan My C-Day framework",
+      "steps": [
+        "Ask: What is the plan?",
+        "Decide what you want to check, prepare, take, ask, or say.",
+        "Add a backup if it would make the event easier.",
+        "Then go to the event and use whichever parts of your plan you need."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": "https://doi.org/10.3390/nu13051401",
+      "review_note": "Keep this challenge flagged for expert review before public release. It translates evidence and/or teen lived experience into a real-world self-management activity."
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_005_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_005_V2_OPEN",
+          "type": "opening",
+          "text": "You have a real social event coming up that involves food.",
+          "next_node_id": "RLC_005_V2_D1"
+        },
+        {
+          "id": "RLC_005_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You clarify where, when, and what the food situation may be.",
+          "next_node_id": "RLC_005_V2_D2"
+        },
+        {
+          "id": "RLC_005_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You identify the information that matters to you.",
+          "next_node_id": "RLC_005_V2_D2"
+        },
+        {
+          "id": "RLC_005_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You focus on what you can control before the event.",
+          "next_node_id": "RLC_005_V2_D2"
+        },
+        {
+          "id": "RLC_005_V2_D1_AFTER4",
+          "type": "consequence",
+          "text": "You prepare for communication.",
+          "next_node_id": "RLC_005_V2_D2"
+        },
+        {
+          "id": "RLC_005_V2_D1",
+          "type": "decision",
+          "text": "What do you want to understand first?",
+          "choices": [
+            {
+              "id": "RLC_005_V2_D1_C1",
+              "text": "What is the plan?",
+              "next_node_id": "RLC_005_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_005_V2_D1_C2",
+              "text": "What do I need to check?",
+              "next_node_id": "RLC_005_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_005_V2_D1_C3",
+              "text": "What could I prepare or take?",
+              "next_node_id": "RLC_005_V2_D1_AFTER3"
+            },
+            {
+              "id": "RLC_005_V2_D1_C4",
+              "text": "What might I need to ask or say?",
+              "next_node_id": "RLC_005_V2_D1_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_005_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You build flexibility into the event plan.",
+          "next_node_id": "RLC_005_V2_D3"
+        },
+        {
+          "id": "RLC_005_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "You decide what you may need to ask later.",
+          "next_node_id": "RLC_005_V2_D3"
+        },
+        {
+          "id": "RLC_005_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You reduce dependence on uncertain details.",
+          "next_node_id": "RLC_005_V2_D3"
+        },
+        {
+          "id": "RLC_005_V2_D2_AFTER4",
+          "type": "consequence",
+          "text": "You can still attend without deciding everything now.",
+          "next_node_id": "RLC_005_V2_D3"
+        },
+        {
+          "id": "RLC_005_V2_D2",
+          "type": "decision",
+          "text": "You learn that some details may not be clear until the event. What would help?",
+          "choices": [
+            {
+              "id": "RLC_005_V2_D2_C1",
+              "text": "Add a backup",
+              "next_node_id": "RLC_005_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_005_V2_D2_C2",
+              "text": "Prepare one question",
+              "next_node_id": "RLC_005_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_005_V2_D2_C3",
+              "text": "Bring or prepare something",
+              "next_node_id": "RLC_005_V2_D2_AFTER3"
+            },
+            {
+              "id": "RLC_005_V2_D2_C4",
+              "text": "Leave the food decision open",
+              "next_node_id": "RLC_005_V2_D2_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_005_V2_D3_AFTER1",
+          "type": "consequence",
+          "text": "You adapt instead of starting over.",
+          "next_node_id": "RLC_005_V2_END"
+        },
+        {
+          "id": "RLC_005_V2_D3_AFTER2",
+          "type": "consequence",
+          "text": "You switch plans.",
+          "next_node_id": "RLC_005_V2_END"
+        },
+        {
+          "id": "RLC_005_V2_D3_AFTER3",
+          "type": "consequence",
+          "text": "You respond to the new situation.",
+          "next_node_id": "RLC_005_V2_END"
+        },
+        {
+          "id": "RLC_005_V2_D3_AFTER4",
+          "type": "consequence",
+          "text": "You protect participation as well as food safety.",
+          "next_node_id": "RLC_005_V2_END"
+        },
+        {
+          "id": "RLC_005_V2_D3",
+          "type": "decision",
+          "text": "At the event, part of the plan changes. What do you do?",
+          "choices": [
+            {
+              "id": "RLC_005_V2_D3_C1",
+              "text": "Use the part of your plan that still works",
+              "next_node_id": "RLC_005_V2_D3_AFTER1"
+            },
+            {
+              "id": "RLC_005_V2_D3_C2",
+              "text": "Use your backup",
+              "next_node_id": "RLC_005_V2_D3_AFTER2"
+            },
+            {
+              "id": "RLC_005_V2_D3_C3",
+              "text": "Ask for updated information",
+              "next_node_id": "RLC_005_V2_D3_AFTER3"
+            },
+            {
+              "id": "RLC_005_V2_D3_C4",
+              "text": "Stay involved even if the food part changes",
+              "next_node_id": "RLC_005_V2_D3_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_005_V2_END",
+          "type": "ending",
+          "text": "You planned for a real event and adapted as needed. The goal was preparation and participation — not perfection.",
+          "skill_tags": [
+            "MANAGE",
+            "PREPARE",
+            "ASK",
+            "SAY",
+            "LIVE"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "content_id": "63ed77b2-2c42-56a8-995e-34b36d5e6297",
+    "challenge_id": "RLC_006",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": false,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_006",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "SPEAK",
+      "skill": "Self-advocacy",
+      "difficulty": "Easy",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_009",
+      "related_practice_id": "PRACTICE_008",
+      "source_type": "authoritative_guidance",
+      "review_status": "expert_review",
+      "expert_reviewed": "false",
+      "medical_review_required": "false",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Ask One Question",
+      "instruction": "The next time you are checking food away from home, ask one question that helps you make your decision.",
+      "safety_note": "You do not have to eat the food to complete this challenge. The skill is asking the question.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "NIDDK dining guidance; teen-facing extension",
+      "steps": [
+        "Try: “How is this prepared?”",
+        "Or: “Is that cooked in a shared fryer?”",
+        "Or: “Could I see the package?”",
+        "Or use your own question."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": "https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease/eating-diet-nutrition",
+      "review_note": "Keep this challenge flagged for expert review before public release. It translates evidence and/or teen lived experience into a real-world self-management activity."
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_006_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_006_V2_OPEN",
+          "type": "opening",
+          "text": "You are checking food away from home and one detail would help you decide what to do next.",
+          "next_node_id": "RLC_006_V2_D1"
+        },
+        {
+          "id": "RLC_006_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You ask about preparation.",
+          "next_node_id": "RLC_006_V2_D2"
+        },
+        {
+          "id": "RLC_006_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You ask about a specific cross-contact point.",
+          "next_node_id": "RLC_006_V2_D2"
+        },
+        {
+          "id": "RLC_006_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You ask to see the source information yourself.",
+          "next_node_id": "RLC_006_V2_D2"
+        },
+        {
+          "id": "RLC_006_V2_D1_AFTER4",
+          "type": "consequence",
+          "text": "You ask the question that fits the situation.",
+          "next_node_id": "RLC_006_V2_D2"
+        },
+        {
+          "id": "RLC_006_V2_D1",
+          "type": "decision",
+          "text": "What kind of question would help most?",
+          "choices": [
+            {
+              "id": "RLC_006_V2_D1_C1",
+              "text": "“How is this prepared?”",
+              "next_node_id": "RLC_006_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_006_V2_D1_C2",
+              "text": "“Is that cooked in a shared fryer?”",
+              "next_node_id": "RLC_006_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_006_V2_D1_C3",
+              "text": "“Could I see the package?”",
+              "next_node_id": "RLC_006_V2_D1_AFTER3"
+            },
+            {
+              "id": "RLC_006_V2_D1_C4",
+              "text": "Use your own question",
+              "next_node_id": "RLC_006_V2_D1_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_006_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You clarify the missing piece.",
+          "next_node_id": "RLC_006_V2_END"
+        },
+        {
+          "id": "RLC_006_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "You stop without guessing.",
+          "next_node_id": "RLC_006_V2_END"
+        },
+        {
+          "id": "RLC_006_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You make a decision without needing the original food to work.",
+          "next_node_id": "RLC_006_V2_END"
+        },
+        {
+          "id": "RLC_006_V2_D2",
+          "type": "decision",
+          "text": "The answer is incomplete. What do you want to do?",
+          "choices": [
+            {
+              "id": "RLC_006_V2_D2_C1",
+              "text": "Ask one follow-up",
+              "next_node_id": "RLC_006_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_006_V2_D2_C2",
+              "text": "Decide you need more information",
+              "next_node_id": "RLC_006_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_006_V2_D2_C3",
+              "text": "Choose another option or use a backup",
+              "next_node_id": "RLC_006_V2_D2_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_006_V2_END",
+          "type": "ending",
+          "text": "You practiced asking for information that helps you make your own decision.",
+          "skill_tags": [
+            "SPEAK",
+            "ASK",
+            "TRUST"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "content_id": "4906f52b-7698-56d6-a5de-c4280fd7f2e9",
+    "challenge_id": "RLC_007",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": false,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_007",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "SPEAK",
+      "skill": "Communication",
+      "difficulty": "Easy",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_008",
+      "related_practice_id": "PRACTICE_010",
+      "source_type": "behavioral_extension",
+      "review_status": "expert_review",
+      "expert_reviewed": "false",
+      "medical_review_required": "false",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Explain Celiac Your Way",
+      "instruction": "Use your own short celiac explanation with one person when it is useful.",
+      "safety_note": "You do not owe anyone your full medical story.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "NIDDK factual basis; teen self-advocacy extension",
+      "steps": [
+        "It can be one sentence or a 20-second explanation.",
+        "You can explain the medical need, what you need in that situation, or both.",
+        "You decide how much personal information to share."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": null,
+      "review_note": "Keep this challenge flagged for expert review before public release. It translates evidence and/or teen lived experience into a real-world self-management activity."
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_007_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_007_V2_OPEN",
+          "type": "opening",
+          "text": "Someone asks why you need something different around food.",
+          "next_node_id": "RLC_007_V2_D1"
+        },
+        {
+          "id": "RLC_007_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You give the shortest useful explanation.",
+          "next_node_id": "RLC_007_V2_D2"
+        },
+        {
+          "id": "RLC_007_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You add a little context.",
+          "next_node_id": "RLC_007_V2_D2"
+        },
+        {
+          "id": "RLC_007_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You keep the focus on the situation.",
+          "next_node_id": "RLC_007_V2_D2"
+        },
+        {
+          "id": "RLC_007_V2_D1_AFTER4",
+          "type": "consequence",
+          "text": "You keep your personal information private.",
+          "next_node_id": "RLC_007_V2_D2"
+        },
+        {
+          "id": "RLC_007_V2_D1",
+          "type": "decision",
+          "text": "How much do you want to explain?",
+          "choices": [
+            {
+              "id": "RLC_007_V2_D1_C1",
+              "text": "One sentence",
+              "next_node_id": "RLC_007_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_007_V2_D1_C2",
+              "text": "A quick 20-second explanation",
+              "next_node_id": "RLC_007_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_007_V2_D1_C3",
+              "text": "Only explain what you need right now",
+              "next_node_id": "RLC_007_V2_D1_AFTER3"
+            },
+            {
+              "id": "RLC_007_V2_D1_C4",
+              "text": "Say you would rather not explain more",
+              "next_node_id": "RLC_007_V2_D1_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_007_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You share only what you are comfortable sharing.",
+          "next_node_id": "RLC_007_V2_END"
+        },
+        {
+          "id": "RLC_007_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "You bring the conversation back to the practical need.",
+          "next_node_id": "RLC_007_V2_END"
+        },
+        {
+          "id": "RLC_007_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You set a boundary.",
+          "next_node_id": "RLC_007_V2_END"
+        },
+        {
+          "id": "RLC_007_V2_D2",
+          "type": "decision",
+          "text": "They ask a follow-up question. What feels right?",
+          "choices": [
+            {
+              "id": "RLC_007_V2_D2_C1",
+              "text": "Answer briefly",
+              "next_node_id": "RLC_007_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_007_V2_D2_C2",
+              "text": "Redirect to what would help",
+              "next_node_id": "RLC_007_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_007_V2_D2_C3",
+              "text": "Say you do not want to get into more detail",
+              "next_node_id": "RLC_007_V2_D2_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_007_V2_END",
+          "type": "ending",
+          "text": "You practiced explaining celiac in a way that fits you — including deciding how much not to share.",
+          "skill_tags": [
+            "SPEAK",
+            "SAY",
+            "TRUST"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "content_id": "d5d163ed-a34e-5d0f-b737-3c7850c0a003",
+    "challenge_id": "RLC_008",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": false,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_008",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "SPEAK",
+      "skill": "Support / communication",
+      "difficulty": "Medium",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_009",
+      "related_practice_id": "PRACTICE_027",
+      "source_type": "behavioral_extension",
+      "review_status": "expert_review",
+      "expert_reviewed": "false",
+      "medical_review_required": "false",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Tell Someone What Helps",
+      "instruction": "Tell one person one concrete thing that makes celiac easier for you.",
+      "safety_note": "Support works better when people know what you actually need.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "Teen lived-experience synthesis",
+      "steps": [
+        "Maybe a friend can help check restaurants.",
+        "Maybe you want people to ask instead of assuming what is safe.",
+        "Maybe you want someone not to make a big deal if you decide not to eat.",
+        "Choose something that would genuinely help you."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": null,
+      "review_note": "Keep this challenge flagged for expert review before public release. It translates evidence and/or teen lived experience into a real-world self-management activity."
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_008_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_008_V2_OPEN",
+          "type": "opening",
+          "text": "Someone you trust wants to be helpful, but they are not sure what actually makes things easier for you.",
+          "next_node_id": "RLC_008_V2_D1"
+        },
+        {
+          "id": "RLC_008_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You give them a concrete planning role.",
+          "next_node_id": "RLC_008_V2_D2"
+        },
+        {
+          "id": "RLC_008_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You ask for information and choice rather than assumptions.",
+          "next_node_id": "RLC_008_V2_D2"
+        },
+        {
+          "id": "RLC_008_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You explain how they can reduce social pressure.",
+          "next_node_id": "RLC_008_V2_D2"
+        },
+        {
+          "id": "RLC_008_V2_D1_AFTER4",
+          "type": "consequence",
+          "text": "You define support in your own way.",
+          "next_node_id": "RLC_008_V2_D2"
+        },
+        {
+          "id": "RLC_008_V2_D1",
+          "type": "decision",
+          "text": "What would be most useful to tell them?",
+          "choices": [
+            {
+              "id": "RLC_008_V2_D1_C1",
+              "text": "Help me check restaurant options",
+              "next_node_id": "RLC_008_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_008_V2_D1_C2",
+              "text": "Ask instead of assuming what is okay for me",
+              "next_node_id": "RLC_008_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_008_V2_D1_C3",
+              "text": "Please don’t make a big deal if I decide not to eat",
+              "next_node_id": "RLC_008_V2_D1_AFTER3"
+            },
+            {
+              "id": "RLC_008_V2_D1_C4",
+              "text": "Something else that genuinely helps me",
+              "next_node_id": "RLC_008_V2_D1_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_008_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You make the request easier to understand.",
+          "next_node_id": "RLC_008_V2_END"
+        },
+        {
+          "id": "RLC_008_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "One clear request can be enough.",
+          "next_node_id": "RLC_008_V2_END"
+        },
+        {
+          "id": "RLC_008_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You turn support into collaboration.",
+          "next_node_id": "RLC_008_V2_END"
+        },
+        {
+          "id": "RLC_008_V2_D2",
+          "type": "decision",
+          "text": "They respond, “I didn’t know that.” What next?",
+          "choices": [
+            {
+              "id": "RLC_008_V2_D2_C1",
+              "text": "Tell them one example",
+              "next_node_id": "RLC_008_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_008_V2_D2_C2",
+              "text": "Thank them and leave it there",
+              "next_node_id": "RLC_008_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_008_V2_D2_C3",
+              "text": "Ask what would make it easier for them to help",
+              "next_node_id": "RLC_008_V2_D2_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_008_V2_END",
+          "type": "ending",
+          "text": "You practiced making support concrete instead of expecting someone to guess what you need.",
+          "skill_tags": [
+            "SPEAK",
+            "COLLABORATE",
+            "SAY"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "content_id": "095a7e86-d995-57a1-9bce-aab9a7b4080f",
+    "challenge_id": "RLC_009",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": false,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_009",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "TRUST",
+      "skill": "Decision-making under uncertainty",
+      "difficulty": "Medium",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_010",
+      "related_practice_id": "PRACTICE_023",
+      "source_type": "behavioral_extension",
+      "review_status": "expert_review",
+      "expert_reviewed": "false",
+      "medical_review_required": "false",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Gather the Information You Need",
+      "instruction": "In one real food situation, identify what information you need before deciding.",
+      "safety_note": "The challenge is gathering useful information—not reaching a required yes/no food decision.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "Beyond Celiac cross-contact guidance; teen lived-experience extension",
+      "steps": [
+        "Start with what you already know.",
+        "Name the missing question: ingredients, preparation, serving, source, packaging, or something else relevant.",
+        "Ask for that information if you want to continue evaluating the food.",
+        "Then make your own decision."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": null,
+      "review_note": "Keep this challenge flagged for expert review before public release. It translates evidence and/or teen lived experience into a real-world self-management activity."
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_009_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_009_V2_OPEN",
+          "type": "opening",
+          "text": "You are considering a food in a real situation. You know some things, but not enough yet to decide.",
+          "next_node_id": "RLC_009_V2_D1"
+        },
+        {
+          "id": "RLC_009_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You identify an ingredient question.",
+          "next_node_id": "RLC_009_V2_D2"
+        },
+        {
+          "id": "RLC_009_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You identify a preparation question.",
+          "next_node_id": "RLC_009_V2_D2"
+        },
+        {
+          "id": "RLC_009_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You identify a serving or handling question.",
+          "next_node_id": "RLC_009_V2_D2"
+        },
+        {
+          "id": "RLC_009_V2_D1_AFTER4",
+          "type": "consequence",
+          "text": "You want to see where the information came from.",
+          "next_node_id": "RLC_009_V2_D2"
+        },
+        {
+          "id": "RLC_009_V2_D1_AFTER5",
+          "type": "consequence",
+          "text": "You name the missing information yourself.",
+          "next_node_id": "RLC_009_V2_D2"
+        },
+        {
+          "id": "RLC_009_V2_D1",
+          "type": "decision",
+          "text": "What information is missing?",
+          "choices": [
+            {
+              "id": "RLC_009_V2_D1_C1",
+              "text": "Ingredients",
+              "next_node_id": "RLC_009_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_009_V2_D1_C2",
+              "text": "Preparation",
+              "next_node_id": "RLC_009_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_009_V2_D1_C3",
+              "text": "Serving / cross-contact",
+              "next_node_id": "RLC_009_V2_D1_AFTER3"
+            },
+            {
+              "id": "RLC_009_V2_D1_C4",
+              "text": "Packaging or source",
+              "next_node_id": "RLC_009_V2_D1_AFTER4"
+            },
+            {
+              "id": "RLC_009_V2_D1_C5",
+              "text": "Something else",
+              "next_node_id": "RLC_009_V2_D1_AFTER5"
+            }
+          ]
+        },
+        {
+          "id": "RLC_009_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You request the missing detail.",
+          "next_node_id": "RLC_009_V2_D3"
+        },
+        {
+          "id": "RLC_009_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "You look for the information directly.",
+          "next_node_id": "RLC_009_V2_D3"
+        },
+        {
+          "id": "RLC_009_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You seek additional information.",
+          "next_node_id": "RLC_009_V2_D3"
+        },
+        {
+          "id": "RLC_009_V2_D2_AFTER4",
+          "type": "consequence",
+          "text": "You stop because you do not need to resolve every uncertainty.",
+          "next_node_id": "RLC_009_V2_D3"
+        },
+        {
+          "id": "RLC_009_V2_D2",
+          "type": "decision",
+          "text": "How do you want to get that information?",
+          "choices": [
+            {
+              "id": "RLC_009_V2_D2_C1",
+              "text": "Ask someone",
+              "next_node_id": "RLC_009_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_009_V2_D2_C2",
+              "text": "Check the current package/source",
+              "next_node_id": "RLC_009_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_009_V2_D2_C3",
+              "text": "Use another trusted source",
+              "next_node_id": "RLC_009_V2_D2_AFTER3"
+            },
+            {
+              "id": "RLC_009_V2_D2_C4",
+              "text": "Decide not to continue evaluating it",
+              "next_node_id": "RLC_009_V2_D2_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_009_V2_D3_AFTER1",
+          "type": "consequence",
+          "text": "You try to close the remaining gap.",
+          "next_node_id": "RLC_009_V2_END"
+        },
+        {
+          "id": "RLC_009_V2_D3_AFTER2",
+          "type": "consequence",
+          "text": "You make a practical decision without resolving everything.",
+          "next_node_id": "RLC_009_V2_END"
+        },
+        {
+          "id": "RLC_009_V2_D3_AFTER3",
+          "type": "consequence",
+          "text": "You choose not to proceed.",
+          "next_node_id": "RLC_009_V2_END"
+        },
+        {
+          "id": "RLC_009_V2_D3_AFTER4",
+          "type": "consequence",
+          "text": "You leave the question open.",
+          "next_node_id": "RLC_009_V2_END"
+        },
+        {
+          "id": "RLC_009_V2_D3",
+          "type": "decision",
+          "text": "You get some information, but it is still incomplete. What now?",
+          "choices": [
+            {
+              "id": "RLC_009_V2_D3_C1",
+              "text": "Ask one more focused question",
+              "next_node_id": "RLC_009_V2_D3_AFTER1"
+            },
+            {
+              "id": "RLC_009_V2_D3_C2",
+              "text": "Use a backup or choose something else",
+              "next_node_id": "RLC_009_V2_D3_AFTER2"
+            },
+            {
+              "id": "RLC_009_V2_D3_C3",
+              "text": "Decide not to eat it",
+              "next_node_id": "RLC_009_V2_D3_AFTER3"
+            },
+            {
+              "id": "RLC_009_V2_D3_C4",
+              "text": "Pause the decision until better information is available",
+              "next_node_id": "RLC_009_V2_D3_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_009_V2_END",
+          "type": "ending",
+          "text": "You practiced identifying what you needed to know and gathering useful information without requiring a particular yes/no food decision.",
+          "skill_tags": [
+            "TRUST",
+            "CHECK",
+            "ASK",
+            "MANAGE"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "content_id": "1dcd6eb3-eb35-54e1-977a-731af6152890",
+    "challenge_id": "RLC_010",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": true,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_010",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "TRUST",
+      "skill": "Confidence / autonomy",
+      "difficulty": "Hard",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_011",
+      "related_practice_id": "PRACTICE_024",
+      "source_type": "behavioral_extension",
+      "review_status": "clinical_review",
+      "expert_reviewed": "false",
+      "medical_review_required": "true",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Make Your Own Decision",
+      "instruction": "Use the information available in one real situation and make the choice that feels appropriate to you.",
+      "safety_note": "Every one of these can complete the challenge. My C-Day never rewards eating an uncertain food or overriding discomfort.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "Teen lived-experience synthesis; expert/clinical review",
+      "steps": [
+        "You might decide to eat.",
+        "You might ask another question.",
+        "You might choose something else.",
+        "You might use a backup or decide not to eat."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": null,
+      "review_note": "Keep this challenge flagged for expert review before public release. It translates evidence and/or teen lived experience into a real-world self-management activity.",
+      "clinical_safety_note": "Do not frame eating as the brave/correct outcome. Do not diagnose anxiety or direct exposure. Preserve user autonomy and allow choosing not to eat as full completion."
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_010_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_010_V2_OPEN",
+          "type": "opening",
+          "text": "You have gathered information about a food situation. Some things are clear; some may still feel uncertain. The decision is yours.",
+          "next_node_id": "RLC_010_V2_D1"
+        },
+        {
+          "id": "RLC_010_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You decide one more piece of information could help.",
+          "next_node_id": "RLC_010_V2_D2"
+        },
+        {
+          "id": "RLC_010_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You make a different food choice.",
+          "next_node_id": "RLC_010_V2_D2"
+        },
+        {
+          "id": "RLC_010_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You switch to the plan you already prepared.",
+          "next_node_id": "RLC_010_V2_D2"
+        },
+        {
+          "id": "RLC_010_V2_D1_AFTER4",
+          "type": "consequence",
+          "text": "You decide participation does not require eating.",
+          "next_node_id": "RLC_010_V2_D2"
+        },
+        {
+          "id": "RLC_010_V2_D1_AFTER5",
+          "type": "consequence",
+          "text": "You choose to look at the available information again before deciding.",
+          "next_node_id": "RLC_010_V2_D2"
+        },
+        {
+          "id": "RLC_010_V2_D1",
+          "type": "decision",
+          "text": "What feels like the right next step for you?",
+          "choices": [
+            {
+              "id": "RLC_010_V2_D1_C1",
+              "text": "Ask another question",
+              "next_node_id": "RLC_010_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_010_V2_D1_C2",
+              "text": "Choose something else",
+              "next_node_id": "RLC_010_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_010_V2_D1_C3",
+              "text": "Use your backup",
+              "next_node_id": "RLC_010_V2_D1_AFTER3"
+            },
+            {
+              "id": "RLC_010_V2_D1_C4",
+              "text": "Decide not to eat",
+              "next_node_id": "RLC_010_V2_D1_AFTER4"
+            },
+            {
+              "id": "RLC_010_V2_D1_C5",
+              "text": "Continue evaluating the food",
+              "next_node_id": "RLC_010_V2_D1_AFTER5"
+            }
+          ]
+        },
+        {
+          "id": "RLC_010_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You separate reassurance from actual information.",
+          "next_node_id": "RLC_010_V2_D3"
+        },
+        {
+          "id": "RLC_010_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "You keep ownership of the decision.",
+          "next_node_id": "RLC_010_V2_D3"
+        },
+        {
+          "id": "RLC_010_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You make your decision without needing agreement.",
+          "next_node_id": "RLC_010_V2_D3"
+        },
+        {
+          "id": "RLC_010_V2_D2_AFTER4",
+          "type": "consequence",
+          "text": "You move on without debating.",
+          "next_node_id": "RLC_010_V2_D3"
+        },
+        {
+          "id": "RLC_010_V2_D2",
+          "type": "decision",
+          "text": "Someone says, “It should be fine.” How do you want to respond?",
+          "choices": [
+            {
+              "id": "RLC_010_V2_D2_C1",
+              "text": "Ask what they know",
+              "next_node_id": "RLC_010_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_010_V2_D2_C2",
+              "text": "Say you’re still deciding",
+              "next_node_id": "RLC_010_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_010_V2_D2_C3",
+              "text": "Say you’re choosing something else",
+              "next_node_id": "RLC_010_V2_D2_AFTER3"
+            },
+            {
+              "id": "RLC_010_V2_D2_C4",
+              "text": "Thank them and use your backup / not eat",
+              "next_node_id": "RLC_010_V2_D2_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_010_V2_D3_AFTER1",
+          "type": "consequence",
+          "text": "You separate social participation from the food decision.",
+          "next_node_id": "RLC_010_V2_END"
+        },
+        {
+          "id": "RLC_010_V2_D3_AFTER2",
+          "type": "consequence",
+          "text": "You ask for support.",
+          "next_node_id": "RLC_010_V2_END"
+        },
+        {
+          "id": "RLC_010_V2_D3_AFTER3",
+          "type": "consequence",
+          "text": "You protect your privacy and attention.",
+          "next_node_id": "RLC_010_V2_END"
+        },
+        {
+          "id": "RLC_010_V2_D3",
+          "type": "decision",
+          "text": "The social plan continues. What matters now?",
+          "choices": [
+            {
+              "id": "RLC_010_V2_D3_C1",
+              "text": "Stay part of the activity",
+              "next_node_id": "RLC_010_V2_D3_AFTER1"
+            },
+            {
+              "id": "RLC_010_V2_D3_C2",
+              "text": "Tell someone what would help",
+              "next_node_id": "RLC_010_V2_D3_AFTER2"
+            },
+            {
+              "id": "RLC_010_V2_D3_C3",
+              "text": "Move on without discussing it more",
+              "next_node_id": "RLC_010_V2_D3_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_010_V2_END",
+          "type": "ending",
+          "text": "You used the information available and made your own choice. My C-Day does not score eating as braver or better than another appropriate choice.",
+          "skill_tags": [
+            "TRUST",
+            "SPEAK",
+            "LIVE",
+            "MANAGE"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "content_id": "03cdbd0e-df7a-5714-a6b2-258f34db4746",
+    "challenge_id": "RLC_011",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": false,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_011",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "LIVE",
+      "skill": "Planning fatigue",
+      "difficulty": "Medium",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_014",
+      "related_practice_id": "PRACTICE_020",
+      "source_type": "behavioral_extension",
+      "review_status": "expert_review",
+      "expert_reviewed": "false",
+      "medical_review_required": "false",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Make a Low-Energy Plan",
+      "instruction": "Choose one celiac situation this week and intentionally use the simplest workable strategy.",
+      "safety_note": "Lower effort does not mean lower-quality self-management.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "Teen lived-experience synthesis",
+      "steps": [
+        "Use a familiar food or place.",
+        "Repeat a plan that already works.",
+        "Use a backup instead of solving every uncertainty.",
+        "Ask someone else to help with part of the planning."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": null,
+      "review_note": "Keep this challenge flagged for expert review before public release. It translates evidence and/or teen lived experience into a real-world self-management activity."
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_011_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_011_V2_OPEN",
+          "type": "opening",
+          "text": "You have another celiac-related plan to make, but you do not want to spend a lot of energy on it.",
+          "next_node_id": "RLC_011_V2_D1"
+        },
+        {
+          "id": "RLC_011_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You reduce the number of new questions.",
+          "next_node_id": "RLC_011_V2_D2"
+        },
+        {
+          "id": "RLC_011_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You reuse something you have already figured out.",
+          "next_node_id": "RLC_011_V2_D2"
+        },
+        {
+          "id": "RLC_011_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You decide not to solve every uncertainty.",
+          "next_node_id": "RLC_011_V2_D2"
+        },
+        {
+          "id": "RLC_011_V2_D1_AFTER4",
+          "type": "consequence",
+          "text": "You share part of the workload.",
+          "next_node_id": "RLC_011_V2_D2"
+        },
+        {
+          "id": "RLC_011_V2_D1",
+          "type": "decision",
+          "text": "What is the simplest workable starting point?",
+          "choices": [
+            {
+              "id": "RLC_011_V2_D1_C1",
+              "text": "Use a familiar food or place",
+              "next_node_id": "RLC_011_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_011_V2_D1_C2",
+              "text": "Repeat a plan that already works",
+              "next_node_id": "RLC_011_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_011_V2_D1_C3",
+              "text": "Use a backup",
+              "next_node_id": "RLC_011_V2_D1_AFTER3"
+            },
+            {
+              "id": "RLC_011_V2_D1_C4",
+              "text": "Ask someone to help",
+              "next_node_id": "RLC_011_V2_D1_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_011_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You keep the task small.",
+          "next_node_id": "RLC_011_V2_D3"
+        },
+        {
+          "id": "RLC_011_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "You protect your energy.",
+          "next_node_id": "RLC_011_V2_D3"
+        },
+        {
+          "id": "RLC_011_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You continue sharing the workload.",
+          "next_node_id": "RLC_011_V2_D3"
+        },
+        {
+          "id": "RLC_011_V2_D2_AFTER4",
+          "type": "consequence",
+          "text": "You do not have to solve everything immediately.",
+          "next_node_id": "RLC_011_V2_D3"
+        },
+        {
+          "id": "RLC_011_V2_D2",
+          "type": "decision",
+          "text": "A new detail appears. What do you do?",
+          "choices": [
+            {
+              "id": "RLC_011_V2_D2_C1",
+              "text": "Handle only the detail that actually matters",
+              "next_node_id": "RLC_011_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_011_V2_D2_C2",
+              "text": "Switch to the backup",
+              "next_node_id": "RLC_011_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_011_V2_D2_C3",
+              "text": "Ask the person helping you to take this part",
+              "next_node_id": "RLC_011_V2_D2_AFTER3"
+            },
+            {
+              "id": "RLC_011_V2_D2_C4",
+              "text": "Decide this plan can wait",
+              "next_node_id": "RLC_011_V2_D2_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_011_V2_D3_AFTER1",
+          "type": "consequence",
+          "text": "You recognize efficiency as a skill.",
+          "next_node_id": "RLC_011_V2_END"
+        },
+        {
+          "id": "RLC_011_V2_D3_AFTER2",
+          "type": "consequence",
+          "text": "You recognize shared work as legitimate.",
+          "next_node_id": "RLC_011_V2_END"
+        },
+        {
+          "id": "RLC_011_V2_D3_AFTER3",
+          "type": "consequence",
+          "text": "You recognize that self-management does not have to consume all your attention.",
+          "next_node_id": "RLC_011_V2_END"
+        },
+        {
+          "id": "RLC_011_V2_D3",
+          "type": "decision",
+          "text": "You notice you spent less time on this than usual. How do you interpret that?",
+          "choices": [
+            {
+              "id": "RLC_011_V2_D3_C1",
+              "text": "The simpler plan worked",
+              "next_node_id": "RLC_011_V2_D3_AFTER1"
+            },
+            {
+              "id": "RLC_011_V2_D3_C2",
+              "text": "I used support well",
+              "next_node_id": "RLC_011_V2_D3_AFTER2"
+            },
+            {
+              "id": "RLC_011_V2_D3_C3",
+              "text": "I protected my energy",
+              "next_node_id": "RLC_011_V2_D3_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_011_V2_END",
+          "type": "ending",
+          "text": "You practiced making celiac management workable with less effort. Lower effort does not mean lower-quality self-management.",
+          "skill_tags": [
+            "LIVE",
+            "MANAGE",
+            "COLLABORATE"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "content_id": "e3678c1b-3e2f-56cb-8f5a-d77a77c0b2b3",
+    "challenge_id": "RLC_012",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": false,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_012",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "LIVE",
+      "skill": "Accepting support",
+      "difficulty": "Medium",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_013",
+      "related_practice_id": "PRACTICE_027",
+      "source_type": "behavioral_extension",
+      "review_status": "expert_review",
+      "expert_reviewed": "false",
+      "medical_review_required": "false",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Let Someone Help",
+      "instruction": "Let one trusted person share one small piece of the celiac workload.",
+      "safety_note": "Independence does not mean doing everything alone.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "Teen lived-experience synthesis; Meyer & Naveh self-management extension",
+      "steps": [
+        "Ask a friend to help look at restaurant options.",
+        "Ask a parent/caregiver to check one detail.",
+        "Ask a teacher or coach to help clarify an event plan.",
+        "Choose a different kind of help that works for you."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": "https://doi.org/10.3390/nu13051401",
+      "review_note": "Keep this challenge flagged for expert review before public release. It translates evidence and/or teen lived experience into a real-world self-management activity."
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_012_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_012_V2_OPEN",
+          "type": "opening",
+          "text": "You have a celiac-related task and someone you trust could take one small part of it.",
+          "next_node_id": "RLC_012_V2_D1"
+        },
+        {
+          "id": "RLC_012_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You share part of the planning.",
+          "next_node_id": "RLC_012_V2_D2"
+        },
+        {
+          "id": "RLC_012_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You delegate one specific task.",
+          "next_node_id": "RLC_012_V2_D2"
+        },
+        {
+          "id": "RLC_012_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You ask the person with access to the information.",
+          "next_node_id": "RLC_012_V2_D2"
+        },
+        {
+          "id": "RLC_012_V2_D1_AFTER4",
+          "type": "consequence",
+          "text": "You choose support that fits your situation.",
+          "next_node_id": "RLC_012_V2_D2"
+        },
+        {
+          "id": "RLC_012_V2_D1",
+          "type": "decision",
+          "text": "What kind of help would actually be useful?",
+          "choices": [
+            {
+              "id": "RLC_012_V2_D1_C1",
+              "text": "A friend checks restaurant options",
+              "next_node_id": "RLC_012_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_012_V2_D1_C2",
+              "text": "A parent/caregiver checks one detail",
+              "next_node_id": "RLC_012_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_012_V2_D1_C3",
+              "text": "A teacher or coach clarifies an event plan",
+              "next_node_id": "RLC_012_V2_D1_AFTER3"
+            },
+            {
+              "id": "RLC_012_V2_D1_C4",
+              "text": "Another kind of help",
+              "next_node_id": "RLC_012_V2_D1_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_012_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You decide it would genuinely help.",
+          "next_node_id": "RLC_012_V2_END"
+        },
+        {
+          "id": "RLC_012_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "You set the boundary you want.",
+          "next_node_id": "RLC_012_V2_END"
+        },
+        {
+          "id": "RLC_012_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You shape the support rather than rejecting it.",
+          "next_node_id": "RLC_012_V2_END"
+        },
+        {
+          "id": "RLC_012_V2_D2",
+          "type": "decision",
+          "text": "They offer to do more than you wanted. What feels right?",
+          "choices": [
+            {
+              "id": "RLC_012_V2_D2_C1",
+              "text": "Accept the extra help",
+              "next_node_id": "RLC_012_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_012_V2_D2_C2",
+              "text": "Keep it to the one task you asked for",
+              "next_node_id": "RLC_012_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_012_V2_D2_C3",
+              "text": "Explain what kind of help works best",
+              "next_node_id": "RLC_012_V2_D2_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_012_V2_END",
+          "type": "ending",
+          "text": "You practiced sharing part of the workload while keeping control over what kind of help you want.",
+          "skill_tags": [
+            "LIVE",
+            "COLLABORATE",
+            "SPEAK"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "content_id": "12619ef7-039b-5084-8361-fd751cfa675f",
+    "challenge_id": "RLC_013",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": false,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_013",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "LIVE",
+      "skill": "Belonging / participation",
+      "difficulty": "Medium",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_013",
+      "related_practice_id": "PRACTICE_016",
+      "source_type": "behavioral_extension",
+      "review_status": "expert_review",
+      "expert_reviewed": "false",
+      "medical_review_required": "false",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Stay Part of the Plan",
+      "instruction": "Find one way to stay socially included even if the food part of an event does not work out the way you hoped.",
+      "safety_note": "You do not need to eat at an event for the social experience to count.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "Teen lived-experience synthesis",
+      "steps": [
+        "Join the activity even if you eat beforehand.",
+        "Use your backup and stay with the group.",
+        "Focus on the non-food part of the event.",
+        "Choose another strategy that keeps you connected."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": null,
+      "review_note": "Keep this challenge flagged for expert review before public release. It translates evidence and/or teen lived experience into a real-world self-management activity."
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_013_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_013_V2_OPEN",
+          "type": "opening",
+          "text": "You are at a social event and the food part is not working out the way you hoped.",
+          "next_node_id": "RLC_013_V2_D1"
+        },
+        {
+          "id": "RLC_013_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You solve the food piece without leaving the social event.",
+          "next_node_id": "RLC_013_V2_D2"
+        },
+        {
+          "id": "RLC_013_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You separate eating from participating.",
+          "next_node_id": "RLC_013_V2_D2"
+        },
+        {
+          "id": "RLC_013_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You shift attention to why you wanted to be there.",
+          "next_node_id": "RLC_013_V2_D2"
+        },
+        {
+          "id": "RLC_013_V2_D1_AFTER4",
+          "type": "consequence",
+          "text": "You define participation for yourself.",
+          "next_node_id": "RLC_013_V2_D2"
+        },
+        {
+          "id": "RLC_013_V2_D1",
+          "type": "decision",
+          "text": "What would help you stay part of the plan?",
+          "choices": [
+            {
+              "id": "RLC_013_V2_D1_C1",
+              "text": "Use your backup and stay with the group",
+              "next_node_id": "RLC_013_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_013_V2_D1_C2",
+              "text": "Eat beforehand / wait and stay for the activity",
+              "next_node_id": "RLC_013_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_013_V2_D1_C3",
+              "text": "Focus on the non-food part",
+              "next_node_id": "RLC_013_V2_D1_AFTER3"
+            },
+            {
+              "id": "RLC_013_V2_D1_C4",
+              "text": "Choose another way to stay connected",
+              "next_node_id": "RLC_013_V2_D1_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_013_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You answer without making it the center of the event.",
+          "next_node_id": "RLC_013_V2_D3"
+        },
+        {
+          "id": "RLC_013_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "You keep the response minimal.",
+          "next_node_id": "RLC_013_V2_D3"
+        },
+        {
+          "id": "RLC_013_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You use the moment to reduce pressure.",
+          "next_node_id": "RLC_013_V2_D3"
+        },
+        {
+          "id": "RLC_013_V2_D2_AFTER4",
+          "type": "consequence",
+          "text": "You do not owe an explanation.",
+          "next_node_id": "RLC_013_V2_D3"
+        },
+        {
+          "id": "RLC_013_V2_D2",
+          "type": "decision",
+          "text": "Someone notices you are not eating and asks about it. What do you want to do?",
+          "choices": [
+            {
+              "id": "RLC_013_V2_D2_C1",
+              "text": "Give a short explanation",
+              "next_node_id": "RLC_013_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_013_V2_D2_C2",
+              "text": "Say you’re all set",
+              "next_node_id": "RLC_013_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_013_V2_D2_C3",
+              "text": "Tell them what would help",
+              "next_node_id": "RLC_013_V2_D2_AFTER3"
+            },
+            {
+              "id": "RLC_013_V2_D2_C4",
+              "text": "Change the subject",
+              "next_node_id": "RLC_013_V2_D2_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_013_V2_D3_AFTER1",
+          "type": "consequence",
+          "text": "You stay connected.",
+          "next_node_id": "RLC_013_V2_END"
+        },
+        {
+          "id": "RLC_013_V2_D3_AFTER2",
+          "type": "consequence",
+          "text": "You use social support.",
+          "next_node_id": "RLC_013_V2_END"
+        },
+        {
+          "id": "RLC_013_V2_D3_AFTER3",
+          "type": "consequence",
+          "text": "You participate in a way that works for you.",
+          "next_node_id": "RLC_013_V2_END"
+        },
+        {
+          "id": "RLC_013_V2_D3",
+          "type": "decision",
+          "text": "The group moves on to the next part of the event. What do you do?",
+          "choices": [
+            {
+              "id": "RLC_013_V2_D3_C1",
+              "text": "Join in",
+              "next_node_id": "RLC_013_V2_D3_AFTER1"
+            },
+            {
+              "id": "RLC_013_V2_D3_C2",
+              "text": "Check in with one friend",
+              "next_node_id": "RLC_013_V2_D3_AFTER2"
+            },
+            {
+              "id": "RLC_013_V2_D3_C3",
+              "text": "Take a break and rejoin later",
+              "next_node_id": "RLC_013_V2_D3_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_013_V2_END",
+          "type": "ending",
+          "text": "The food part changed, but you found a way to protect the social experience. Eating at the event was never required for participation to count.",
+          "skill_tags": [
+            "LIVE",
+            "TRUST",
+            "SPEAK"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "content_id": "36c58daa-acc7-5fbb-a9bd-9f834fcd28d5",
+    "challenge_id": "RLC_014",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": false,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_014",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "LEAD",
+      "skill": "Peer education / advocacy",
+      "difficulty": "Medium",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_015",
+      "related_practice_id": "PRACTICE_029",
+      "source_type": "behavioral_extension",
+      "review_status": "expert_review",
+      "expert_reviewed": "false",
+      "medical_review_required": "false",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Teach One Person Something",
+      "instruction": "Share one useful celiac fact or strategy with someone who is open to learning.",
+      "safety_note": "Teaching is optional. You never have to educate someone just because you have celiac disease.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "NIDDK factual basis; teen advocacy extension",
+      "steps": [
+        "Explain one thing about cross-contact.",
+        "Show a friend one question that helps when choosing a restaurant.",
+        "Correct one misconception if you want to.",
+        "Share a trusted resource instead of explaining it yourself."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": null,
+      "review_note": "Keep this challenge flagged for expert review before public release. It translates evidence and/or teen lived experience into a real-world self-management activity."
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_014_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_014_V2_OPEN",
+          "type": "opening",
+          "text": "Someone you know is genuinely open to learning something that could make celiac situations easier.",
+          "next_node_id": "RLC_014_V2_D1"
+        },
+        {
+          "id": "RLC_014_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You explain one practical concept.",
+          "next_node_id": "RLC_014_V2_D2"
+        },
+        {
+          "id": "RLC_014_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You share a strategy someone can actually use.",
+          "next_node_id": "RLC_014_V2_D2"
+        },
+        {
+          "id": "RLC_014_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You clarify something that matters to you.",
+          "next_node_id": "RLC_014_V2_D2"
+        },
+        {
+          "id": "RLC_014_V2_D1_AFTER4",
+          "type": "consequence",
+          "text": "You let the source do the teaching.",
+          "next_node_id": "RLC_014_V2_D2"
+        },
+        {
+          "id": "RLC_014_V2_D1_AFTER5",
+          "type": "consequence",
+          "text": "You decide not to take on the educator role.",
+          "next_node_id": "RLC_014_V2_D2"
+        },
+        {
+          "id": "RLC_014_V2_D1",
+          "type": "decision",
+          "text": "What do you want to share?",
+          "choices": [
+            {
+              "id": "RLC_014_V2_D1_C1",
+              "text": "One thing about cross-contact",
+              "next_node_id": "RLC_014_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_014_V2_D1_C2",
+              "text": "One useful restaurant question",
+              "next_node_id": "RLC_014_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_014_V2_D1_C3",
+              "text": "Correct one misconception",
+              "next_node_id": "RLC_014_V2_D1_AFTER3"
+            },
+            {
+              "id": "RLC_014_V2_D1_C4",
+              "text": "Share a trusted resource",
+              "next_node_id": "RLC_014_V2_D1_AFTER4"
+            },
+            {
+              "id": "RLC_014_V2_D1_C5",
+              "text": "Nothing right now",
+              "next_node_id": "RLC_014_V2_D1_AFTER5"
+            }
+          ]
+        },
+        {
+          "id": "RLC_014_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You continue the conversation.",
+          "next_node_id": "RLC_014_V2_END"
+        },
+        {
+          "id": "RLC_014_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "You do not have to be the expert.",
+          "next_node_id": "RLC_014_V2_END"
+        },
+        {
+          "id": "RLC_014_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You set a boundary.",
+          "next_node_id": "RLC_014_V2_END"
+        },
+        {
+          "id": "RLC_014_V2_D2",
+          "type": "decision",
+          "text": "They ask another question. What feels right?",
+          "choices": [
+            {
+              "id": "RLC_014_V2_D2_C1",
+              "text": "Answer if you know and want to",
+              "next_node_id": "RLC_014_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_014_V2_D2_C2",
+              "text": "Point them to a trusted resource",
+              "next_node_id": "RLC_014_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_014_V2_D2_C3",
+              "text": "Say that’s all you want to explain today",
+              "next_node_id": "RLC_014_V2_D2_AFTER3"
+            }
+          ]
+        },
+        {
+          "id": "RLC_014_V2_END",
+          "type": "ending",
+          "text": "You practiced advocacy on your terms — including the option not to educate someone yourself.",
+          "skill_tags": [
+            "LEAD",
+            "SPEAK",
+            "TRUST"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "content_id": "c94e7ba6-d730-5d82-87b4-a73e5bdd2ffd",
+    "challenge_id": "RLC_015",
+    "adventure_version": "2.0-prototype.1",
+    "branching_enabled": true,
+    "active": true,
+    "review_status": "needs_review",
+    "expert_review_required": true,
+    "expert_reviewed": false,
+    "medical_review_required": false,
+    "medical_reviewed": false,
+    "source_document": "Plan_My_C-Day_RLC_Branching_Adventure_Content_Architecture_v2.docx",
+    "content_origin": "Proposed V2 branching extension",
+    "original_review_metadata": {
+      "challenge_id": "RLC_015",
+      "content_type": "REAL_LIFE_CHALLENGE",
+      "domain": "LEAD",
+      "skill": "Advocacy / systems thinking",
+      "difficulty": "Hard",
+      "xp_value": "+15",
+      "related_quick_learn_id": "QL_015",
+      "related_practice_id": "PRACTICE_028",
+      "source_type": "behavioral_extension",
+      "review_status": "expert_review",
+      "expert_reviewed": "false",
+      "medical_review_required": "false",
+      "content_version": "1.0",
+      "active": "true",
+      "title": "Make One Thing More Inclusive",
+      "instruction": "Notice one small change that could make a real setting more inclusive for someone with celiac disease.",
+      "safety_note": "Completing the challenge does not require the other person or organization to make the change. Noticing, proposing, or discussing a constructive idea counts.",
+      "completion_message": "You tried the skill. That counts. +15 XP",
+      "source_basis": "Meyer & Naveh self-management framework; teen advocacy extension",
+      "steps": [
+        "Maybe school events could share food information earlier.",
+        "Maybe a club could keep packaged options available.",
+        "Maybe friends could choose restaurants together instead of leaving all the research to one person.",
+        "If you want to, suggest the change to someone who could help."
+      ],
+      "reflection_options": [
+        "😊 Easier than expected",
+        "🙂 Pretty good",
+        "😐 Okay",
+        "😬 Awkward",
+        "🔄 Didn't go as planned"
+      ],
+      "source_url": "https://doi.org/10.3390/nu13051401",
+      "review_note": "Keep this challenge flagged for expert review before public release. It translates evidence and/or teen lived experience into a real-world self-management activity."
+    },
+    "graph": {
+      "format": "rlc_branching_v1",
+      "start_node_id": "RLC_015_V2_OPEN",
+      "nodes": [
+        {
+          "id": "RLC_015_V2_OPEN",
+          "type": "opening",
+          "text": "You notice a small part of school, a club, a team, or a social plan that could be easier for someone managing celiac disease.",
+          "next_node_id": "RLC_015_V2_D1"
+        },
+        {
+          "id": "RLC_015_V2_D1_AFTER1",
+          "type": "consequence",
+          "text": "You identify a planning problem that better information could reduce.",
+          "next_node_id": "RLC_015_V2_D2"
+        },
+        {
+          "id": "RLC_015_V2_D1_AFTER2",
+          "type": "consequence",
+          "text": "You identify a practical backup idea.",
+          "next_node_id": "RLC_015_V2_D2"
+        },
+        {
+          "id": "RLC_015_V2_D1_AFTER3",
+          "type": "consequence",
+          "text": "You identify a way to distribute the research burden.",
+          "next_node_id": "RLC_015_V2_D2"
+        },
+        {
+          "id": "RLC_015_V2_D1_AFTER4",
+          "type": "consequence",
+          "text": "You identify an inclusion idea from your own setting.",
+          "next_node_id": "RLC_015_V2_D2"
+        },
+        {
+          "id": "RLC_015_V2_D1",
+          "type": "decision",
+          "text": "What kind of change do you notice?",
+          "choices": [
+            {
+              "id": "RLC_015_V2_D1_C1",
+              "text": "Share food information earlier",
+              "next_node_id": "RLC_015_V2_D1_AFTER1"
+            },
+            {
+              "id": "RLC_015_V2_D1_C2",
+              "text": "Keep a packaged option available",
+              "next_node_id": "RLC_015_V2_D1_AFTER2"
+            },
+            {
+              "id": "RLC_015_V2_D1_C3",
+              "text": "Choose restaurants together",
+              "next_node_id": "RLC_015_V2_D1_AFTER3"
+            },
+            {
+              "id": "RLC_015_V2_D1_C4",
+              "text": "Another small change",
+              "next_node_id": "RLC_015_V2_D1_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_015_V2_D2_AFTER1",
+          "type": "consequence",
+          "text": "You move from noticing to proposing.",
+          "next_node_id": "RLC_015_V2_D3"
+        },
+        {
+          "id": "RLC_015_V2_D2_AFTER2",
+          "type": "consequence",
+          "text": "You refine the idea with support.",
+          "next_node_id": "RLC_015_V2_D3"
+        },
+        {
+          "id": "RLC_015_V2_D2_AFTER3",
+          "type": "consequence",
+          "text": "You do not have to act immediately.",
+          "next_node_id": "RLC_015_V2_D3"
+        },
+        {
+          "id": "RLC_015_V2_D2_AFTER4",
+          "type": "consequence",
+          "text": "Recognizing a systems issue still counts.",
+          "next_node_id": "RLC_015_V2_D3"
+        },
+        {
+          "id": "RLC_015_V2_D2",
+          "type": "decision",
+          "text": "What do you want to do with the idea?",
+          "choices": [
+            {
+              "id": "RLC_015_V2_D2_C1",
+              "text": "Suggest it to someone who could help",
+              "next_node_id": "RLC_015_V2_D2_AFTER1"
+            },
+            {
+              "id": "RLC_015_V2_D2_C2",
+              "text": "Talk it through with a friend first",
+              "next_node_id": "RLC_015_V2_D2_AFTER2"
+            },
+            {
+              "id": "RLC_015_V2_D2_C3",
+              "text": "Write it down for later",
+              "next_node_id": "RLC_015_V2_D2_AFTER3"
+            },
+            {
+              "id": "RLC_015_V2_D2_C4",
+              "text": "Just notice it for now",
+              "next_node_id": "RLC_015_V2_D2_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_015_V2_D3_AFTER1",
+          "type": "consequence",
+          "text": "You make the benefit concrete.",
+          "next_node_id": "RLC_015_V2_END"
+        },
+        {
+          "id": "RLC_015_V2_D3_AFTER2",
+          "type": "consequence",
+          "text": "You reduce the size of the change.",
+          "next_node_id": "RLC_015_V2_END"
+        },
+        {
+          "id": "RLC_015_V2_D3_AFTER3",
+          "type": "consequence",
+          "text": "You do not have to persuade everyone.",
+          "next_node_id": "RLC_015_V2_END"
+        },
+        {
+          "id": "RLC_015_V2_D3_AFTER4",
+          "type": "consequence",
+          "text": "Completion does not depend on changing the organization.",
+          "next_node_id": "RLC_015_V2_END"
+        },
+        {
+          "id": "RLC_015_V2_D3",
+          "type": "decision",
+          "text": "The response is mixed: someone says, “We’ve never done it that way.” What next?",
+          "choices": [
+            {
+              "id": "RLC_015_V2_D3_C1",
+              "text": "Explain briefly why it could help",
+              "next_node_id": "RLC_015_V2_D3_AFTER1"
+            },
+            {
+              "id": "RLC_015_V2_D3_C2",
+              "text": "Offer one small version to try",
+              "next_node_id": "RLC_015_V2_D3_AFTER2"
+            },
+            {
+              "id": "RLC_015_V2_D3_C3",
+              "text": "Leave the idea with them",
+              "next_node_id": "RLC_015_V2_D3_AFTER3"
+            },
+            {
+              "id": "RLC_015_V2_D3_C4",
+              "text": "Decide not to push further",
+              "next_node_id": "RLC_015_V2_D3_AFTER4"
+            }
+          ]
+        },
+        {
+          "id": "RLC_015_V2_END",
+          "type": "ending",
+          "text": "You practiced noticing how a setting — not just the individual teen — can make participation easier. The outcome does not determine whether the challenge counts.",
+          "skill_tags": [
+            "LEAD",
+            "SPEAK",
+            "COLLABORATE",
+            "LIVE"
+          ]
+        }
+      ]
+    }
+  }
+]
