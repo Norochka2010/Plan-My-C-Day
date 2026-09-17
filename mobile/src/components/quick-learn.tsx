@@ -141,7 +141,7 @@ export function QuickLearn({
         kind === "complete"
           ? `Lesson completed. ${next.xp} XP for learning.`
           : next.saved
-            ? "Saved on this device."
+            ? "Saved to your account."
             : "Removed from saved lessons.",
       );
     } catch {
@@ -286,7 +286,7 @@ export function QuickLearn({
               </Text>
             </View>
             <Text style={s.small}>
-              Saved lessons, completion and Quick Learn XP stay on this device.
+              Saved lessons, completion and Quick Learn XP are saved to your account.
               XP rewards learning. Each lesson earns XP once.
             </Text>
             {!storageReady && (
@@ -348,7 +348,7 @@ const s = StyleSheet.create({
   },
   eyebrow: {
     color: "#594366",
-    fontSize: 12,
+    fontSize: 14,
     letterSpacing: 1,
     fontWeight: "700",
   },
@@ -368,7 +368,7 @@ const s = StyleSheet.create({
     fontWeight: "600",
   },
   body: { color: "#62556E", fontSize: 16, lineHeight: 26 },
-  small: { color: "#716579", fontSize: 12, lineHeight: 19 },
+  small: { color: "#716579", fontSize: 14, lineHeight: 21 },
   card: {
     borderRadius: 22,
     padding: 20,

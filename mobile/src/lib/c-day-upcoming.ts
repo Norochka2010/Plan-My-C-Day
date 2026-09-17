@@ -1,3 +1,4 @@
+import { isArchivedCDay } from './c-day-archive';
 import { supabase } from "./supabase";
 import type { CDayAction, CDayEvent } from "./c-day-model";
 
@@ -18,7 +19,7 @@ export async function listUpcomingCDays(
   now = Date.now(),
 ): Promise<UpcomingCDay[]> {
   const records: UpcomingCDay[] = [];
-  const cutoff = new Date(now).toISOString();
+
   for (let offset = 0; ; offset += 100) {
     const { data, error } = await supabase
       .from("c_day_events")
@@ -27,7 +28,6 @@ export async function listUpcomingCDays(
       )
       .eq("user_id", userId)
       .in("status", ["draft", "planned"])
-      .gt("event_start_at", cutoff)
       .order("event_start_at", { ascending: true })
       .order("id", { ascending: true })
       .range(offset, offset + 99);
@@ -42,8 +42,7 @@ export function upcomingCDays(events: UpcomingCDay[], now: number) {
   return [...new Map(events.map((event) => [event.id, event])).values()]
     .filter(
       (event) =>
-        (event.status === "draft" || event.status === "planned") &&
-        Date.parse(event.event_start_at) > now,
+        ((event.status === "planned" && !isArchivedCDay(event, now)) || (event.status === "draft" && Date.parse(event.event_start_at) > now)),
     )
     .sort(
       (a, b) =>
@@ -63,7 +62,7 @@ export function nextUpcomingAction(
           action.completion_status === "planned" &&
           action.scheduled_at &&
           Date.parse(action.scheduled_at) > now &&
-          Date.parse(action.scheduled_at) <= Date.parse(event.event_start_at),
+          Date.parse(action.scheduled_at) <= Date.parse(event.event_start_at) + 15 * 60000,
       )
       .sort(
         (a, b) =>

@@ -1,9 +1,12 @@
+import { SwipeDeleteCard } from "./swipe-delete-card";
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Fonts } from "@/constants/theme";
 import { formatEventMoment, type CDayEvent } from "@/lib/c-day-model";
 import {
   agendaGroups,
   eventsByDate,
+  upcomingPreview,
   initialAgendaState,
   monthCells,
   shiftMonth,
@@ -18,6 +21,7 @@ export function CDayAgenda({
   state,
   onChange,
   onOpen,
+  onDelete,
 }: {
   events: CDayEvent[];
   now: number;
@@ -26,8 +30,12 @@ export function CDayAgenda({
   state: AgendaState;
   onChange: (state: AgendaState) => void;
   onOpen: (event: CDayEvent) => void;
+  onDelete: (event: CDayEvent) => void;
 }) {
   const groups = agendaGroups(events, now, featuredId);
+  const { nearest, months } = upcomingPreview(groups.upcoming);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const toggleGroup = (key: string) => setExpanded(current => ({ ...current, [key]: !current[key] }));
   const dates = eventsByDate(events);
   const selected = state.selectedDate
     ? (dates.get(state.selectedDate) ?? [])
@@ -52,7 +60,7 @@ export function CDayAgenda({
   }
   function eventCard(event: CDayEvent) {
     return (
-      <Pressable
+      <SwipeDeleteCard key={event.id} disabled={busy} onDelete={() => onDelete(event)}><Pressable
         key={event.id}
         accessibilityRole="button"
         accessibilityLabel={`${event.title}, ${event.status === "draft" ? "Draft" : "Planned"}, ${formatEventMoment(event.event_start_at, event.event_timezone)}`}
@@ -61,11 +69,12 @@ export function CDayAgenda({
         onPress={() => onOpen(event)}
         style={({ pressed }) => [
           s.eventCard,
+          event.status === "draft" ? s.draftCard : s.plannedCard,
           pressed && s.pressed,
           busy && s.disabled,
         ]}
       >
-        <Text style={[s.status, s.statusBadge]}>
+        <Text style={[s.status, s.statusBadge, event.status === "draft" && s.draftBadge]}>
           {event.status === "draft" ? "○ Draft" : "★ Planned"}
         </Text>
         <Text style={s.eventTitle}>{event.title}</Text>
@@ -75,12 +84,39 @@ export function CDayAgenda({
         <Text style={s.openText}>
           {event.status === "draft" ? "Continue draft ›" : "View plan ›"}
         </Text>
+      </Pressable></SwipeDeleteCard>
+    );
+  }
+  function compactCard(event: CDayEvent) {
+    return (
+      <SwipeDeleteCard key={event.id} disabled={busy} onDelete={() => onDelete(event)}><Pressable key={event.id} accessibilityRole="button"
+        accessibilityLabel={`${event.title}, ${event.status}, ${formatEventMoment(event.event_start_at, event.event_timezone)}`}
+        accessibilityState={{ disabled: busy }} disabled={busy} onPress={() => onOpen(event)}
+        style={({ pressed }) => [s.eventCard, s.compactCard, event.status === "draft" ? s.draftCard : s.plannedCard, pressed && s.pressed, busy && s.disabled]}>
+        <View style={s.compactContent}>
+          <Text style={[s.status, event.status === "draft" && s.draftBadge]}>{event.status === "draft" ? "○ Draft" : "★ Planned"}</Text>
+          <Text style={s.eventTitle}>{event.title}</Text>
+          <Text style={s.body}>{formatEventMoment(event.event_start_at, event.event_timezone)}</Text>
+        </View>
+        <Text style={s.arrow}>›</Text>
+      </Pressable></SwipeDeleteCard>
+    );
+  }
+  function disclosure(key: string, title: string, count: number) {
+    return (
+      <Pressable accessibilityRole="button" accessibilityLabel={`${title}, ${count} C-Days`}
+        accessibilityState={{ expanded: !!expanded[key], disabled: busy }} disabled={busy}
+        onPress={() => toggleGroup(key)} style={({ pressed }) => [s.disclosure, pressed && s.pressed]}>
+        <Text style={s.disclosureTitle}>{title}</Text>
+        <Text style={s.status}>{count}</Text>
+        <Text style={s.arrow}>{expanded[key] ? "⌃" : "⌄"}</Text>
       </Pressable>
     );
   }
   return (
     <View style={s.section}>
       <Text style={s.heading}>Your C-Days</Text>
+      <Text style={s.caption}>Swipe left on a draft or plan to delete it.</Text>
       <View style={s.toggle}>
         {(["list", "calendar"] as const).map((view) => (
           <Pressable
@@ -109,8 +145,8 @@ export function CDayAgenda({
         <>
           {groups.upcoming.length > 0 && (
             <>
-              <Text style={s.subheading}>Coming up · nearest first</Text>
-              {groups.upcoming.map(eventCard)}
+              <Text style={s.subheading}>Up next · nearest first</Text>
+              {nearest.map(eventCard)}
             </>
           )}
           {!groups.upcoming.length && (
@@ -120,14 +156,21 @@ export function CDayAgenda({
                 : "No upcoming C-Days yet."}
             </Text>
           )}
+          {months.length > 0 && <Text style={s.subheading}>More C-Days · by month</Text>}
+          {months.map(({ month, events: monthEvents }) => (
+            <View key={month} style={s.section}>
+              {disclosure(month, new Date(`${month}-01T12:00:00Z`).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" }), monthEvents.length)}
+              {expanded[month] && monthEvents.map(compactCard)}
+            </View>
+          ))}
           {groups.earlier.length > 0 && (
-            <>
-              <Text style={s.subheading}>Earlier dates</Text>
-              <Text style={s.caption}>
-                Drafts and plans you haven’t completed yet.
-              </Text>
-              {groups.earlier.map(eventCard)}
-            </>
+            <View style={s.section}>
+              {disclosure("earlier", "Earlier dates", groups.earlier.length)}
+              {expanded.earlier && <>
+                <Text style={s.caption}>Drafts and plans you haven’t completed yet.</Text>
+                {groups.earlier.map(compactCard)}
+              </>}
+            </View>
           )}
         </>
       ) : (
@@ -240,6 +283,10 @@ export function CDayAgenda({
 }
 const s = StyleSheet.create({
   section: { gap: 12 },
+  compactCard: { flexDirection: "row", alignItems: "center", padding: 12, gap: 12 },
+  compactContent: { flex: 1, gap: 4 },
+  disclosure: { flexDirection: "row", alignItems: "center", gap: 12, minHeight: 54, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 16, backgroundColor: "#EEF0E8", borderWidth: 1, borderColor: "#D5DDCF" },
+  disclosureTitle: { flex: 1, fontSize: 17, fontWeight: "600", color: "#354C29" },
   heading: {
     fontFamily: Fonts.rounded,
     fontSize: 22,
@@ -286,6 +333,9 @@ const s = StyleSheet.create({
     borderLeftWidth: 3,
     borderLeftColor: "#B4CCA2",
   },
+  draftCard: { backgroundColor: "#F1EAF7", borderColor: "#D2BFDF", borderLeftColor: "#9472AD" },
+  plannedCard: { backgroundColor: "#EDF3E6", borderColor: "#C5D6B7", borderLeftColor: "#7B9D62" },
+  draftBadge: { backgroundColor: "#E4D6EE", color: "#63497B" },
   eventTitle: {
     fontFamily: Fonts.rounded,
     fontSize: 18,
@@ -293,7 +343,7 @@ const s = StyleSheet.create({
     color: "#302040",
   },
   body: { fontSize: 15, lineHeight: 23, color: "#62556E" },
-  caption: { fontSize: 13, lineHeight: 20, color: "#62556E" },
+  caption: { fontSize: 14, lineHeight: 21, color: "#62556E" },
   status: { fontSize: 14, fontWeight: "600", color: "#496B36" },
   statusBadge: { alignSelf: "flex-start", borderRadius: 10, paddingHorizontal: 9, paddingVertical: 3, backgroundColor: "#EDF2E6" },
   openText: { fontSize: 14, fontWeight: "600", color: "#354C29" },
@@ -338,7 +388,7 @@ const s = StyleSheet.create({
   },
   grid: { flexDirection: "row", flexWrap: "wrap" },
   weekday: { width: "14.2857%", alignItems: "center", paddingVertical: 6 },
-  weekdayText: { fontSize: 11, color: "#62556E" },
+  weekdayText: { fontSize: 14, color: "#62556E" },
   day: {
     width: "14.2857%",
     minHeight: 58,
@@ -353,5 +403,5 @@ const s = StyleSheet.create({
   selectedDay: { borderColor: "#557A40", backgroundColor: "#D8E9CA" },
   dayNumber: { fontSize: 16, color: "#62556E" },
   dayNumberMarked: { fontWeight: "700", color: "#354C29" },
-  markers: { fontSize: 12, minHeight: 18, color: "#496B36" },
+  markers: { fontSize: 14, minHeight: 18, color: "#496B36" },
 });

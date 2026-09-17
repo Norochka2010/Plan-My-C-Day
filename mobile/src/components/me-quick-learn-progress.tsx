@@ -1,5 +1,6 @@
+import {importLegacyExplore,legacyImportStatus} from '@/lib/explore-legacy-import';
 import { useCallback, useRef, useState } from 'react';
-import { ActivityIndicator, AppState, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, AppState, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { readExploreProgress, type ExploreProgressSummary } from '@/lib/explore-progress';
 
@@ -8,12 +9,14 @@ export function MeQuickLearnProgress() {
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [legacyCount,setLegacyCount]=useState(0),[importing,setImporting]=useState(false),[importMessage,setImportMessage]=useState('');
   const generation = useRef(0), focused = useRef(false);
   const refresh = useCallback(async () => {
     const request = ++generation.current;
     setLoading(true); setFailed(false);
     try {
-      const value = await readExploreProgress();
+      const [value,legacy] = await Promise.all([readExploreProgress(),legacyImportStatus()]);
+      if (focused.current && generation.current === request) setLegacyCount(legacy.count);
       if (focused.current && generation.current === request) setTotals(value);
     } catch {
       if (focused.current && generation.current === request) setFailed(true);
@@ -28,7 +31,12 @@ export function MeQuickLearnProgress() {
   }, [refresh]));
   return <View style={s.card}>
     <Text accessibilityRole="header" style={s.heading}>Your Explore progress</Text>
-    <Text style={s.note}>Saved on this device · Separate from your Plan XP</Text>
+    <Text style={s.note}>Saved to your account · Separate from your Plan XP</Text>
+    {legacyCount>0 && <View style={s.row}>
+      <Text style={s.body}>{legacyCount} earlier activity records are still on this phone. Import them to include them in your account totals.</Text>
+      <Pressable accessibilityRole="button" disabled={importing} style={s.button} onPress={()=>Alert.alert('Import earlier Explore progress?', 'Only import if this phone’s earlier progress belongs to your signed-in account. The original phone records will be kept as a backup.', [{text:'Not now',style:'cancel'},{text:'Import my progress',onPress:()=>{setImporting(true);setImportMessage('');void importLegacyExplore().then(()=>{setImportMessage('Your earlier progress is saved to your account.');void refresh();}).catch(()=>setImportMessage('Import could not finish. Your phone records are safe. Check your connection and retry; already imported awards will not duplicate.')).finally(()=>setImporting(false));}}])}><Text style={s.body}>{importing?'Importing…':'Import my earlier progress'}</Text></Pressable>
+    </View>}
+    {!!importMessage&&<Text accessibilityLiveRegion="polite" style={s.body}>{importMessage}</Text>}
     {loading ? <ActivityIndicator accessibilityLabel="Loading Explore progress" /> : failed ? <>
       <Text style={s.body}>Your Explore total couldn’t load. Your saved awards haven’t been changed.</Text>
       <Pressable accessibilityRole="button" style={s.button} onPress={() => void refresh()}><Text style={s.body}>Try again</Text></Pressable>
@@ -47,6 +55,6 @@ const s = StyleSheet.create({
   heading: { fontSize: 21, fontWeight: '700', color: '#294B36' },
   xp: { fontSize: 24, fontWeight: '700', color: '#355D3C', marginBottom: 6 },
   body: { fontSize: 16, lineHeight: 23, color: '#344B3B' },
-  note: { fontSize: 13, lineHeight: 19, color: '#536651' },
+  note: { fontSize: 14, lineHeight: 21, color: '#536651' },
   button: { minHeight: 48, justifyContent: 'center', alignItems: 'center', backgroundColor: '#EAF0F7', borderRadius: 14, padding: 12 },
 });

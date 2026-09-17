@@ -45,11 +45,11 @@
       ],
       [
         "expo-calendar",
-
         {
           "calendarPermission": "Allow Plan My C-Day to add and update your planned actions in your calendar."
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,

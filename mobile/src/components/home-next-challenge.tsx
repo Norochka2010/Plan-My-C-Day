@@ -55,6 +55,6 @@ const s = StyleSheet.create({
   card: { borderWidth: 1.5, borderColor: '#EED3A1', borderRadius: 18, backgroundColor: '#FFFDFA', padding: 18, flexDirection: 'row', alignItems: 'flex-start', gap: 14 },
   badge: { width: 48, height: 48, borderRadius: 16, backgroundColor: '#FFF1D6', alignItems: 'center', justifyContent: 'center' },
   icon: { fontSize: 29, color: '#5D4277' }, copy: { flex: 1, gap: 8 }, title: { color: '#241638', fontSize: 16, lineHeight: 23, fontWeight: '600' },
-  body: { color: '#6E6577', fontSize: 14, lineHeight: 21 }, small: { color: '#6E6577', fontSize: 12, lineHeight: 18 },
+  body: { color: '#6E6577', fontSize: 14, lineHeight: 21 }, small: { color: '#6E6577', fontSize: 14, lineHeight: 21 },
   button: { minHeight: 44, justifyContent: 'center' }, link: { color: '#5D4277', fontSize: 14, lineHeight: 22, fontWeight: '600' },
 });

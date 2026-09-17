@@ -50,7 +50,7 @@ export function RealLifeChallenge({contentId,onClose,onOpen,publishedOnly=false,
       {adventure&&<Text style={s.small}>Adventure copy: Nora’s proposed V2 branching extension.</Text>}
       <Text style={s.body}>{adventure?'Original challenge source:':'Source:'} {card.source_basis}</Text>
       {card.source_url&&/^https?:\/\//i.test(card.source_url)&&<Action variant="navigation" label="Read the source ↗" onPress={()=>{Linking.openURL(card.source_url!).catch(()=>setMessage('The source link couldn’t open. Please try again.'))}} disabled={busy}/>}
-      <Text style={s.small}>Challenge progress and XP are saved on this device.</Text>
+      <Text style={s.small}>Challenge progress and XP are saved to your account.</Text>
     </>}
     {!!message&&<Text accessibilityLiveRegion="polite" style={s.body}>{message}</Text>}
   </ScrollView></SafeAreaView>;
@@ -58,7 +58,7 @@ export function RealLifeChallenge({contentId,onClose,onOpen,publishedOnly=false,
 const s=StyleSheet.create({
   screen:{flex:1,backgroundColor:'#FFFCF7'},content:{padding:24,paddingBottom:40,gap:18,width:'100%',maxWidth:640,alignSelf:'center'},
   title:{fontFamily:Fonts.rounded,fontSize:30,lineHeight:38,fontWeight:'600',color:'#34472F'},heading:{fontFamily:Fonts.rounded,fontSize:20,lineHeight:28,fontWeight:'600',color:'#34472F'},
-  body:{fontSize:16,lineHeight:26,color:'#53604B'},small:{fontSize:13,lineHeight:20,color:'#66715F'},
+  body:{fontSize:16,lineHeight:26,color:'#53604B'},small:{fontSize:14,lineHeight:21,color:'#66715F'},
   card:{backgroundColor:'#FFF3DC',borderColor:'#EBD4A5',borderWidth:1,borderRadius:22,padding:20,gap:12},green:{backgroundColor:'#EDF5E7',borderColor:'#C5DDB5'},
   step:{flexDirection:'row',gap:10},button:{backgroundColor:'#E8F0DF',borderRadius:14,minHeight:48,padding:14,alignItems:'center',justifyContent:'center'},label:{fontSize:16,fontWeight:'600',color:'#365037'},
 });

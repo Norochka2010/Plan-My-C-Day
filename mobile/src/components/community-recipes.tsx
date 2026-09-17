@@ -213,7 +213,7 @@ function Community() {
 const s=StyleSheet.create({
  screen:{flex:1,backgroundColor:'#FFFCF7'},content:{padding:20,paddingBottom:36,gap:16,width:'100%',maxWidth:620,alignSelf:'center'},
  title:{fontFamily:Fonts.rounded,fontSize:28,lineHeight:36,fontWeight:'600',color:'#302040'},heading:{fontFamily:Fonts.rounded,fontSize:19,lineHeight:27,fontWeight:'600',color:'#302040'},
- body:{fontSize:16,lineHeight:24,color:'#62556E'},small:{fontSize:13,lineHeight:20,color:'#716579'},badge:{fontSize:12,lineHeight:20,fontWeight:'700',color:'#63497B',letterSpacing:1},
+ body:{fontSize:16,lineHeight:24,color:'#62556E'},small:{fontSize:14,lineHeight:21,color:'#716579'},badge:{fontSize:14,lineHeight:21,fontWeight:'700',color:'#63497B',letterSpacing:1},
  card:{padding:16,gap:12,backgroundColor:'#FFFFFF',borderColor:'#DFE5D7',borderWidth:1,borderRadius:20},infoCard:{padding:14,gap:8,backgroundColor:'#F0EDF5',borderRadius:16},
  info:{padding:14,backgroundColor:'#EDF3E6',borderRadius:14,color:'#405D35',fontSize:14,lineHeight:22},error:{padding:14,backgroundColor:'#FFF0E3',borderRadius:14,color:'#75452D',fontSize:15,lineHeight:23},
  row:{flexDirection:'row',alignItems:'center',gap:10,flexWrap:'wrap'},gap:{gap:8},chips:{flexDirection:'row',flexWrap:'wrap',gap:8},chip:{padding:12,minHeight:48,backgroundColor:'#F1EAF5',borderWidth:1,borderColor:'#E1D6E9',borderRadius:14},selected:{borderColor:'#806493',backgroundColor:'#EBE0F2'},

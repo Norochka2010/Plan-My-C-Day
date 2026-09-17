@@ -252,7 +252,7 @@ export function PlanTimeField({ label, value, onChange, editable = true }: Props
 }
 const s = StyleSheet.create({
   today: { borderWidth: 2, borderColor: "#806493" },
-  hint: { fontSize: 13, lineHeight: 20, color: "#62556E" },
+  hint: { fontSize: 14, lineHeight: 21, color: "#62556E" },
   timeGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   timeChoice: { minWidth: 48, minHeight: 48, flexGrow: 1, flexBasis: "20%", alignItems: "center", justifyContent: "center", padding: 8, borderRadius: 12, backgroundColor: "#F0EAF5" },
   gap: { gap: 8 },

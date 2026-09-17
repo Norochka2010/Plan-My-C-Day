@@ -1,0 +1,131 @@
+import { useCallback, useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useFocusEffect, useRouter } from "expo-router";
+import {
+  getActionExploreSupport,
+  supportLimit,
+  type SupportAction,
+} from "@/lib/c-day-explore-support";
+import type { ExploreSummary } from "@/lib/explore-content";
+import { newId } from "@/lib/c-day-model";
+
+const labels = {
+  QUICK_LEARN: "Quick Learn",
+  MYTH_OR_FACT: "Myth or Fact?",
+  PRACTICE_A_SKILL: "Practice a Skill",
+  REAL_LIFE_CHALLENGE: "Real-Life Challenges",
+  EXPERT_RESOURCE: "From the Experts",
+};
+/** A separate, read-only request: support can never hold up plan saves or Done. */
+export function CDayExploreSupport({
+  action,
+  eventType,
+  eventStatus,
+  origin,
+  disabled = false,
+}: {
+  action: SupportAction;
+  eventType: string;
+  eventStatus: string;
+  origin: "home" | "plan";
+  disabled?: boolean;
+}) {
+  const router = useRouter();
+  const [items, setItems] = useState<ExploreSummary[]>([]);
+  const limit = supportLimit(action, eventType, eventStatus);
+  useFocusEffect(
+    useCallback(() => {
+      let active = true;
+      setItems([]);
+      if (limit)
+        void getActionExploreSupport(action, eventType, eventStatus)
+          .then((rows) => {
+            if (active) setItems(rows);
+          })
+          .catch(() => {
+            if (active) setItems([]);
+          });
+      return () => {
+        active = false;
+      };
+    }, [
+      action.id,
+      action.action_library_id,
+      action.difficulty,
+      action.completion_status,
+      eventType,
+      eventStatus,
+      limit,
+    ]),
+  );
+  if (!limit || !items.length) return null;
+  return (
+    <View style={s.panel}>
+      <Text style={s.heading}>
+        {origin === "home"
+          ? "Could help with your C-Day"
+          : "Optional Explore support"}
+      </Text>
+      {limit === 2 && (
+        <Text style={s.body}>
+          Something to explore if you’d like support with this task.
+        </Text>
+      )}
+      <Text style={s.small}>
+        Your choice—this isn’t required to complete your C-Day.
+      </Text>
+      {items.slice(0, limit).map((item) => (
+        <Pressable
+          key={item.content_id}
+          disabled={disabled}
+          accessibilityRole="button"
+          accessibilityState={{ disabled }}
+          accessibilityLabel={`Optional ${labels[item.content_type]}: ${item.title}`}
+          style={({ pressed }) => [
+            s.link,
+            (pressed || disabled) && { opacity: 0.5 },
+          ]}
+          onPress={() =>
+            router.push({
+              pathname: "/explore",
+              params: {
+                supportContentId: item.content_id,
+                supportEntry: newId(),
+                returnTo: origin,
+              },
+            })
+          }
+        >
+          <Text style={s.small}>{labels[item.content_type]}</Text>
+          <Text style={s.linkText}>{item.title} →</Text>
+        </Pressable>
+      ))}
+    </View>
+  );
+}
+const s = StyleSheet.create({
+  panel: {
+    gap: 6,
+
+    padding: 14,
+    backgroundColor: "#EDF5E7",
+    borderWidth: 1,
+    borderColor: "#C5DDB5",
+    borderRadius: 16,
+  },
+  heading: {
+    color: "#35204E",
+    fontSize: 15,
+    lineHeight: 22,
+    fontWeight: "600",
+  },
+  body: { color: "#62556E", fontSize: 14, lineHeight: 21 },
+  small: { color: "#62556E", fontSize: 14, lineHeight: 21 },
+  link: { minHeight: 44, paddingVertical: 8, gap: 3 },
+  linkText: {
+    color: "#4B3862",
+    fontSize: 14,
+    fontWeight: "600",
+    lineHeight: 21,
+  },
+});

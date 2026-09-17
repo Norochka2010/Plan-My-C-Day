@@ -134,8 +134,8 @@ const s = StyleSheet.create({
   heading: { fontFamily: Fonts.rounded, fontSize: 20, lineHeight: 28, fontWeight: '600', color: '#302040' },
   cardTitle: { fontFamily: Fonts.rounded, fontSize: 19, lineHeight: 27, fontWeight: '600', color: '#302040' },
   organization: { fontSize: 16, lineHeight: 24, fontWeight: '600', color: '#435871' },
-  body: { fontSize: 16, lineHeight: 25, color: '#62556E' }, small: { fontSize: 13, lineHeight: 20, color: '#62556E' },
-  badge: { fontSize: 11, lineHeight: 17, letterSpacing: 0.6, fontWeight: '700', color: '#435871' },
+  body: { fontSize: 16, lineHeight: 25, color: '#62556E' }, small: { fontSize: 14, lineHeight: 21, color: '#62556E' },
+  badge: { fontSize: 14, lineHeight: 21, letterSpacing: 0.6, fontWeight: '700', color: '#435871' },
   card: { borderRadius: 22, padding: 20, gap: 12, backgroundColor: '#EAF0FA', borderColor: '#C8D7EB', borderWidth: 1 },
   collections: { gap: 12 }, collection: { padding: 18, gap: 8, borderRadius: 20, backgroundColor: '#F1F6EA', borderWidth: 1, borderColor: '#C5DDB5' },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 }, tag: { backgroundColor: '#FFFCF7', borderRadius: 12, paddingHorizontal: 10, paddingVertical: 6 },
@@ -148,5 +148,5 @@ const s = StyleSheet.create({
   selected: { backgroundColor: '#DCEBD0', borderColor: '#587646', borderWidth: 2 },
   button: { minHeight: 48, padding: 14, borderRadius: 14, backgroundColor: '#E2ECD9', alignItems: 'center', justifyContent: 'center' },
   buttonText: { fontSize: 16, lineHeight: 23, fontWeight: '600', color: '#355338' }, dim: { opacity: 0.6 },
-  url: { fontSize: 12, lineHeight: 19, color: '#435871' },
+  url: { fontSize: 14, lineHeight: 21, color: '#435871' },
 });

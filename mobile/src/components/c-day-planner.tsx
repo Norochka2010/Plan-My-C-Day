@@ -1,3 +1,10 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { isArchivedCDay } from '@/lib/c-day-archive';
+import { SwipeDeleteCard } from "./swipe-delete-card";
+import { simulationArtwork } from "@/lib/simulation-artwork";
+import { CustomBuilder, CustomSnapshot, SaveCustomTemplate } from "./custom-builder";
+import { cDayEventConfig, type CDayEventType } from "@/lib/c-day-event-types";
+import { CDayCalendarPanel } from "./c-day-calendar-panel";
 import { CDayExploreSupport } from "./c-day-explore-support";
 import { CDayAgenda } from "./c-day-agenda";
 import {
@@ -13,6 +20,7 @@ import {
   Alert,
   AppState,
   Keyboard,
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -30,6 +38,7 @@ import {
   getPlan,
   submitCDayReflection,
   listCDays,
+  deleteCDay,
   planError,
   saveCDay,
   saveCDayAction,
@@ -232,6 +241,7 @@ type Step =
   | "home"
   | "types"
   | "details"
+  | "builder"
   | "categories"
   | "call"
   | "schedule"
@@ -273,6 +283,8 @@ function Planner({
       listener.remove();
     };
   }, []);
+  const [moreActions, setMoreActions] = useState(false);
+  const setupDrafts = useRef<Record<string, {date:string; time:string; difficulty:Difficulty|null; sync:boolean; relative:{value:number|null;unit:'days'|'weeks'|'custom'}}>>({});
   const [category, setCategory] = useState<string>("CALL");
   const [id, setId] = useState(""),
     [title, setTitle] = useState(""),
@@ -294,6 +306,28 @@ function Planner({
     [loading, setLoading] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
+  const [calendarDefault, setCalendarDefault] = useState<boolean | null>(null);
+  const [calendarDefaultReady, setCalendarDefaultReady] = useState(false);
+  const [calendarOverride, setCalendarOverride] = useState(false);
+  useEffect(() => {
+    let active = true;
+    setCalendarDefault(null); setCalendarDefaultReady(false);
+    if (!event) return;
+    AsyncStorage.getItem(`c-day-calendar-choice:v1:${userId}:${event.id}`).then(value => {
+      if (active) setCalendarDefault(value === 'true' ? true : value === 'false' ? false : null);
+    }).catch(() => {}).finally(() => { if (active) setCalendarDefaultReady(true); });
+    return () => { active = false; };
+  }, [event?.id, userId]);
+  const scheduleFieldsY = useRef(0);
+  const scheduleFooterY = useRef(0);
+  // Recover a screen retained by Fast Refresh from the former multi-screen flow.
+  useEffect(() => {
+    if (step === 'difficulty' || step === 'calendar') setStep('schedule');
+  }, [step]);
+  const advanceAfterSave = useRef(false);
+  const [reviewing, setReviewing] = useState(false);
+  const [quickActionIndex, setQuickActionIndex] = useState(0);
+  useEffect(() => { setQuickActionIndex(0); }, [step, event?.id]);
   const locked = useRef(false),
     alive = useRef(true),
     scroll = useRef<ScrollView>(null);
@@ -336,6 +370,37 @@ function Planner({
       locked.current = false;
       if (alive.current) setBusy(false);
     }
+  }
+  function confirmDelete(selected: CDayEvent) {
+    if (locked.current) return;
+    async function remove(removeCalendar: boolean) {
+      if (locked.current) return;
+      locked.current = true; setBusy(true); setError("");
+      try {
+        if (removeCalendar) {
+          const plan = await getPlan(selected.id, false);
+          const requests = [
+            { actionId: `event:${selected.id}`, title: selected.title, startsAt: selected.event_start_at, timeZone: selected.event_timezone, nativeEventId: null as string | null },
+            ...plan.actions.filter(action => action.scheduled_at).map(action => ({ actionId: action.id, title: action.action_text_snapshot, startsAt: action.scheduled_at!, timeZone: selected.event_timezone, nativeEventId: action.native_calendar_event_id })),
+          ];
+          for (const request of requests) {
+            const result = await cDayCalendar.remove(request);
+            if (result.status !== 'not_requested') throw Error('calendar');
+          }
+        }
+        await deleteCDay(selected.id);
+        if (alive.current) { setEvents(current => current.filter(item => item.id !== selected.id)); setNotice("C-Day deleted."); }
+      } catch {
+        if (alive.current) setError(removeCalendar
+          ? "Deletion could not finish. Your plan is still saved; some calendar entries may already be removed. Check calendar access and your connection, then retry."
+          : "Could not delete this C-Day. It is still saved. Check your connection and try again.");
+      } finally { locked.current = false; if (alive.current) setBusy(false); }
+    }
+    Alert.alert(selected.status === "draft" ? "Delete draft?" : "Delete plan?",
+      `Delete “${selected.title}” and its saved activities, reflection, and C-Day progress? This cannot be undone. Would you also like to remove its linked entries from your iPhone calendar?`,
+      [{ text: "Cancel", style: "cancel" },
+       { text: "Delete plan only", style: "destructive", onPress: () => void remove(false) },
+       { text: "Delete plan + calendar entries", style: "destructive", onPress: () => void remove(true) }]);
   }
   const [entryLoading, setEntryLoading] = useState(!!entryEventId);
   const [entryError, setEntryError] = useState("");
@@ -392,6 +457,8 @@ function Planner({
       }
     });
   }
+  const [draftType, setDraftType] = useState<CDayEventType>("dinner_with_friends");
+  const detailsConfig = cDayEventConfig[draftType];
   function candidate(): CDayEvent {
     if (!title.trim()) throw Error("Give your C-Day a name.");
     const start = resolveDateTime(date, time, zone);
@@ -400,7 +467,7 @@ function Planner({
     return {
       id,
       user_id: userId,
-      event_type: "dinner_with_friends",
+      event_type: draftType,
       title: title.trim(),
       venue_name: venue.trim() || null,
       event_start_at: start,
@@ -430,13 +497,14 @@ function Planner({
     return () => clearTimeout(timer);
     // These are precisely the editable draft fields. Saves do not restart this effect.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, id, title, date, time, venue, zone]);
+  }, [step, id, title, date, time, venue, zone, draftType]);
   function start() {
+    setDraftType("dinner_with_friends");
     setId(newId());
     setEvent(null);
     setActions([]);
     setConfiguredAction(null);
-    setTitle("Dinner With Friends");
+    setTitle(cDayEventConfig.dinner_with_friends.defaultTitle);
     setDate("");
     setTime("");
     setVenue("");
@@ -461,7 +529,7 @@ function Planner({
         setActions(plan.actions);
         setItems(plan.items);
         setNotice("Draft saved.");
-        setStep("categories");
+        setStep(saved.event_type === "custom" ? "builder" : "categories");
       }
     });
   }
@@ -593,7 +661,7 @@ function Planner({
       if (alive.current) {
         setActions((current) => sortActions([...current, selected]));
         setNotice("Action added to your draft.");
-        if (item.id === "call_01") chooseAction(selected);
+
       }
     });
   }
@@ -640,6 +708,17 @@ function Planner({
               }
             : undefined,
         );
+        if (choice !== "done" && (updated.calendar_sync_enabled || updated.native_calendar_event_id)) {
+          void (async () => {
+            const result = await prepareCalendarSync(choice !== "not_needed", {
+              actionId: updated.id, title: updated.action_text_snapshot,
+              startsAt: updated.scheduled_at!, timeZone: event.event_timezone,
+              nativeEventId: updated.native_calendar_event_id,
+            });
+            const synced = await saveCalendarResult(updated, result);
+            if (alive.current && synced) setActions(current => current.map(a => a.id === synced.id ? synced : a));
+          })().catch(() => { if (alive.current) setNotice("Your action is saved. Calendar status could not be updated; retry from My Plan."); });
+        }
         if (alive.current) {
           setActions((current) =>
             sortActions(
@@ -695,7 +774,8 @@ function Planner({
     setEditing(!!existing);
     setActionId(existing?.id ?? newId());
     setDifficulty(existing?.difficulty ?? null);
-    setSync(existing?.calendar_sync_enabled ?? false);
+    setSync(existing?.scheduled_at ? existing.calendar_sync_enabled : calendarDefault ?? false);
+    setCalendarOverride(false);
     if (existing?.scheduled_at && event) {
       const f = localFields(existing.scheduled_at, event.event_timezone);
       setActionDate(f.date);
@@ -714,6 +794,8 @@ function Planner({
       setActionTime("");
       setRelative({ value: null, unit: "custom" });
     }
+    const retained = setupDrafts.current[existing.id];
+    if (retained) { setActionDate(retained.date); setActionTime(retained.time); setDifficulty(retained.difficulty); setSync(retained.sync); setRelative(retained.relative); }
     setError("");
     setNotice("");
     setStep("schedule");
@@ -727,13 +809,13 @@ function Planner({
     if (!event) return;
     try {
       const iso =
-        days === null ? todaySchedule(event) : relativeSchedule(event, days);
+        days === 0 ? new Date(Date.parse(event.event_start_at) + 15 * 60000).toISOString() : days === null ? todaySchedule(event) : relativeSchedule(event, days);
       validateSchedule(iso, event);
       const f = localFields(iso, event.event_timezone);
       setActionDate(f.date);
       setActionTime(f.time);
       setRelative(
-        days === null
+        days === null || days === 0
           ? { value: null, unit: "custom" }
           : days === 7
             ? { value: 1, unit: "weeks" }
@@ -758,7 +840,7 @@ function Planner({
     } catch {}
   }
   function continueSchedule() {
-    if (!event) return;
+    if (!event || !resolved || busy) return;
     try {
       const iso = resolveDateTime(actionDate, actionTime, event.event_timezone);
       validateSchedule(iso, event);
@@ -767,13 +849,13 @@ function Planner({
         void followThrough(configuredAction, "reschedule", iso);
         return;
       }
-      setStep("difficulty");
+      void saveAction();
     } catch (e) {
       setError((e as Error).message);
     }
   }
   async function saveAction() {
-    if (!event || !configuredAction || !difficulty) return;
+    if (!event || !configuredAction || !difficulty || calendarDefault === null || !calendarDefaultReady) return;
     let scheduled: string;
     try {
       scheduled = resolveDateTime(actionDate, actionTime, event.event_timezone);
@@ -784,6 +866,7 @@ function Planner({
       return;
     }
     await operation(async () => {
+      try { await AsyncStorage.setItem(`c-day-calendar-choice:v1:${userId}:${event.id}`, String(calendarDefault)); } catch { /* Keep plan saving independent of device preferences. */ }
       const prior = actions.find((a) => a.id === actionId);
       const saved = await saveCDayAction({
         id: actionId,
@@ -799,13 +882,21 @@ function Planner({
         native_calendar_event_id: prior?.native_calendar_event_id ?? null,
         calendar_sync_message: null,
       });
+      delete setupDrafts.current[actionId];
       // The in-app action is persisted before optional calendar work starts.
       if (alive.current) {
         setActions((current) =>
           sortActions([...current.filter((a) => a.id !== saved.id), saved]),
         );
-        setNotice("Your draft plan is saved.");
-        setStep("plan");
+        const next = [...actions].sort((a,b) => a.id.localeCompare(b.id)).find(a => a.id !== saved.id && a.completion_status !== 'not_needed' && (!a.scheduled_at || !a.difficulty));
+        setNotice("Your action is saved.");
+        if (next) {
+          chooseAction(next);
+          scroll.current?.scrollTo({y:0,animated:false});
+        } else {
+          setReviewing(true);
+          setStep("plan");
+        }
       }
       void (async () => {
         const cal = await prepareCalendarSync(sync, {
@@ -829,12 +920,14 @@ function Planner({
     });
   }
   function back() {
+    if (step === 'schedule' && actionId) setupDrafts.current[actionId] = {date:actionDate,time:actionTime,difficulty,sync,relative};
     setError("");
     setNotice("");
     const previous: Record<Step, Step> = {
       home: "home",
       types: "home",
       details: "types",
+      builder: "plan",
       categories: "plan",
       call: "categories",
       schedule: editing ? "plan" : "call",
@@ -854,7 +947,15 @@ function Planner({
     (a) => a.completion_status !== "not_needed",
   );
   const displayedActions =
-    event?.status !== "draft" ? sortActions(actions) : activeActions;
+    event?.status !== "draft" ? sortActions(actions) : [...activeActions].sort((a,b) => a.id.localeCompare(b.id));
+  const nextSetupAction = displayedActions.find(a => !a.scheduled_at || !a.difficulty);
+  const readyCount = activeActions.filter(a => a.scheduled_at && a.difficulty).length;
+  const selecting = ['details','categories','call','builder','schedule'].includes(step) || (step === 'plan' && event?.status === 'draft');
+  const phase = step === 'details' ? 0 : step === 'plan' && reviewing && !nextSetupAction ? 2 : 1;
+  const suggestionTags = event?.event_type === 'custom' ? event.custom_context?.tags ?? [] : [event?.event_type ?? ''];
+  const ranked = [...items].sort((a,b) => Number(b.event_tags?.some(tag=>suggestionTags.includes(tag)) ?? false) - Number(a.event_tags?.some(tag=>suggestionTags.includes(tag)) ?? false) || a.id.localeCompare(b.id));
+  const suggestionCategories = new Set<string>();
+  const suggested = ranked.filter(item => { if (suggestionCategories.has(item.category)) return false; suggestionCategories.add(item.category); return true; }).slice(0,4);
   const nextEvent = nearestDraft(events, now);
   if (entryLoading || entryError)
     return (
@@ -892,12 +993,17 @@ function Planner({
     <SafeAreaView edges={["top", "left", "right"]} style={s.screen}>
       <ScrollView
         ref={scroll}
+        stickyHeaderIndices={selecting ? [0] : undefined}
         onContentSizeChange={focusEntryAction}
         contentContainerStyle={s.content}
         keyboardShouldPersistTaps="handled"
         automaticallyAdjustKeyboardInsets
         keyboardDismissMode="on-drag"
       >
+        {selecting && <View style={{backgroundColor:'#FFFCF7',paddingVertical:10,gap:6}}>
+          <View style={{flexDirection:'row',gap:8}}>{['Event','Actions','Review'].map((label,index)=><Text key={label} accessibilityLabel={`${label}${phase===index ? ', current step' : ''}`} style={{fontSize:16,fontWeight:phase===index?'700':'400',color:phase===index?'#36552F':'#716579'}}>{index>0?'→ ':''}{label}</Text>)}</View>
+          <Text accessibilityLiveRegion="polite" style={s.small}>{activeActions.length} actions selected · Choose 2–6</Text>
+        </View>}
         {step !== "home" && (
           <Button label="‹ Back" onPress={back} disabled={busy} secondary />
         )}
@@ -926,8 +1032,8 @@ function Planner({
             {loading ? (
               <ActivityIndicator accessibilityLabel="Loading your plans" />
             ) : nextEvent ? (
-              <View style={[s.card, s.eventSummary]}>
-                <Text style={s.statusBadge}>○ Your next draft</Text>
+              <SwipeDeleteCard disabled={busy} onDelete={() => confirmDelete(nextEvent)}><View style={[s.card, s.eventSummary, { backgroundColor: "#F1EAF7", borderColor: "#D2BFDF" }]}>
+                <Text style={[s.statusBadge, { backgroundColor: "#E4D6EE", color: "#63497B" }]}>○ Your next draft</Text>
                 <Text style={s.heading}>{nextEvent.title}</Text>
                 <Text style={s.body}>
                   {formatEventMoment(
@@ -940,7 +1046,7 @@ function Planner({
                   onPress={() => void openDraft(nextEvent)}
                   disabled={busy}
                 />
-              </View>
+              </View></SwipeDeleteCard>
             ) : (
               !error &&
               activeCDays(events).length === 0 && (
@@ -960,6 +1066,7 @@ function Planner({
                 busy={busy}
                 state={agendaState}
                 onChange={setAgendaState}
+                onDelete={confirmDelete}
                 onOpen={(selected) => void openDraft(selected)}
               />
             )}
@@ -985,30 +1092,31 @@ function Planner({
         {step === "history" && (
           <>
             <Text style={s.title}>Past C-Days</Text>
+            <Text style={s.body}>Swipe left on a C-Day to delete it.</Text>
             {loading ? (
               <ActivityIndicator accessibilityLabel="Loading past C-Days" />
             ) : (
               <>
-                {!error && !events.some((e) => e.status === "completed") && (
+                {!error && !events.some((e) => e.status === "completed" || isArchivedCDay(e, now)) && (
                   <Text style={s.body}>
-                    Your completed C-Days will appear here after reflection.
+                    Completed C-Days and plans archived after 30 days will appear here.
                   </Text>
                 )}
                 {events
-                  .filter((e) => e.status === "completed")
+                  .filter((e) => e.status === "completed" || isArchivedCDay(e, now))
                   .sort(
                     (a, b) =>
                       Date.parse(b.event_start_at) -
                       Date.parse(a.event_start_at),
                   )
                   .map((e) => (
-                    <Button
+                    <SwipeDeleteCard key={e.id} disabled={busy} onDelete={() => confirmDelete(e)}><View style={{ backgroundColor: "#FFFCF7" }}><Button
                       key={e.id}
                       secondary
-                      label={`${e.title} · ${formatEventMoment(e.event_start_at, e.event_timezone)}`}
+                      label={`${e.title} · ${formatEventMoment(e.event_start_at, e.event_timezone)}${isArchivedCDay(e, now) ? " · Archived without reflection" : ""}`}
                       onPress={() => void openDraft(e)}
                       disabled={busy}
-                    />
+                    /></View></SwipeDeleteCard>
                   ))}
               </>
             )}
@@ -1120,6 +1228,7 @@ function Planner({
             <LeafCharacter size={140} />
             <Text style={s.title}>Your C-Day is complete.</Text>
             <Text style={s.body}>Your plan and reflection are saved.</Text>
+            {event.event_type === "custom" && <SaveCustomTemplate key={event.id} event={event} />}
             <PlanRewards xp={cDayEarnedXP(actions)} />
             <Button label="View My C-Day" onPress={() => setStep("plan")} />
             <Button
@@ -1132,29 +1241,47 @@ function Planner({
         {step === "types" && (
           <>
             <Text style={s.title}>Choose a C-Day</Text>
-            {eventTypes.map(([key, label]) => (
-              <Button
-                key={key}
-                label={
-                  key === "dinner_with_friends"
-                    ? label
-                    : `${label} · Coming soon`
-                }
-                disabled={key !== "dinner_with_friends"}
-                onPress={() => setStep("details")}
-              />
+            {eventTypes.filter(([key]) => key !== "custom").map(([key, label]) => (
+              <Pressable key={key} accessibilityRole="button" accessibilityLabel={label}
+                disabled={!cDayEventConfig[key].enabled}
+                accessibilityState={{ disabled: !cDayEventConfig[key].enabled }}
+                onPress={() => { if (!cDayEventConfig[key].enabled) return; setDraftType(key); setTitle(cDayEventConfig[key].defaultTitle); setStep("details"); }}
+                style={({ pressed }) => [s.simulationMenuCard, pressed && { opacity: 0.75 }]}>
+                <Image source={simulationArtwork[key as keyof typeof simulationArtwork]} style={s.simulationArtwork} resizeMode="contain" accessible={false} />
+                <Text style={s.simulationMenuLabel}>{label}</Text>
+                <Text style={s.simulationMenuChevron} accessible={false}>›</Text>
+              </Pressable>
             ))}
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Create My Own C-Day"
+              accessibilityHint="Build a custom event with optional planning questions"
+              onPress={() => { setDraftType("custom"); setTitle(""); setStep("details"); }}
+              style={({ pressed }) => [s.customMenuCard, pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] }]}
+            >
+              <View style={s.customMenuTop}>
+                <View style={s.customMenuCopy}>
+                  <Text style={s.customMenuEyebrow}>✦ MAKE IT YOURS</Text>
+                </View>
+                <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"><LeafCharacter size={72} /></View>
+              </View>
+              <Text style={s.customMenuTitle} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>Create My Own C-Day</Text>
+              <Text style={s.customMenuBody}>Something coming up that doesn’t fit the list? Let’s build your C-Day.</Text>
+              <View style={s.customMenuCta}><Text style={s.customMenuCtaText}>BUILD MY C-DAY</Text><Text style={s.customMenuArrow}>→</Text></View>
+            </Pressable>
           </>
         )}
         {step === "details" && (
           <>
-            <Text style={s.title}>Dinner With Friends</Text>
+            <Text style={s.title}>{detailsConfig.heading}</Text>
+            {draftType === "custom" && <Text style={s.body}>Something coming up that doesn’t fit the list? Let’s build your C-Day.</Text>}
             <Field
-              label="C-Day name"
+              label={detailsConfig.titlePrompt}
               value={title}
               onChange={setTitle}
               editable={!busy}
             />
+            {detailsConfig.dateTimePrompt && <Text style={s.body}>{detailsConfig.dateTimePrompt}</Text>}
             <PlanDateField
               label="Date"
               value={date}
@@ -1168,7 +1295,7 @@ function Planner({
               editable={!busy}
             />
             <Field
-              label="Place or restaurant (optional)"
+              label={detailsConfig.venuePrompt}
               value={venue}
               onChange={setVenue}
               editable={!busy}
@@ -1178,20 +1305,32 @@ function Planner({
               are valid.
             </Text>
             <Button
-              label={busy ? "Saving…" : "Choose my actions"}
+              label={busy ? "Saving…" : draftType === "custom" ? "BUILD MY C-DAY" : "Choose my actions"}
               onPress={() => void continueDetails()}
               disabled={busy}
             />
           </>
         )}
+        {step === "builder" && event?.event_type === "custom" && event.status === "draft" && <CustomBuilder key={event.id} event={event} items={items} actions={activeActions} busy={busy}
+          onAdd={(a) => void addSelection(a)} onRemove={(a) => void removeSelection(a)}
+          onRefresh={async () => { const current = await getCDay(event.id); const plan = await getPlan(event.id); if(alive.current){setEvent(current);setActions(plan.actions);setItems(plan.items);} }}
+          onAll={() => setStep("categories")} onPlan={() => setStep("plan")} />}
         {step === "categories" && (
           <>
             <Text style={s.title}>What could help you get ready?</Text>
-            <Text style={s.body}>Choose up to 6 actions for your draft.</Text>
+            <Text style={s.body}>Choose 2–6 actions. Pick what helps you; you don’t need one from every category.</Text>
             <Text accessibilityLiveRegion="polite" style={s.selectionCount}>
-              {activeActions.length} of 6 selected
+              {activeActions.length} actions selected · Choose 2–6
             </Text>
-            <View style={s.categoryGrid}>
+            <Text style={s.heading}>A few ideas for your C-Day</Text>
+            <Text style={s.small}>Tap to select. Choose what fits your situation.</Text>
+            {suggested.map(item => {
+              const chosen = activeActions.find(a=>a.action_library_id===item.id);
+              const disabled = busy || (!chosen && activeActions.length>=6);
+              return <Pressable key={item.id} accessibilityRole="checkbox" accessibilityState={{checked:!!chosen,disabled}} disabled={disabled} onPress={()=>chosen ? void removeSelection(chosen) : void addSelection(item)} style={[s.card,{padding:14,backgroundColor:chosen?'#EAF3E3':'#FFFFFF',borderColor:chosen?'#7B9C65':'#DDE5D4',opacity:disabled?.6:1}]}><Text style={s.heading}>{chosen?'✓':'○'} {item.action_text}</Text></Pressable>;
+            })}
+            <Button secondary label={moreActions ? "Hide more options" : "See more options"} onPress={()=>setMoreActions(v=>!v)} disabled={busy}/>
+            {moreActions && <View style={s.categoryGrid}>
               {categories.map((c) => {
                 const count = activeActions.filter(action => actionCategory(action.action_library_id) === c).length;
                 return <Pressable key={c} accessibilityRole="button"
@@ -1206,11 +1345,11 @@ function Planner({
                   </View>
                 </Pressable>;
               })}
-            </View>
+            </View>}
             <Button polished
-              label="View draft plan"
-              disabled={busy}
-              onPress={() => setStep("plan")}
+              label={`Schedule my ${activeActions.length} actions`}
+              disabled={busy || activeActions.length < 2}
+              onPress={() => { if(nextSetupAction) chooseAction(nextSetupAction); else {setReviewing(true);setStep("plan");} }}
             />
           </>
         )}
@@ -1219,7 +1358,7 @@ function Planner({
             <Text style={s.title}>{category}</Text>
             <CDayActionSelector
               category={category}
-              items={items}
+              items={event && ["school_event", "travel", "party", "friends_house", "sports"].includes(event.event_type) ? [...items].sort((a, b) => Number(b.event_tags?.includes(event.event_type) ?? false) - Number(a.event_tags?.includes(event.event_type) ?? false) || a.id.localeCompare(b.id)) : items}
               selected={activeActions}
               busy={busy}
               onAdd={(item) => void addSelection(item)}
@@ -1233,7 +1372,7 @@ function Planner({
               onPress={() => setStep("categories")}
             />
             <Button polished
-              label="View draft plan"
+              label={`Schedule my ${activeActions.length} actions`}
               disabled={busy}
               onPress={() => setStep("plan")}
             />
@@ -1241,8 +1380,11 @@ function Planner({
         )}
         {step === "schedule" && event && (
           <>
-            <Text style={s.title}>When would you like to do this?</Text>
-            <Text style={s.body}>{configuredAction?.action_text_snapshot}</Text>
+            <View style={{ backgroundColor: '#EDF5E7', borderColor: '#B5CEA3', borderWidth: 1.5, borderLeftWidth: 5, borderRadius: 20, padding: 18, gap: 8 }}>
+              <Text style={{ color: '#496B36', fontSize: 15, fontWeight: '700', letterSpacing: 0.6 }}>YOUR ACTION</Text>
+              <Text accessibilityRole="header" style={{ color: '#302040', fontFamily: Fonts.rounded, fontSize: 25, lineHeight: 33, fontWeight: '700' }}>{configuredAction?.action_text_snapshot}</Text>
+            </View>
+            <Text style={s.heading}>When would you like to do this?</Text>
             <Text style={s.small}>
               C-Day:{" "}
               {formatEventMoment(event.event_start_at, event.event_timezone)}
@@ -1252,6 +1394,7 @@ function Planner({
               disabled={busy}
               onPress={() => pickSchedule(null)}
             />
+            <Button label="At event · 15 minutes after start" disabled={busy} onPress={() => pickSchedule(0)} />
             {[1, 2, 3, 7].map((d) => (
               <Button
                 key={d}
@@ -1266,6 +1409,7 @@ function Planner({
             ))}
             {!!presetError && <Text accessibilityLiveRegion="polite" style={s.errorBox}>{presetError}</Text>}
             <View key={`schedule-fields-${presetVisit}`} style={s.gap} onLayout={e => {
+              scheduleFieldsY.current = e.nativeEvent.layout.y;
               if (presetScrollPending.current) {
                 presetScrollPending.current = false;
                 scroll.current?.scrollTo({ y: Math.max(0, e.nativeEvent.layout.y - 16), animated: false });
@@ -1300,26 +1444,8 @@ function Planner({
                 </Text>
               </View>
             )}
-            <Button polished
-              label={
-                busy
-                  ? "Saving…"
-                  : event.status === "planned"
-                    ? "Save new time"
-                    : "Continue"
-              }
-              disabled={busy}
-              onPress={continueSchedule}
-            />
-            </View>
-          </>
-        )}
-        {step === "difficulty" && (
-          <>
-            <Text style={s.title}>
-              For this C-Day, how does this task feel?
-            </Text>
-            <Text style={s.body}>{configuredAction?.action_text_snapshot}</Text>
+            {event.status === 'draft' && <>
+              <Text style={s.heading}>How does this task feel?</Text>
             {(
               [
                 ["easy", "Easy", "I feel pretty comfortable doing this."],
@@ -1330,8 +1456,15 @@ function Planner({
               <Pressable
                 key={value}
                 accessibilityRole="radio"
-                accessibilityState={{ checked: difficulty === value }}
-                onPress={() => setDifficulty(value)}
+                disabled={busy}
+                accessibilityState={{ checked: difficulty === value, disabled: busy }}
+                onPress={() => {
+                  setDifficulty(value);
+                  Keyboard.dismiss();
+                  requestAnimationFrame(() => {
+                    if (alive.current) scroll.current?.scrollTo({ y: Math.max(0, scheduleFieldsY.current + scheduleFooterY.current - 24), animated: true });
+                  });
+                }}
                 style={[s.choiceCard, difficulty === value && s.selected]}
               >
                 <Text style={s.heading}>
@@ -1345,46 +1478,42 @@ function Planner({
               There isn’t a right answer. The same task can feel different in
               different situations.
             </Text>
-            <Button
-              label="Continue"
-              onPress={() => setStep("calendar")}
-              disabled={!difficulty}
+
+              <View style={s.gap} onLayout={e => { scheduleFooterY.current = e.nativeEvent.layout.y; }}>
+              {!calendarDefaultReady ? <Text style={s.small}>Loading calendar choice…</Text> : calendarDefault === null ? <View style={s.card}>
+                <Text style={s.heading}>Calendar for this plan</Text>
+                <Text style={s.small}>Add scheduled actions to your phone calendar? We’ll use this choice for the remaining actions on this phone. You can change individual actions.</Text>
+                <Button label="Yes, add my actions" onPress={() => { setCalendarDefault(true); setSync(true); }} disabled={busy} />
+                <Button secondary label="Keep in app only" onPress={() => { setCalendarDefault(false); setSync(false); }} disabled={busy} />
+              </View> : <View style={s.gap}>
+                <Text style={s.small}>Calendar for this action: {sync ? 'On' : 'Off'}</Text>
+                <Pressable accessibilityRole="button" onPress={() => setCalendarOverride(v=>!v)} style={{minHeight:44,justifyContent:'center'}}><Text style={s.small}>Change for this action {calendarOverride ? '−' : '+'}</Text></Pressable>
+                {calendarOverride && <Switch accessibilityLabel="Add this action to my phone calendar" value={sync} onValueChange={setSync} disabled={busy} />}
+              </View>}
+              {sync && <Text style={s.small}>Your plan saves first. Calendar entries last 15 minutes.</Text>}
+              </View>
+            </>}
+            {!resolved && <Text style={s.small}>Choose a date and time to continue.</Text>}
+            <Button polished
+              label={
+                busy
+                  ? "Saving…"
+                  : event.status === "planned"
+                    ? "Save new time"
+                    : actions.some(a => a.id !== actionId && a.completion_status !== "not_needed" && (!a.scheduled_at || !a.difficulty)) ? "Save & next action" : "Save & review my plan"
+              }
+              disabled={busy || !resolved || (event.status === "draft" && (!difficulty || !calendarDefaultReady || calendarDefault === null))}
+              onPress={continueSchedule}
             />
-          </>
-        )}
-        {step === "calendar" && (
-          <>
-            <Text style={s.title}>Keep your plan handy</Text>
-            <View style={s.card}>
-              <Text style={s.heading}>Add to my phone calendar</Text>
-              <Switch
-                accessibilityLabel="Add to my phone calendar"
-                value={sync}
-                onValueChange={setSync}
-                disabled={busy}
-                trackColor={{ true: "#769E62", false: "#D9D1DF" }}
-              />
-              <Text style={s.body}>
-                {cDayCalendar.available
-                  ? "Calendar sync is optional."
-                  : "Phone calendar sync is not available in Expo Go. You can save your preference now; this will not create a phone event."}
-              </Text>
             </View>
-            {sync && (
-              <Text style={s.small}>
-                Your request will stay pending. My Plan works without calendar
-                access.
-              </Text>
-            )}
-            <Button
-              label={busy ? "Saving…" : "Save to My Plan"}
-              onPress={() => void saveAction()}
-              disabled={busy}
-            />
           </>
         )}
         {step === "plan" && event && (
           <>
+            {event.event_type === "custom" && event.status === "draft" && <Button label="Open my C-Day Builder" onPress={() => setStep("builder")} disabled={busy} />}
+            {event.event_type === "custom" && event.status !== "draft" && <CustomSnapshot event={event} actions={actions} />}
+            {event.event_type === "custom" && event.status === "completed" && <SaveCustomTemplate key={event.id} event={event} />}
+
             <Text style={s.title}>
               {event.status === "completed" ? "My C-Day" : "My Plan"}
             </Text>
@@ -1400,15 +1529,19 @@ function Planner({
                     ? "Planned"
                     : "Draft"}
               </Text>
-              {!!event.venue_name && (
-                <Text style={s.body}>{event.venue_name}</Text>
-              )}
+              <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap'}}>
+              {!!event.venue_name && <Text style={[s.small,{flexShrink:1}]}>{event.venue_name}</Text>}
               <Pressable accessibilityRole="button" accessibilityLabel="View event time zone"
                 onPress={() => Alert.alert("Event time zone", `${event.event_timezone.replace(/_/g, " ")}\nAll dates and action times in this plan use this saved time zone.`)}
                 style={{ minHeight: 44, justifyContent: "center", alignSelf: "flex-start" }}>
                 <Text style={s.small}>Time zone ⓘ</Text>
               </Pressable>
+              </View>
             </View>
+            {event.status === "planned" && (
+              <CDayCalendarPanel key={event.id} event={event} actions={actions}
+                onUpdate={(updated) => setActions(current => current.map(a => a.id === updated.id ? updated : a))} />
+            )}
             {event.status !== "draft" && (
               <PlanRewards
                 rating={event.plan_rating}
@@ -1418,16 +1551,16 @@ function Planner({
             <Text style={s.body}>
               {event.status !== "draft"
                 ? `${actions.filter((a) => a.completion_status === "planned").length} planned · ${actions.filter((a) => a.completion_status === "done").length} done · ${actions.filter((a) => a.completion_status === "not_needed").length} not needed`
-                : `${activeActions.length} of 6 actions selected`}
+                : `Your ${activeActions.length} actions · ${readyCount} ready, ${activeActions.length - readyCount} to go`}
             </Text>
             {event.status === "planned" && (
               <View style={s.card}>
                 {Date.parse(event.event_start_at) <= now ? (
-                  <Button polished
+                  <View style={s.gap}><Text style={s.body}>How did it go? You can reflect even if your actions aren’t marked done.</Text><Button polished
                     label="Reflect on this C-Day"
                     onPress={beginReflection}
                     disabled={busy}
-                  />
+                  /></View>
                 ) : (
                   <Text style={s.small}>
                     Reflection will be available after your C-Day event time.
@@ -1440,10 +1573,15 @@ function Planner({
                 Your draft is saved. Choose an action when you’re ready.
               </Text>
             )}
-            {displayedActions.map((a) => (
+            {displayedActions.map((a, index) => (
               <View
                 key={a.id}
                 onLayout={(layout) => {
+                  if (advanceAfterSave.current && a.id === nextSetupAction?.id) {
+                    const y = layout.nativeEvent.layout.y;
+                    advanceAfterSave.current = false;
+                    requestAnimationFrame(() => scroll.current?.scrollTo({ y: Math.max(0,y-16), animated: true }));
+                  }
                   if (a.id === focusedAction && focusPending.current) {
                     focusY.current = layout.nativeEvent.layout.y;
                     focusEntryAction();
@@ -1452,6 +1590,8 @@ function Planner({
                 style={[
                   s.card,
                   s.timelineCard,
+                  event.status === "planned" && Date.parse(event.event_start_at) > now && a.completion_status === "planned" && a.scheduled_at && Date.parse(a.scheduled_at) <= now ? {backgroundColor:'#FFF3D8',borderColor:'#D9B96E'} : null,
+                  event.status === "draft" && { backgroundColor: a.scheduled_at && a.difficulty ? '#EDF5E7' : a.id === nextSetupAction?.id ? '#FFF0E2' : '#FAF9F6', borderColor: a.id === nextSetupAction?.id ? '#D8A474' : '#DCE5D5' },
                   a.id === focusedAction && {
                     borderColor: "#9472AD",
                     borderWidth: 2,
@@ -1464,6 +1604,8 @@ function Planner({
                     s.notNeededCard,
                 ]}
               >
+                <Text style={s.scheduleLabel}>Action {index + 1} of {displayedActions.length}{event.status === "draft" ? a.scheduled_at && a.difficulty ? ' · ✓ Ready' : a.id === nextSetupAction?.id ? ' · Up next' : ' · Still to do' : ''}</Text>
+                {event.status === "planned" && Date.parse(event.event_start_at) > now && a.completion_status === "planned" && a.scheduled_at && Date.parse(a.scheduled_at) <= now && <Text style={s.scheduleLabel}>Needs a check-in · Mark done, reschedule, or choose no longer needed.</Text>}
                 <View style={s.timelineHeader}>
                   <View style={[s.timelineDot, a.completion_status === "done" && s.timelineDotDone]} />
                   <Text style={s.scheduleLabel}>
@@ -1500,20 +1642,18 @@ function Planner({
                   {actionCategory(a.action_library_id)}
                 </Text>
                 <Text style={s.heading}>{a.action_text_snapshot}</Text>
-                <Text style={s.difficultyBadge}>
+                {event.status !== "draft" && <Text style={s.difficultyBadge}>
                   Difficulty:{" "}
                   {a.difficulty
                     ? a.difficulty[0].toUpperCase() + a.difficulty.slice(1)
                     : "Not set"}
-                </Text>
-                <Text style={s.small}>
+                </Text>}
+                {a.calendar_sync_status !== "not_requested" && <Text style={s.small}>
                   Calendar:{" "}
-                  {a.calendar_sync_status === "not_requested"
-                    ? "Not requested"
-                    : a.calendar_sync_status === "pending"
+                  {a.calendar_sync_status === "pending"
                       ? "Deferred · saved in My Plan only"
                       : a.calendar_sync_status}
-                </Text>
+                </Text>}
                 <CDayExploreSupport
                   action={a}
                   eventType={event.event_type}
@@ -1549,22 +1689,8 @@ function Planner({
                   )}
                 {event.status === "draft" && (
                   <>
-                    <Button polished
-                      secondary
-                      label={
-                        a.scheduled_at
-                          ? "Edit schedule or difficulty"
-                          : "Schedule this action"
-                      }
-                      onPress={() => chooseAction(a)}
-                      disabled={busy}
-                    />
-                    <Button polished
-                      secondary
-                      label="Remove from draft"
-                      disabled={busy}
-                      onPress={() => void removeSelection(a)}
-                    />
+                    {a.scheduled_at && a.difficulty ? <Pressable accessibilityRole="button" accessibilityLabel={`Edit action ${index + 1} schedule or difficulty`} disabled={busy} onPress={() => chooseAction(a)} style={{minHeight:44,justifyContent:'center'}}><Text style={s.scheduleLabel}>Edit schedule or difficulty ›</Text></Pressable> : <Button polished secondary={a.id !== nextSetupAction?.id} label={`Schedule action ${index + 1}`} onPress={() => chooseAction(a)} disabled={busy} />}
+                    <Pressable accessibilityRole="button" accessibilityLabel={`Remove action ${index + 1} from draft`} disabled={busy} onPress={() => void removeSelection(a)} style={{minHeight:44,justifyContent:'center',alignSelf:'flex-start'}}><Text style={[s.small,{textDecorationLine:'underline'}]}>Remove</Text></Pressable>
                   </>
                 )}
               </View>
@@ -1572,6 +1698,7 @@ function Planner({
             {event.status === "draft" && (
               <>
                 <Button polished
+                  secondary
                   label={
                     activeActions.length >= 6
                       ? "Review action categories"
@@ -1580,6 +1707,8 @@ function Planner({
                   onPress={() => setStep("categories")}
                   disabled={busy}
                 />
+                {!nextSetupAction && activeActions.length >= 2 && !reviewing && <View onLayout={e => { if (advanceAfterSave.current) { const y = e.nativeEvent.layout.y; advanceAfterSave.current = false; requestAnimationFrame(() => scroll.current?.scrollTo({y: Math.max(0,y-16), animated:true})); } }}><Button polished label="Review my plan" disabled={busy} onPress={() => setReviewing(true)} /></View>}
+                {reviewing && !nextSetupAction && activeActions.length >= 2 && <>
                 <View style={s.card}>
                   <Text style={s.heading}>
                     How do you feel about your plan?
@@ -1645,6 +1774,7 @@ function Planner({
                     </Text>
                   )}
                 </View>
+                </>}
               </>
             )}
 
@@ -1682,26 +1812,28 @@ function Planner({
           <>
             <LeafCharacter size={140} />
             <Text style={s.title}>Your C-Day is planned.</Text>
+            {event.event_type === "custom" && <><CustomSnapshot event={event} actions={actions} /><Button label="BACK HOME" onPress={() => router.push("/")} /></>}
             <Text style={s.heading}>{event.title}</Text>
             <Text style={s.body}>{activeActions.length} actions planned</Text>
             {(() => {
-              const next = activeActions
-                .filter((a) => a.completion_status === "planned")
-                .find(
-                  (a) =>
-                    a.scheduled_at && Date.parse(a.scheduled_at) > Date.now(),
-                );
-              return next ? (
+              const scheduled = activeActions.filter(a => a.completion_status === "planned" && a.scheduled_at);
+              const index = Math.min(quickActionIndex, Math.max(0, scheduled.length - 1));
+              const current = scheduled[index];
+              return current ? (
                 <View style={s.card}>
-                  <Text style={s.small}>Next scheduled action</Text>
-                  <Text style={s.heading}>{next.action_text_snapshot}</Text>
-                  <Text style={s.body}>
-                    {formatMoment(next.scheduled_at!, event.event_timezone)}
-                  </Text>
+                  <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between', gap:8}}>
+                    <Text style={[s.small,{flex:1}]}>Action {index + 1} of {scheduled.length}</Text>
+                    {scheduled.length > 1 && <View style={{flexDirection:'row',gap:8}}>
+                      <Pressable accessibilityRole="button" accessibilityLabel="Previous planned action" accessibilityState={{disabled:index === 0}} disabled={index === 0} onPress={() => setQuickActionIndex(index - 1)} style={{minWidth:44,minHeight:44,borderRadius:14,backgroundColor:'#DCEACF',alignItems:'center',justifyContent:'center',opacity:index === 0 ? 0.35 : 1}}><Text style={{fontSize:28,color:'#405D35'}}>‹</Text></Pressable>
+                      <Pressable accessibilityRole="button" accessibilityLabel="Next planned action" accessibilityState={{disabled:index === scheduled.length - 1}} disabled={index === scheduled.length - 1} onPress={() => setQuickActionIndex(index + 1)} style={{minWidth:44,minHeight:44,borderRadius:14,backgroundColor:'#DCEACF',alignItems:'center',justifyContent:'center',opacity:index === scheduled.length - 1 ? 0.35 : 1}}><Text style={{fontSize:28,color:'#405D35'}}>›</Text></Pressable>
+                    </View>}
                   </View>
-              ) : (
-                <Text style={s.body}>No upcoming scheduled actions.</Text>
-              );
+                  <View accessibilityLiveRegion="polite" style={s.gap}>
+                    <Text style={s.heading}>{current.action_text_snapshot}</Text>
+                    <Text style={s.body}>{formatMoment(current.scheduled_at!, event.event_timezone)}</Text>
+                  </View>
+                </View>
+              ) : <Text style={s.body}>No scheduled actions.</Text>;
             })()}
             <Button label="View My Plan" onPress={() => setStep("plan")} />
             <Button
@@ -1730,6 +1862,19 @@ function Planner({
   );
 }
 const s = StyleSheet.create({
+  simulationMenuCard: { flexDirection: "row", alignItems: "center", gap: 12, padding: 12, minHeight: 100, borderRadius: 20, backgroundColor: "#E8F0DF", borderWidth: 1, borderColor: "#BDD2AD" },
+  simulationArtwork: { width: 88, height: 80 },
+  simulationMenuLabel: { flex: 1, fontSize: 18, fontWeight: "600", color: "#354C29", lineHeight: 25 },
+  simulationMenuChevron: { fontSize: 28, color: "#496B36" },
+  customMenuCard: { backgroundColor: "#EEE4F4", borderColor: "#9472AD", borderWidth: 2, borderRadius: 24, padding: 20, gap: 16, marginBottom: 8 },
+  customMenuTop: { flexDirection: "row", alignItems: "center", gap: 12 },
+  customMenuCopy: { flex: 1, gap: 8 },
+  customMenuEyebrow: { fontSize: 14, lineHeight: 21, letterSpacing: 1, fontWeight: "700", color: "#63497B" },
+  customMenuTitle: { fontFamily: Fonts.rounded, fontSize: 20, lineHeight: 28, fontWeight: "600", color: "#302040" },
+  customMenuBody: { fontSize: 16, lineHeight: 24, color: "#62556E" },
+  customMenuCta: { backgroundColor: "#63497B", borderRadius: 14, paddingHorizontal: 16, paddingVertical: 12, minHeight: 48, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 },
+  customMenuCtaText: { flex: 1, fontSize: 16, lineHeight: 23, fontWeight: "700", color: "#FFFFFF" },
+  customMenuArrow: { fontSize: 24, color: "#FFFFFF" },
   selectionCount: { alignSelf: "flex-start", backgroundColor: "#E9EFDF", color: "#405D35", borderRadius: 12, paddingHorizontal: 12, paddingVertical: 8, fontSize: 15, fontWeight: "700" },
   categoryGrid: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
   categoryTile: { flexGrow: 1, flexBasis: "46%", minWidth: 140, minHeight: 90, backgroundColor: "#FFFFFF", borderColor: "#DFE4D7", borderWidth: 1, borderRadius: 18, padding: 14, gap: 8 },
@@ -1739,8 +1884,8 @@ const s = StyleSheet.create({
   categoryArrow: { fontSize: 24, color: "#705384" },
   welcomeRow: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 4 },
   welcomeText: { flex: 1, minWidth: 0, gap: 8 },
-  eventSummary: { backgroundColor: "#F4F7EE", borderColor: "#DDE5D4", padding: 18, gap: 10 },
-  statusBadge: { alignSelf: "flex-start", backgroundColor: "#E6EEDA", color: "#405D35", borderRadius: 10, paddingHorizontal: 10, paddingVertical: 4, fontSize: 13, lineHeight: 20, fontWeight: "600" },
+  eventSummary: { backgroundColor: "#F4F7EE", borderColor: "#DDE5D4", padding: 14, gap: 6 },
+  statusBadge: { alignSelf: "flex-start", backgroundColor: "#E6EEDA", color: "#405D35", borderRadius: 10, paddingHorizontal: 10, paddingVertical: 4, fontSize: 14, lineHeight: 21, fontWeight: "600" },
   timelineCard: { backgroundColor: "#FFFFFF", borderColor: "#E1E5DA", borderLeftWidth: 3, borderLeftColor: "#B4CCA2", padding: 16, gap: 10 },
   timelineHeader: { flexDirection: "row", alignItems: "center", gap: 9 },
   timelineDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: "#FFFFFF", borderColor: "#789666", borderWidth: 2 },
@@ -1763,7 +1908,7 @@ const s = StyleSheet.create({
   },
   gap: { gap: 8 },
   eyebrow: {
-    fontSize: 12,
+    fontSize: 14,
     letterSpacing: 1,
     color: "#62556E",
     fontWeight: "700",
@@ -1868,8 +2013,8 @@ const s = StyleSheet.create({
   emptyStars: { color: "#8C8068" },
   ratingValue: { fontSize: 18, fontWeight: "700", color: "#51452C" },
   rewardCaption: {
-    fontSize: 12,
-    lineHeight: 17,
+    fontSize: 14,
+    lineHeight: 21,
     color: "#526347",
     textAlign: "center",
   },

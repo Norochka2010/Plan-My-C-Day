@@ -54,7 +54,7 @@ export function PracticeScenario({contentId,catalog,onClose,onOpen,publishedOnly
       </>}
       {!!message&&<Text accessibilityLiveRegion="polite" style={s.body}>{message}</Text>}
       {!ready&&<Action label="Retry progress" onPress={()=>setRetry(v=>v+1)}/>}
-      <Text style={s.small}>Practice XP on this device: {ready?Object.values(progress).reduce((sum,e)=>sum+e.xp,0):'…'}. XP is for completion, regardless of your response. Each scenario earns XP once. Your response is not saved.</Text>
+      <Text style={s.small}>Practice XP in your account: {ready?Object.values(progress).reduce((sum,e)=>sum+e.xp,0):'…'}. XP is for completion, regardless of your response. Each scenario earns XP once. Your response is not saved.</Text>
       <Action variant="navigation" label={next?'Next scenario':'Back to Explore'} onPress={()=>next?onOpen(next):onClose()} disabled={busy}/>
     </>}
   </ScrollView></SafeAreaView>;
@@ -62,7 +62,7 @@ export function PracticeScenario({contentId,catalog,onClose,onOpen,publishedOnly
 const s=StyleSheet.create({
  screen:{flex:1,backgroundColor:'#FFFCF7'},content:{padding:24,paddingBottom:40,width:'100%',maxWidth:640,alignSelf:'center',gap:18},
  title:{color:'#241638',fontFamily:Fonts.rounded,fontSize:32,lineHeight:40,fontWeight:'600'},heading:{color:'#302040',fontFamily:Fonts.rounded,fontSize:20,lineHeight:29,fontWeight:'600'},
- body:{color:'#62556E',fontSize:16,lineHeight:26},small:{color:'#716579',fontSize:12,lineHeight:19},
+ body:{color:'#62556E',fontSize:16,lineHeight:26},small:{color:'#716579',fontSize:14,lineHeight:21},
  card:{backgroundColor:'#EFEDF9',borderColor:'#CEC8E8',borderWidth:1,borderRadius:22,padding:20,gap:12},green:{backgroundColor:'#EDF5E7',borderColor:'#C5DDB5'},
  button:{backgroundColor:'#EEE4F4',borderColor:'#EEE4F4',borderWidth:2,borderRadius:14,minHeight:48,padding:14,justifyContent:'center'},selected:{borderColor:'#63497B'},label:{color:'#432B58',fontSize:16,fontWeight:'600'},
 });

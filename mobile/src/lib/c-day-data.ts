@@ -36,7 +36,7 @@ export async function getPlan(
     includeLibrary
       ? supabase
           .from("action_library")
-          .select("id,category,action_text,source,content_version,active")
+          .select("id,category,action_text,source,content_version,active,event_tags,context_tags")
           .eq("active", true)
           .eq("source", "Meyer_2021")
           .order("id")
@@ -99,10 +99,12 @@ export function planError(error: unknown) {
 export async function saveCalendarResult(
   action: CDayAction,
   result: import("./c-day-calendar").CalendarResult,
+  syncEnabled?: boolean,
 ): Promise<CDayAction | null> {
   const { data, error } = await supabase
     .from("c_day_actions")
     .update({
+      ...(syncEnabled === undefined ? {} : { calendar_sync_enabled: syncEnabled }),
       calendar_sync_status: result.status,
       native_calendar_event_id: result.nativeEventId,
       calendar_sync_message: result.message,
@@ -216,5 +218,10 @@ export async function submitCDayReflection(
     p_tags: tags,
     p_notes: notes.trim() || null,
   });
+  if (error) throw error;
+}
+
+export async function deleteCDay(id: string): Promise<void> {
+  const { error } = await supabase.rpc("delete_c_day", { p_event_id: id });
   if (error) throw error;
 }

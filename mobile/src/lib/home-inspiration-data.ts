@@ -1,3 +1,4 @@
+import {readAccountProgress} from './explore-account-progress';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from './supabase';
 import { parseInspirationMessages, parseInspirationState, selectInspiration, type InspirationContext, type InspirationAction, type InspirationMessage } from './home-inspiration-model';
@@ -25,22 +26,11 @@ async function readContext(userId: string, now: number): Promise<InspirationCont
   }
   return {nextPlannedAt:future[0]?.event_start_at??null,actions,events};
 }
-// Explore ledgers are device-local. Only observe new completions while the same
-// account is active in this process; never attribute inherited progress at sign-in.
+// Observe account-backed completion dates only; reflection and XP do not enter selection.
 let observedAccount: string | null = null;
 let exploreSince = Infinity;
 async function readExploreCompletions(): Promise<NonNullable<InspirationContext['exploreCompletions']>> {
-  const keys=(await AsyncStorage.getAllKeys()).filter(k=>k.startsWith('quick-learn:v1:') || k.startsWith('real-life-challenge:v1:') || k==='practice:completion:v1' || k==='myth-or-fact:completion:v1');
-  const entries: NonNullable<InspirationContext['exploreCompletions']>=[];
-  for(const [key,raw] of await AsyncStorage.multiGet(keys)) {
-    if(!raw)continue;
-    const value=JSON.parse(raw);
-    const add=(id:string,p:any)=>{if(p && typeof p.completedAt==='string' && Date.parse(p.completedAt)>exploreSince)entries.push({id,completedAt:p.completedAt});};
-    if(key.startsWith('quick-learn:v1:')) {if(value?.complete===true)add(key,value);}
-    else if(key.startsWith('real-life-challenge:v1:')) {if(value?.status==='completed')add(key,value);}
-    else if(value && typeof value==='object' && !Array.isArray(value))for(const [id,p] of Object.entries(value))add(`${key}:${id}`,p);
-  }
-  return entries; // No reflection text, XP values, or profile data enters selection.
+ return (await readAccountProgress()).filter(p=>p.status==='completed' && !p.imported_from_device && p.completed_at && Date.parse(p.completed_at)>exploreSince).map(p=>({id:p.content_id,completedAt:p.completed_at!}));
 }
 export type InspirationDisplay = { message: InspirationMessage; validUntil: number };
 let queue: Promise<unknown> = Promise.resolve();

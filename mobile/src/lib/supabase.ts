@@ -1,5 +1,5 @@
 import 'react-native-url-polyfill/auto';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { sessionStorage } from './session-storage';
 import { createClient } from '@supabase/supabase-js';
 import { Platform } from 'react-native';
 
@@ -13,7 +13,7 @@ if (!url || !key) {
 // This client handles both authentication and database queries.
 export const supabase = createClient(url, key, {
   auth: {
-    ...(Platform.OS !== 'web' ? { storage: AsyncStorage } : {}),
+    ...(Platform.OS !== 'web' ? { storage: sessionStorage } : {}),
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,

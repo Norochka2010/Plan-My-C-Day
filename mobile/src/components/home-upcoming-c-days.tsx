@@ -52,7 +52,7 @@ export function HomeUpcomingCDays() {
   }, []);
   return (
     <View style={s.section}>
-      <Text style={s.sectionTitle}>Upcoming C-Days</Text>
+      <Text style={s.sectionTitle}>Your C-Days</Text>
       {!account.ready ? (
         <ActivityIndicator accessibilityLabel="Loading your account" />
       ) : account.id ? (
@@ -204,7 +204,9 @@ function UpcomingCards({ userId }: { userId: string }) {
             }
           >
             {visible.map((event, index) => {
-              const action = nextUpcomingAction(event, now);
+              const past = event.status === "planned" && Date.parse(event.event_start_at) <= now;
+              const overdue = event.status === "planned" ? [...event.actions].filter(a => a.completion_status === "planned" && a.scheduled_at && Date.parse(a.scheduled_at) <= now).sort((a,b) => Date.parse(a.scheduled_at!) - Date.parse(b.scheduled_at!))[0] : undefined;
+              const action = overdue ?? nextUpcomingAction(event, now);
               return (
                 <View key={event.id} style={{ width, paddingHorizontal: 1, flexShrink: 0 }}>
                   <View style={s.eventCard} onLayout={(e) => {
@@ -258,17 +260,22 @@ function UpcomingCards({ userId }: { userId: string }) {
                           : "View your plan →"}
                       </Text>
                     </Pressable>
-                    {action ? (
+                    {past ? <View style={[s.action,{backgroundColor:'#FFF3D8'}]}>
+                      <Text style={s.title}>How did it go?</Text>
+                      <Text style={s.body}>You can reflect even if you haven’t marked your actions done.</Text>
+                      <Pressable accessibilityRole="button" onPress={() => open(event.id)} style={s.link}><Text style={s.linkText}>Open plan to reflect →</Text></Pressable>
+                    </View> : action ? (
                       <Pressable
                         accessibilityRole="button"
                         accessibilityLabel={`Open next action: ${action.action_text_snapshot}`}
                         onPress={() => open(event.id, action.id)}
                         style={({ pressed }) => [
                           s.action,
+                          overdue && {backgroundColor:'#FFF3D8'},
                           pressed && s.pressed,
                         ]}
                       >
-                        <Text style={s.small}>NEXT SCHEDULED ACTION</Text>
+                        <Text style={s.small}>{overdue ? "NEEDS A CHECK-IN" : "NEXT SCHEDULED ACTION"}</Text>
                         <Text style={s.actionTitle}>
                           {action.action_text_snapshot}
                         </Text>
@@ -278,7 +285,7 @@ function UpcomingCards({ userId }: { userId: string }) {
                             event.event_timezone,
                           )}
                         </Text>
-                        <Text style={s.linkText}>Open action →</Text>
+                        <Text style={s.linkText}>{overdue ? "Check in · Done, reschedule or no longer needed →" : "Open action →"}</Text>
                       </Pressable>
                     ) : (
                       <View style={s.action}>
@@ -287,7 +294,7 @@ function UpcomingCards({ userId }: { userId: string }) {
                         </Text>
                       </View>
                     )}
-                    {action && index === page && (
+                    {!past && action && index === page && (
                       <View
                         style={{ paddingHorizontal: 18, paddingBottom: 14 }}
                       >
@@ -347,7 +354,7 @@ const s = StyleSheet.create({
   status: { color: "#5D4277", fontSize: 14, fontWeight: "600" },
   title: { color: "#241638", fontSize: 20, lineHeight: 27, fontWeight: "600" },
   body: { color: "#62556E", fontSize: 14, lineHeight: 21 },
-  small: { color: "#6E6577", fontSize: 12, lineHeight: 18 },
+  small: { color: "#6E6577", fontSize: 14, lineHeight: 21 },
   action: {
     padding: 18,
     gap: 7,

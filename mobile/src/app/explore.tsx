@@ -34,6 +34,9 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
   const navigation = useNavigation();
   const handledEntry = useRef(false);
   const [supportSession, setSupportSession] = useState(!!supportId);
+  // Keep HOME challenge previews and their linked activities under one access policy.
+  // Release builds and ordinary Plan support still require published content.
+  const publishedOnly = supportSession && !(__DEV__ && homeChallenge);
   const [supportMessage, setSupportMessage] = useState('');
   function returnToCDay() {
     setSelected(null); setLessonId(null); setMythId(null); setPracticeId(null); setChallengeId(null); setExpertOpen(false); setExpertId(null);
@@ -57,7 +60,7 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
     let active = true;
     setLoading(true);
     setFailed(false);
-    getExploreCatalog({ publishedOnly: supportSession }).then(items => {
+    getExploreCatalog({ publishedOnly }).then(items => {
       if (active) {
         setCatalog(items);
         if (!homeChallenge && supportSession && supportId && !handledEntry.current) {
@@ -71,7 +74,7 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
       if (active) { setFailed(true); setCatalog([]); }
     }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, [retry, supportSession, supportId, homeChallenge]));
+  }, [retry, supportSession, supportId, homeChallenge, publishedOnly]));
   function openContent(item: ExploreSummary) {
     setSelected(null); setLessonId(null); setMythId(null); setPracticeId(null); setChallengeId(null); setExpertOpen(false); setExpertId(null);
     if (item.content_type === 'QUICK_LEARN') setLessonId(item.content_id);
@@ -82,10 +85,18 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
     else setSelected(sections.find(section => section.type === item.content_type)?.title ?? null);
   }
   const selectedType = selected === 'Real-Life Challenges' ? 'REAL_LIFE_CHALLENGE' : selected === 'Quick Learn' ? 'QUICK_LEARN' : selected === 'Practice a Skill' ? 'PRACTICE_A_SKILL' : 'MYTH_OR_FACT';
+  const scroll = useRef<ScrollView>(null);
+  const growthTop = useRef(0);
+  const scrollToGrowth = useRef(false);
   const recommended = catalog[0];
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.screen}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView ref={scroll} contentContainerStyle={styles.content} onContentSizeChange={() => {
+        if (scrollToGrowth.current) {
+          scrollToGrowth.current = false;
+          scroll.current?.scrollTo({ y: growthTop.current, animated: true });
+        }
+      }}>
         <View style={styles.header}>
           <View style={styles.copy}>
             <Text accessibilityRole="header" style={styles.title}>Explore</Text>
@@ -122,24 +133,26 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
           </Pressable> : <Text style={styles.body}>New things to explore are on their way.</Text>}
         </View>
 
-        <ExploreGrowthCard catalog={catalog} catalogLoading={loading} catalogFailed={failed}
+        <View onLayout={event => { growthTop.current = event.nativeEvent.layout.y; }}>
+        <ExploreGrowthCard onOpen={openContent} onExpand={() => { scrollToGrowth.current = true; }} catalog={catalog} catalogLoading={loading} catalogFailed={failed}
           refreshKey={[lessonId, mythId, practiceId, challengeId, selected].join('|')} />
+        </View>
 
       </ScrollView>
       <Modal visible={expertOpen} animationType="none" onRequestClose={() => { setExpertOpen(false); setExpertId(null); }}>
         {expertOpen && <SafeAreaProvider><ExpertResources initialContentId={expertId} onClose={() => { setExpertOpen(false); setExpertId(null); }} /></SafeAreaProvider>}
       </Modal>
       <Modal visible={challengeId !== null} animationType="none" onRequestClose={() => { if (homeChallenge) returnToCDay(); else setChallengeId(null); }}>
-        {challengeId && <SafeAreaProvider><RealLifeChallenge backLabel={homeChallenge ? "‹ Back to Home" : undefined} publishedOnly={supportSession && !(__DEV__ && homeChallenge)} key={challengeId} contentId={challengeId} onClose={() => { if (homeChallenge) returnToCDay(); else setChallengeId(null); }} onOpen={openContent} /></SafeAreaProvider>}
+        {challengeId && <SafeAreaProvider><RealLifeChallenge backLabel={homeChallenge ? "‹ Back to Home" : undefined} publishedOnly={publishedOnly} key={challengeId} contentId={challengeId} onClose={() => { if (homeChallenge) returnToCDay(); else setChallengeId(null); }} onOpen={openContent} /></SafeAreaProvider>}
       </Modal>
       <Modal visible={practiceId !== null} animationType="slide" onRequestClose={() => setPracticeId(null)}>
-        {practiceId && <SafeAreaProvider><PracticeScenario publishedOnly={supportSession} key={practiceId} contentId={practiceId} catalog={catalog} onClose={() => setPracticeId(null)} onOpen={openContent} /></SafeAreaProvider>}
+        {practiceId && <SafeAreaProvider><PracticeScenario publishedOnly={publishedOnly} key={practiceId} contentId={practiceId} catalog={catalog} onClose={() => setPracticeId(null)} onOpen={openContent} /></SafeAreaProvider>}
       </Modal>
       <Modal visible={mythId !== null} animationType="slide" onRequestClose={() => setMythId(null)}>
-        {mythId && <SafeAreaProvider><MythOrFact publishedOnly={supportSession} key={mythId} contentId={mythId} catalog={catalog} onClose={() => setMythId(null)} onOpen={openContent} /></SafeAreaProvider>}
+        {mythId && <SafeAreaProvider><MythOrFact publishedOnly={publishedOnly} key={mythId} contentId={mythId} catalog={catalog} onClose={() => setMythId(null)} onOpen={openContent} /></SafeAreaProvider>}
       </Modal>
       <Modal visible={lessonId !== null} animationType="slide" onRequestClose={() => setLessonId(null)}>
-        {lessonId && <SafeAreaProvider><QuickLearn publishedOnly={supportSession} key={lessonId} contentId={lessonId} catalog={catalog} onClose={() => setLessonId(null)} onNext={setLessonId} onPractice={(item) => { if (item) openContent(item); else { setLessonId(null); setSelected('Practice a Skill'); } }} /></SafeAreaProvider>}
+        {lessonId && <SafeAreaProvider><QuickLearn publishedOnly={publishedOnly} key={lessonId} contentId={lessonId} catalog={catalog} onClose={() => setLessonId(null)} onNext={setLessonId} onPractice={(item) => { if (item) openContent(item); else { setLessonId(null); setSelected('Practice a Skill'); } }} /></SafeAreaProvider>}
       </Modal>
       <Modal visible={selected !== null} transparent animationType="fade" onRequestClose={() => setSelected(null)}>
         <SafeAreaProvider><SafeAreaView style={{ flex: 1 }}>
@@ -165,15 +178,15 @@ const styles = StyleSheet.create({
   subtitle: { color: '#62556E', fontSize: 16, lineHeight: 25 },
   heading: { color: '#302040', fontSize: 19, lineHeight: 27, fontWeight: '600', fontFamily: Fonts.rounded },
   body: { color: '#62556E', fontSize: 14, lineHeight: 22 },
-  small: { color: '#716579', fontSize: 12, lineHeight: 18 },
+  small: { color: '#716579', fontSize: 14, lineHeight: 21 },
   recommendation: { padding: 14, gap: 8, borderRadius: 22, backgroundColor: '#F4EBF7', borderWidth: 1, borderColor: '#D9C4E5' },
   recommendationButton: { padding: 10, flexDirection: 'row', alignItems: 'center', gap: 12, borderRadius: 14, backgroundColor: '#FFFCF7', minHeight: 48 },
   progress: { gap: 10 },
   domainRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   domain: { minWidth: 80, flexGrow: 1, gap: 6, paddingVertical: 8 },
-  domainLabel: { color: '#594366', fontSize: 10, letterSpacing: 0.6, fontWeight: '700' },
+  domainLabel: { color: '#594366', fontSize: 14, letterSpacing: 0.6, fontWeight: '700' },
   track: { height: 5, backgroundColor: '#E7DFEB', borderRadius: 3 },
-  status: { color: '#716579', fontSize: 10 },
+  status: { color: '#716579', fontSize: 14 },
   cardList: { gap: 8 },
   card: { borderWidth: 1, borderRadius: 18, padding: 12, minHeight: 80, flexDirection: 'row', alignItems: 'center', gap: 14 },
   iconBadge: { width: 40, height: 44, alignItems: 'center', justifyContent: 'center' },

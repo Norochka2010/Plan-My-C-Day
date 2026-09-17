@@ -18,7 +18,7 @@ export interface ExploreContent {
   review_status: 'DRAFT' | 'IN_REVIEW' | 'APPROVED' | 'ARCHIVED'; expert_reviewer: string | null;
   medical_review_required: boolean; content_version: number; last_reviewed: string | null; active: boolean;
 }
-export type ExploreSummary = Pick<ExploreContent, 'content_id' | 'content_type' | 'title' | 'subtitle' | 'domain' | 'estimated_minutes' | 'source_type' | 'development_preview'> & { growth_domains?: GrowthDomain[] };
+export type ExploreSummary = Pick<ExploreContent, 'content_id' | 'content_type' | 'title' | 'subtitle' | 'domain' | 'estimated_minutes' | 'source_type' | 'development_preview'> & { growth_domains?: GrowthDomain[]; xp_value?: number };
 
 /** Metro excludes this guarded local snapshot from release builds. Never bypass RLS. */
 function developmentPracticePreviews(): ExploreContent[] {
@@ -65,7 +65,7 @@ export async function getExploreCatalog({ publishedOnly = false }: { publishedOn
   const result: ExploreSummary[] = [];
   for (let offset = 0; ; offset += 100) {
     const { data, error } = await supabase.from('explore_content')
-      .select('content_id,content_type,title,subtitle,domain,estimated_minutes,source_type,content_body,active,review_status,medical_review_required,expert_reviewer')
+      .select('content_id,content_type,title,subtitle,domain,estimated_minutes,xp_value,source_type,content_body,active,review_status,medical_review_required,expert_reviewer')
       .eq('active', true).eq('review_status', 'APPROVED').neq('source_type', 'COMMUNITY')
       .order('title').order('content_id').range(offset, offset + 99);
     if (error) throw error;

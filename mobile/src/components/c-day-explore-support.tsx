@@ -31,6 +31,7 @@ export function CDayExploreSupport({
   disabled?: boolean;
 }) {
   const router = useRouter();
+  const [expanded, setExpanded] = useState(false);
   const [items, setItems] = useState<ExploreSummary[]>([]);
   const limit = supportLimit(action, eventType, eventStatus);
   useFocusEffect(
@@ -60,7 +61,9 @@ export function CDayExploreSupport({
   );
   if (!limit || !items.length) return null;
   return (
-    <View style={[s.panel, limit === 2 && s.prominent]}>
+    <View style={s.panel}>
+      <Pressable accessibilityRole="button" accessibilityState={{expanded}} onPress={() => setExpanded(v=>!v)} style={{minHeight:44,justifyContent:'center'}}><Text style={s.heading}>Want help with this? {expanded ? '−' : '+'}</Text></Pressable>
+      {expanded && <>
       <Text style={s.heading}>
         {origin === "home"
           ? "Could help with your C-Day"
@@ -100,17 +103,14 @@ export function CDayExploreSupport({
           <Text style={s.linkText}>{item.title} →</Text>
         </Pressable>
       ))}
+      </>}
     </View>
   );
 }
 const s = StyleSheet.create({
   panel: {
     gap: 6,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: "#D9C4E5",
-  },
-  prominent: {
+
     padding: 14,
     backgroundColor: "#EDF5E7",
     borderWidth: 1,
@@ -124,7 +124,7 @@ const s = StyleSheet.create({
     fontWeight: "600",
   },
   body: { color: "#62556E", fontSize: 14, lineHeight: 21 },
-  small: { color: "#62556E", fontSize: 12, lineHeight: 18 },
+  small: { color: "#62556E", fontSize: 14, lineHeight: 21 },
   link: { minHeight: 44, paddingVertical: 8, gap: 3 },
   linkText: {
     color: "#4B3862",

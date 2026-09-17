@@ -1,27 +1,8 @@
-import { readChallengeTotals } from './real-life-challenge-progress';
-import { readQuickLearnTotals } from './quick-learn-progress';
-import { readMythProgress } from './myth-progress';
-import { readPracticeProgress } from './practice-progress';
-
-export type ExploreProgressSummary = {
-  xp: number;
-  categories: { title: string; xp: number | null; completed: number | null }[];
-};
-/** Read the original completion ledgers; never copy or re-award XP. */
-export async function readExploreProgress(): Promise<ExploreProgressSummary> {
-  const [quick, myth, practice, challenges] = await Promise.all([
-    readQuickLearnTotals(), readMythProgress(), readPracticeProgress(), readChallengeTotals(),
-  ]);
-  const summarize = (title: string, entries: Record<string, { xp: number }>) => ({
-    title, xp: Object.values(entries).reduce((total, entry) => total + entry.xp, 0),
-    completed: Object.keys(entries).length,
-  });
-  const categories = [
-    { title: 'Quick Learn', xp: quick.xp, completed: quick.completedLessons },
-    summarize('Myth or Fact?', myth),
-    summarize('Practice a Skill', practice),
-    { title: 'Real-Life Challenges', xp: challenges.xp, completed: challenges.completedChallenges },
-    { title: 'From the Experts', xp: null, completed: null },
-  ];
-  return { xp: categories.reduce((total, category) => total + (category.xp ?? 0), 0), categories };
+import {readAccountProgress} from './explore-account-progress';
+export type ExploreProgressSummary={xp:number;categories:{title:string;xp:number|null;completed:number|null}[]};
+/** One account-owned ledger supplies ME totals. Reading never issues awards. */
+export async function readExploreProgress():Promise<ExploreProgressSummary>{
+ const rows=(await readAccountProgress()).filter(p=>p.status==='completed');
+ const categories=[['Quick Learn','QUICK_LEARN'],['Myth or Fact?','MYTH_OR_FACT'],['Practice a Skill','PRACTICE_A_SKILL'],['Real-Life Challenges','REAL_LIFE_CHALLENGE']].map(([title,type])=>{const entries=rows.filter(p=>p.content_type===type);return{title,xp:entries.reduce((n,p)=>n+p.xp_awarded,0),completed:entries.length};});
+ return{xp:categories.reduce((n,c)=>n+c.xp,0),categories:[...categories,{title:'From the Experts',xp:null,completed:null}]};
 }

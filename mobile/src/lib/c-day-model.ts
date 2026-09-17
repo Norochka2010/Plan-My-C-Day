@@ -2,6 +2,8 @@ export type Difficulty = "easy" | "moderate" | "hard";
 export type CalendarStatus =
   "not_requested" | "pending" | "synced" | "denied" | "failed";
 export type CDayEvent = {
+  custom_context?: { answers: Record<string,string[]>; tags: string[] } | null;
+  builder_version?: string | null;
   id: string;
   user_id: string;
   event_type: string;
@@ -17,6 +19,8 @@ export type CDayEvent = {
   status: "draft" | "planned" | "completed" | "cancelled";
 };
 export type LibraryAction = {
+  event_tags?: string[];
+  context_tags?: string[];
   id: string;
   category: string;
   action_text: string;
@@ -54,15 +58,7 @@ export const categories = [
   "CALL",
   "SAY",
 ] as const;
-export const eventTypes = [
-  ["dinner_with_friends", "Eating Out / Dinner With Friends"],
-  ["school_event", "School Trip / School Event"],
-  ["travel", "Travel / Family Vacation"],
-  ["party", "Party / Social Event"],
-  ["friends_house", "Friend’s House / Sleepover"],
-  ["sports", "Sports / Team Event"],
-  ["custom", "Create My Own C-Day"],
-] as const;
+export { eventTypes } from "./c-day-event-types";
 export function newId() {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
     const n = Math.floor(Math.random() * 16);
@@ -155,8 +151,8 @@ export function validateSchedule(
   const t = Date.parse(iso);
   if (!Number.isFinite(t) || t <= now)
     throw Error("Choose a future time for this action.");
-  if (t > Date.parse(event.event_start_at))
-    throw Error("Schedule this preparation action no later than your C-Day.");
+  if (t > Date.parse(event.event_start_at) + 15 * 60000)
+    throw Error("Choose a time no later than 15 minutes after your C-Day starts.");
 }
 export function formatMoment(iso: string, zone: string) {
   const f = localFields(iso, zone),

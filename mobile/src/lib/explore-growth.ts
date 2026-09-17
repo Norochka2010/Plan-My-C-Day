@@ -1,8 +1,5 @@
+import {readAccountProgress} from './explore-account-progress';
 import type { ExploreSummary } from './explore-content';
-import { readQuickLearnProgress } from './quick-learn-progress';
-import { readMythProgress } from './myth-progress';
-import { readPracticeProgress } from './practice-progress';
-import { readChallengeProgress } from './real-life-challenge-progress';
 export const growthDomains = ['KNOW', 'MANAGE', 'SPEAK', 'TRUST', 'LIVE', 'LEAD'] as const;
 export type GrowthDomain = typeof growthDomains[number];
 export type GrowthBar = { domain: GrowthDomain; completed: number; available: number };
@@ -16,16 +13,8 @@ const tracked = new Set(['QUICK_LEARN', 'MYTH_OR_FACT', 'PRACTICE_A_SKILL', 'REA
 /** Read the existing ledgers only. No XP writes, new awards, or mastery scoring. */
 export async function readExploreGrowth(catalog: ExploreSummary[]): Promise<GrowthBar[]> {
   const items = [...new Map(catalog.filter(item => tracked.has(item.content_type)).map(item => [item.content_id, item])).values()];
-  const [myths, practices] = await Promise.all([readMythProgress(), readPracticeProgress()]);
-  const completed = await Promise.all(items.map(async item => {
-    switch (item.content_type) {
-      case 'QUICK_LEARN': return (await readQuickLearnProgress(item.content_id)).complete;
-      case 'MYTH_OR_FACT': return Object.hasOwn(myths, item.content_id);
-      case 'PRACTICE_A_SKILL': return Object.hasOwn(practices, item.content_id);
-      case 'REAL_LIFE_CHALLENGE': return (await readChallengeProgress(item.content_id))?.status === 'completed';
-      default: return false;
-    }
-  }));
+  const done = new Set((await readAccountProgress()).filter(p=>p.status==='completed').map(p=>p.content_id));
+  const completed = items.map(item=>done.has(item.content_id));
   return growthDomains.map(domain => items.reduce((bar, item, i) => {
     if ((item.growth_domains ?? contentGrowthDomains(item)).includes(domain)) {
       bar.available += 1; if (completed[i]) bar.completed += 1;

@@ -1,3 +1,4 @@
+import { isArchivedCDay } from './c-day-archive';
 import { localFields, type CDayEvent } from "./c-day-model";
 export type AgendaState = {
   view: "list" | "calendar";
@@ -14,7 +15,7 @@ export function initialAgendaState(): AgendaState {
 }
 export function activeCDays(events: CDayEvent[]): CDayEvent[] {
   return events
-    .filter((e) => e.status === "draft" || e.status === "planned")
+    .filter((e) => e.status === "draft" || (e.status === "planned" && !isArchivedCDay(e)))
     .sort(
       (a, b) =>
         Date.parse(a.event_start_at) - Date.parse(b.event_start_at) ||
@@ -61,4 +62,18 @@ export function monthCells(month: string): (string | null)[] {
     cells.push(`${month}-${String(d).padStart(2, "0")}`);
   while (cells.length % 7) cells.push(null);
   return cells;
+}
+
+/** Keep the nearest three visible; group the remainder by each event's saved local month. */
+export function upcomingPreview(upcoming: CDayEvent[]) {
+  const months = new Map<string, CDayEvent[]>();
+  for (const event of upcoming.slice(3)) {
+    const month = localFields(event.event_start_at, event.event_timezone).date.slice(0, 7);
+    months.set(month, [...(months.get(month) ?? []), event]);
+  }
+  return {
+    nearest: upcoming.slice(0, 3),
+    months: [...months.entries()].sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, events]) => ({ month, events })),
+  };
 }

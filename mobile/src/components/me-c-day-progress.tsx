@@ -258,7 +258,7 @@ const s = StyleSheet.create({
     fontWeight: "600",
   },
   body: { color: "#62556E", fontSize: 14, lineHeight: 22 },
-  small: { color: "#716579", fontSize: 12, lineHeight: 19 },
+  small: { color: "#716579", fontSize: 14, lineHeight: 21 },
   tiles: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   tile: {
     flexGrow: 1,

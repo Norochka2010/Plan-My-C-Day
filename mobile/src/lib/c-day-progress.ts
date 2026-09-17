@@ -52,7 +52,7 @@ export async function getCompletedCDayHistory(
         "id,user_id,event_type,title,event_start_at,event_timezone,status,actions:c_day_actions(id,c_day_event_id,action_library_id,action_text_snapshot,source_snapshot,source_version_snapshot,scheduled_at,difficulty,completion_status,xp_awarded)",
       )
       .eq("user_id", userId)
-      .eq("event_type", "dinner_with_friends")
+      .in("event_type", ["dinner_with_friends", "school_event", "travel", "party", "friends_house", "sports", "custom"])
       .eq("status", "completed")
       .order("event_start_at", { ascending: false })
       .order("id", { ascending: true })
@@ -70,7 +70,7 @@ export function summarizeCDayHistory(rows: HistoricalCDay[], userId: string) {
         .filter(
           (event) =>
             event.user_id === userId &&
-            event.event_type === "dinner_with_friends" &&
+            ["dinner_with_friends", "school_event", "travel", "party", "friends_house", "sports", "custom"].includes(event.event_type) &&
             event.status === "completed",
         )
         .map((event) => [event.id, event]),

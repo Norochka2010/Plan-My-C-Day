@@ -22,7 +22,7 @@ export function supportLimit(
   eventStatus: string,
 ) {
   if (
-    eventType !== "dinner_with_friends" ||
+    !["dinner_with_friends", "school_event", "travel", "party", "friends_house", "sports", "custom"].includes(eventType) ||
     !["draft", "planned"].includes(eventStatus) ||
     action.completion_status !== "planned"
   )

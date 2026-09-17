@@ -52,7 +52,7 @@ export function MythOrFact({ contentId, catalog, onClose, onOpen, publishedOnly 
         {related ? <Action variant="navigation" label={`Related: ${related.title}`} onPress={() => onOpen(related)} disabled={busy} /> : card.related_content_id ? <Text style={s.small}>Related activity isn’t available yet.</Text> : null}
         <Action label={progress[contentId] ? `Completed ✓ · ${progress[contentId].xp} XP` : busy ? 'Saving…' : `Mark Complete · ${card.xp_value} XP`} onPress={complete} disabled={busy || !ready || !!progress[contentId]} />
       </>}
-      <Text style={s.small}>Myth or Fact XP on this device: {ready ? Object.values(progress).reduce((sum, entry) => sum + entry.xp, 0) : '…'}. Each activity earns XP once. Progress is stored on this device.</Text>
+      <Text style={s.small}>Myth or Fact XP in your account: {ready ? Object.values(progress).reduce((sum, entry) => sum + entry.xp, 0) : '…'}. Each activity earns XP once. Progress is saved to your account.</Text>
       {!!message && <Text accessibilityLiveRegion="polite" style={s.body}>{message}</Text>}
       {!ready && <Action label="Retry progress" onPress={() => setRetry(v => v + 1)} />}
       <Action variant="navigation" label={next ? 'Next activity' : 'Back to Explore'} onPress={() => next ? onOpen(next) : onClose()} disabled={busy} />
@@ -65,7 +65,7 @@ const s = StyleSheet.create({
   title: { color: '#241638', fontFamily: Fonts.rounded, fontSize: 32, lineHeight: 40, fontWeight: '600' },
   heading: { color: '#302040', fontFamily: Fonts.rounded, fontSize: 20, lineHeight: 29, fontWeight: '600' },
   body: { color: '#62556E', fontSize: 16, lineHeight: 26 },
-  small: { color: '#716579', fontSize: 12, lineHeight: 19 },
+  small: { color: '#716579', fontSize: 14, lineHeight: 21 },
   card: { backgroundColor: '#F4EBF7', borderColor: '#D9C4E5', borderWidth: 1, borderRadius: 22, padding: 20, gap: 12 },
   green: { backgroundColor: '#EDF5E7', borderColor: '#C5DDB5' },
   button: { backgroundColor: '#EEE4F4', borderRadius: 14, minHeight: 48, padding: 14, alignItems: 'center', justifyContent: 'center' },

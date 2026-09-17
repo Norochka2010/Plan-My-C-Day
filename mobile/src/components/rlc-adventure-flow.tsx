@@ -27,4 +27,4 @@ export function RLCAdventureFlow({adventure,busy,onStart,onFinish,onAdvance,repl
  </View>
  </View>;
 }
-const s=StyleSheet.create({wrap:{gap:14},card:{gap:16,padding:20,borderWidth:1,borderColor:'#DDD0B9',borderRadius:22,backgroundColor:'#FFF5E5'},heading:{fontFamily:Fonts.rounded,fontSize:20,lineHeight:28,color:'#34472F',fontWeight:'600'},body:{fontSize:16,lineHeight:26,color:'#53604B'},small:{fontSize:13,lineHeight:20,color:'#66715F'}});
+const s=StyleSheet.create({wrap:{gap:14},card:{gap:16,padding:20,borderWidth:1,borderColor:'#DDD0B9',borderRadius:22,backgroundColor:'#FFF5E5'},heading:{fontFamily:Fonts.rounded,fontSize:20,lineHeight:28,color:'#34472F',fontWeight:'600'},body:{fontSize:16,lineHeight:26,color:'#53604B'},small:{fontSize:14,lineHeight:21,color:'#66715F'}});
