@@ -1,3 +1,4 @@
+import { ExploreDetails } from './explore-details';
 import { ExploreActionButton as Action } from '@/components/explore-action-button';
 import { useEffect, useRef, useState } from "react";
 import {
@@ -139,7 +140,7 @@ export function QuickLearn({
       setProgress(next);
       setMessage(
         kind === "complete"
-          ? `Lesson completed. ${next.xp} XP for learning.`
+          ? next.xp > 0 ? `Lesson completed. ${next.xp} XP for learning.` : "Lesson completed and saved."
           : next.saved
             ? "Saved to your account."
             : "Removed from saved lessons.",
@@ -158,7 +159,7 @@ export function QuickLearn({
   return (
     <SafeAreaView style={s.screen}>
       <ScrollView contentContainerStyle={s.content}>
-        <Action variant="navigation" label="‹ Back to Explore" onPress={onClose} disabled={busy} />
+        <Action variant="back" label="‹ Back" onPress={onClose} disabled={busy} />
         <Text style={s.eyebrow}>QUICK LEARN</Text>
         {loading ? (
           <Text style={s.body}>Loading your lesson…</Text>
@@ -176,16 +177,13 @@ export function QuickLearn({
             </Text>
             {!!row.subtitle && <Text style={s.subtitle}>{row.subtitle}</Text>}
             <View style={s.meta}>
-              <View style={s.chip}>
-                <Text style={s.small}>{row.domain}</Text>
-              </View>
-              {!!lesson.estimatedTime && (
-                <Text style={s.body}>{lesson.estimatedTime}</Text>
-              )}
+              {!!lesson.estimatedTime && <Text style={s.small}>{lesson.estimatedTime}</Text>}
+              <Action variant="back" label={progress.saved ? 'Saved ✓ · Unsave' : 'Save lesson'} onPress={() => update('saved')} disabled={busy || !storageReady} />
             </View>
+            {__DEV__ && row.development_preview && <Text style={s.small}>Preview · Expert review required</Text>}
             {!!row.intro && <Text style={s.body}>{row.intro}</Text>}
             {lesson.cards.map((card, i) => (
-              <View key={i} style={s.card}>
+              <View key={i} style={s.section}>
                 {!!card.title && (
                   <Text accessibilityRole="header" style={s.heading}>
                     {card.title}
@@ -207,52 +205,19 @@ export function QuickLearn({
               </View>
             )}
             {!!row.next_step && (
-              <View style={s.card}>
+              <View style={s.section}>
                 <Text accessibilityRole="header" style={s.heading}>
                   Try This
                 </Text>
                 <Text style={s.body}>{row.next_step}</Text>
               </View>
             )}
-            <View style={s.card}>
-              <Text accessibilityRole="header" style={s.heading}>
-                Related Practice
-              </Text>
-              {relatedLoading ? (
-                <Text style={s.body}>Loading related Practice…</Text>
-              ) : related.length ? (
-                related.map((item) => (
-                  <View key={item.content_id}>
-                    <Text style={s.heading}>{item.title}</Text>
-                    {!!item.subtitle && (
-                      <Text style={s.body}>{item.subtitle}</Text>
-                    )}
-                    <Action variant="navigation"
-                      label={`Open Practice: ${item.title}`}
-                      onPress={() => onPractice(item)}
-                      disabled={busy}
-                    />
-                  </View>
-                ))
-              ) : (
-                <>
-                  <Text style={s.body}>
-                    {relatedFailed
-                      ? "Related Practice could not load. You can still complete this lesson."
-                      : "The related Practice activity isn’t available right now. You can still complete this lesson."}
-                  </Text>
-                  <Action variant="navigation"
-                    label="Explore Practice a Skill"
-                    onPress={() => onPractice()}
-                    disabled={busy}
-                  />
-                </>
-              )}
-            </View>
-            <View style={s.card}>
-              <Text accessibilityRole="header" style={s.heading}>
-                Source / Evidence Basis
-              </Text>
+            {related.length > 0 && <View style={s.card}>
+              <Text style={s.heading}>Want to practice?</Text>
+              {related.map(item => <Action key={item.content_id} variant="navigation" label={item.title} onPress={() => onPractice(item)} disabled={busy} />)}
+            </View>}
+            <Text style={s.small}>{row.expert_reviewer ? `Reviewed by ${row.expert_reviewer}` : 'Source-informed content · No expert review recorded'}</Text>
+            <ExploreDetails>
               {lesson.sourceEvidence ? (
                 <Text style={s.body}>{lesson.sourceEvidence}</Text>
               ) : (
@@ -277,18 +242,8 @@ export function QuickLearn({
                   }}
                 />
               )}
-              <Text style={s.small}>
-                Source-informed learning content
-                {row.expert_reviewer
-                  ? ` · Reviewed by ${row.expert_reviewer}`
-                  : " · No expert review recorded"}
-                .
-              </Text>
-            </View>
-            <Text style={s.small}>
-              Saved lessons, completion and Quick Learn XP are saved to your account.
-              XP rewards learning. Each lesson earns XP once.
-            </Text>
+              <Text style={s.small}>XP rewards learning. Each lesson earns its available XP once.</Text>
+            </ExploreDetails>
             {!storageReady && (
               <Action
                 label="Retry progress"
@@ -302,34 +257,10 @@ export function QuickLearn({
               </Text>
             )}
             <View style={s.actions}>
-              <Action
-                label={
-                  progress.complete
-                    ? `Completed ✓ · ${progress.xp} XP`
-                    : busy
-                      ? "Saving…"
-                      : `Mark Complete · ${row.xp_value} XP`
-                }
-                onPress={() => update("complete")}
-                disabled={busy || !storageReady || progress.complete}
-              />
-              <Action variant="navigation"
-                label={progress.saved ? "Saved ✓ — Unsave" : "Save"}
-                onPress={() => update("saved")}
-                disabled={busy || !storageReady}
-              />
-              <Action variant="navigation"
-                label="Next"
-                onPress={() => (next ? onNext(next.content_id) : onClose())}
-                disabled={busy}
-              />
+              {!progress.complete ? <Action label={busy ? 'Saving…' : 'Mark complete'} onPress={() => update('complete')} disabled={busy || !storageReady} />
+                : <><Text style={s.heading}>Completed ✓{progress.xp > 0 ? ` · ${progress.xp} XP` : ''}</Text>
+                  <Action label={next ? 'Next lesson' : 'Done'} onPress={() => next ? onNext(next.content_id) : onClose()} disabled={busy} /></>}
             </View>
-            {!next && (
-              <Text style={s.small}>
-                You’ve reached the last available lesson. Next returns to
-                Explore.
-              </Text>
-            )}
           </>
         )}
       </ScrollView>
@@ -343,7 +274,7 @@ const s = StyleSheet.create({
     maxWidth: 640,
     alignSelf: "center",
     padding: 24,
-    gap: 18,
+    gap: 16,
     paddingBottom: 40,
   },
   eyebrow: {
@@ -354,8 +285,8 @@ const s = StyleSheet.create({
   },
   title: {
     color: "#241638",
-    fontSize: 32,
-    lineHeight: 40,
+    fontSize: 28,
+    lineHeight: 36,
     fontFamily: Fonts.rounded,
     fontWeight: "600",
   },
@@ -369,6 +300,7 @@ const s = StyleSheet.create({
   },
   body: { color: "#62556E", fontSize: 16, lineHeight: 26 },
   small: { color: "#716579", fontSize: 14, lineHeight: 21 },
+  section: { gap: 8, paddingVertical: 4 },
   card: {
     borderRadius: 22,
     padding: 20,

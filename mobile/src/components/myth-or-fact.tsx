@@ -1,3 +1,4 @@
+import { ExploreDetails } from './explore-details';
 import { ExploreActionButton as Action } from '@/components/explore-action-button';
 import { useEffect, useRef, useState } from 'react';
 import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -24,11 +25,12 @@ export function MythOrFact({ contentId, catalog, onClose, onOpen, publishedOnly 
     readMythProgress().then(value => { if (active) { setProgress(value); setReady(true); } }).catch(() => { if (active) setMessage('Progress could not load. Try again before completing.'); });
     return () => { active = false; };
   }, [contentId, retry, publishedOnly]);
-  async function complete() {
-    if (!card || !revealed || !ready || locked.current || progress[contentId]) return;
+  async function complete(): Promise<boolean> {
+    if (progress[contentId]) return true;
+    if (!card || !revealed || !ready || locked.current) return false;
     locked.current = true; setBusy(true); setMessage('');
-    try { const value = await completeMyth(contentId, card.xp_value); setProgress(value); setMessage(`Activity completed. ${value[contentId].xp} XP recorded for taking part.`); }
-    catch { setMessage('Completion did not save. Please try again.'); }
+    try { const value = await completeMyth(contentId, card.xp_value); setProgress(value); setMessage(value[contentId].xp > 0 ? `Completed · ${value[contentId].xp} XP saved.` : 'Completed and saved.'); return true; }
+    catch { setMessage('Completion did not save. Please try again.'); return false; }
     finally { locked.current = false; setBusy(false); }
   }
   const choices = card?.answer_type === 'FACT' || card?.answer_type === 'MYTH';
@@ -37,32 +39,34 @@ export function MythOrFact({ contentId, catalog, onClose, onOpen, publishedOnly 
   const next = index < 0 ? undefined : items[index + 1];
   const related = catalog.find(item => item.content_id === card?.related_content_id);
   return <SafeAreaView style={s.screen}><ScrollView contentContainerStyle={s.content}>
-    <Action variant="navigation" label="‹ Back to Explore" onPress={onClose} disabled={busy} />
-    <Text style={s.title} accessibilityRole="header">Myth or Fact?</Text>
+    <Action variant="back" label="‹ Back" onPress={onClose} disabled={busy} />
+    <Text style={s.small}>MYTH OR FACT</Text>
     {loading ? <Text style={s.body}>Loading activity…</Text> : failed ? <><Text style={s.body}>This activity couldn’t load.</Text><Action label="Try again" onPress={() => setRetry(v => v + 1)} /></> : !card ? <Text style={s.body}>This activity isn’t ready yet. Please choose another one.</Text> : <>
-      {!!card.domain && <Text style={s.small}>{card.domain}</Text>}
       {!!card.topic && <Text style={s.small}>{card.topic}</Text>}
       {__DEV__ && card.development_preview && <Text style={s.small}>Development preview · Expert review required</Text>}
-      <View style={s.card}><Text accessibilityRole="header" style={s.heading}>{card.statement}</Text></View>
-      {!revealed ? choices ? <><Text style={s.body}>What do you think? XP is for completing the activity, whichever answer you choose.</Text>{(['FACT', 'MYTH'] as const).map(value => <Action variant="choice" key={value} label={value === 'FACT' ? 'Fact' : 'Myth'} onPress={() => { setGuess(value); setRevealed(true); }} />)}</> : <><Text style={s.body}>Take a moment to reflect. This one has room for context, not a right-or-wrong score.</Text><Action label="Reveal" onPress={() => setRevealed(true)} /></> : <>
+      <View style={s.card}><Text accessibilityRole="header" style={s.title}>{card.statement}</Text></View>
+      {!revealed ? choices ? <><Text style={s.body}>What do you think?</Text>{(['FACT', 'MYTH'] as const).map(value => <Action variant="choice" key={value} label={value === 'FACT' ? 'Fact' : 'Myth'} onPress={() => { setGuess(value); setRevealed(true); }} />)}</> : <><Text style={s.body}>Take a moment to reflect. This one has room for context, not a right-or-wrong score.</Text><Action label="Reveal" onPress={() => setRevealed(true)} /></> : <>
         <View style={[s.card, s.green]} accessibilityLiveRegion="polite"><Text style={s.heading}>{responseHeading(card.answer_type, guess)}</Text><Text style={s.body}>{card.explanation}</Text></View>
+        <ExploreDetails title="Takeaway & source">
         {!!card.takeaway && <View style={[s.card, s.green]}><Text style={s.heading}>Takeaway</Text><Text style={s.body}>{card.takeaway}</Text></View>}
         {!!card.source && <Text style={s.body}>Source: {card.source}</Text>}
         {!!card.source_url && /^https?:\/\//i.test(card.source_url) && <Action variant="navigation" label="Read the source ↗" onPress={() => { Linking.openURL(card.source_url!).catch(() => setMessage('The source could not open. Please try again.')); }} />}
         {related ? <Action variant="navigation" label={`Related: ${related.title}`} onPress={() => onOpen(related)} disabled={busy} /> : card.related_content_id ? <Text style={s.small}>Related activity isn’t available yet.</Text> : null}
-        <Action label={progress[contentId] ? `Completed ✓ · ${progress[contentId].xp} XP` : busy ? 'Saving…' : `Mark Complete · ${card.xp_value} XP`} onPress={complete} disabled={busy || !ready || !!progress[contentId]} />
+        <Text style={s.small}>XP is for taking part, whichever answer you chose. Each activity earns its available XP once.</Text>
+        </ExploreDetails>
+        <Action label={progress[contentId] ? progress[contentId].xp > 0 ? `Completed ✓ · ${progress[contentId].xp} XP` : 'Completed ✓' : busy ? 'Saving…' : 'Mark complete'} onPress={complete} disabled={busy || !ready || !!progress[contentId]} />
       </>}
-      <Text style={s.small}>Myth or Fact XP in your account: {ready ? Object.values(progress).reduce((sum, entry) => sum + entry.xp, 0) : '…'}. Each activity earns XP once. Progress is saved to your account.</Text>
+
       {!!message && <Text accessibilityLiveRegion="polite" style={s.body}>{message}</Text>}
       {!ready && <Action label="Retry progress" onPress={() => setRetry(v => v + 1)} />}
-      <Action variant="navigation" label={next ? 'Next activity' : 'Back to Explore'} onPress={() => next ? onOpen(next) : onClose()} disabled={busy} />
+      <Action variant="navigation" label={!revealed ? (next ? 'Skip' : 'Back to collection') : progress[contentId] ? (next ? 'Next question' : 'Done') : (next ? 'Save & next question' : 'Save & finish')} onPress={async () => { if (revealed && !await complete()) return; next ? onOpen(next) : onClose(); }} disabled={busy || (revealed && !ready)} />
     </>}
   </ScrollView></SafeAreaView>;
 }
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#FFFCF7' },
   content: { padding: 24, paddingBottom: 40, width: '100%', maxWidth: 640, alignSelf: 'center', gap: 18 },
-  title: { color: '#241638', fontFamily: Fonts.rounded, fontSize: 32, lineHeight: 40, fontWeight: '600' },
+  title: { color: '#241638', fontFamily: Fonts.rounded, fontSize: 25, lineHeight: 34, fontWeight: '600' },
   heading: { color: '#302040', fontFamily: Fonts.rounded, fontSize: 20, lineHeight: 29, fontWeight: '600' },
   body: { color: '#62556E', fontSize: 16, lineHeight: 26 },
   small: { color: '#716579', fontSize: 14, lineHeight: 21 },

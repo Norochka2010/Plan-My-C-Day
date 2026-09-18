@@ -11,7 +11,6 @@ export function RLCAdventureFlow({adventure,busy,onStart,onFinish,onAdvance,repl
  async function start(){if(node.type!=='opening'||lock.current||busy)return;lock.current=true;setWorking(true);try{if(replay||await onStart())next(node.next_node_id);}finally{lock.current=false;setWorking(false);}}
  async function finish(){if(lock.current||busy)return;lock.current=true;setWorking(true);try{await onFinish();}finally{lock.current=false;setWorking(false);}}
  return <View style={s.wrap}>
- {adventure.development_preview&&<Text style={s.small}>Development preview · New adventure content requires expert review</Text>}
  {node.type==='opening'&&<Text style={s.small}>You can complete this challenge on screen, then reflect. Choices are not scored.</Text>}
  <View style={s.card}>
  <Text accessibilityRole="header" style={s.heading}>{node.type==='opening'?'Your situation':node.type==='consequence'?'Here’s what happens next…':node.type==='ending'?'Your adventure':node.text}</Text>

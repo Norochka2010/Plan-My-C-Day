@@ -69,7 +69,7 @@ export function ExpertResources({ onClose, initialContentId = null }: { onClose:
   return <SafeAreaView style={s.screen}>
     <ScrollView ref={scroll} contentContainerStyle={s.content} onLayout={event => setViewportHeight(event.nativeEvent.layout.height)}>
       <Button label={selected ? 'Back to resources' : 'Back to Explore'} onPress={selected ? () => setSelected(null) : onClose} />
-      <View style={s.header}><View style={s.copy}><Text accessibilityRole="header" style={s.title}>From the Experts</Text>
+      <View style={s.header}><View style={s.copy}><Text accessibilityRole="header" style={s.title}>Trusted Resources</Text>
         {!selected && <Text style={s.body}>Go deeper with a trusted outside source.</Text>}</View><LeafCharacter size={70} /></View>
       {loading ? <ActivityIndicator accessibilityLabel="Loading trusted resources" /> : failed ? <View style={s.card}>
         <Text style={s.body}>Trusted resources couldn’t load right now.</Text><Button label="Try again" onPress={() => setRetry(v => v + 1)} />

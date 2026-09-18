@@ -15,11 +15,11 @@ import { LeafCharacter } from '@/components/leaf-character';
 import { Fonts } from '@/constants/theme';
 
 const sections = [
-  { type: 'QUICK_LEARN' as ContentType, title: 'Quick Learn', icon: '✦', description: 'Small discoveries for everyday life.', color: '#EDF5E7', border: '#C5DDB5' },
-  { type: 'MYTH_OR_FACT' as ContentType, title: 'Myth or Fact?', icon: '?', description: 'Get curious. Make room for questions.', color: '#F4EBF7', border: '#D9C4E5' },
-  { type: 'PRACTICE_A_SKILL' as ContentType, title: 'Practice a Skill', icon: '💬', description: 'Build confidence at your own pace.', color: '#EFEDF9', border: '#CEC8E8' },
-  { type: 'REAL_LIFE_CHALLENGE' as ContentType, title: 'Real-Life Challenges', icon: '☆', description: 'Small steps that fit your life.', color: '#FFF3DC', border: '#EBD4A5' },
-  { type: 'EXPERT_RESOURCE' as ContentType, title: 'From the Experts', icon: '◎', description: 'A place for trusted guidance.', color: '#EAF0FA', border: '#C8D7EB' },
+  { type: 'QUICK_LEARN' as ContentType, title: 'Quick Learn', icon: '✦', description: 'Understand one useful idea.', color: '#EDF5E7', border: '#C5DDB5' },
+  { type: 'MYTH_OR_FACT' as ContentType, title: 'Myth or Fact?', icon: '?', description: 'Pick an answer and discover why.', color: '#F4EBF7', border: '#D9C4E5' },
+  { type: 'PRACTICE_A_SKILL' as ContentType, title: 'Practice a Skill', icon: '💬', description: 'Rehearse what you could say or do.', color: '#EFEDF9', border: '#CEC8E8' },
+  { type: 'REAL_LIFE_CHALLENGE' as ContentType, title: 'Real-Life Challenges', icon: '☆', description: 'Try a small step at your own pace.', color: '#FFF3DC', border: '#EBD4A5' },
+  { type: 'EXPERT_RESOURCE' as ContentType, title: 'Trusted Resources', icon: '◎', description: 'Read guidance from trusted sources.', color: '#EAF0FA', border: '#C8D7EB' },
 ] as const;
 
 export default function ExploreScreen() {
@@ -52,6 +52,7 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
   const [mythId, setMythId] = useState<string | null>(null);
   const [lessonId, setLessonId] = useState<string | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
+  const catalogOffsets = useRef<Record<string, number>>({});
   const [catalog, setCatalog] = useState<ExploreSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
@@ -76,7 +77,8 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
     return () => { active = false; };
   }, [retry, supportSession, supportId, homeChallenge, publishedOnly]));
   function openContent(item: ExploreSummary) {
-    setSelected(null); setLessonId(null); setMythId(null); setPracticeId(null); setChallengeId(null); setExpertOpen(false); setExpertId(null);
+    // Preserve the collection while opening related activities in the same modal.
+    setLessonId(null); setMythId(null); setPracticeId(null); setChallengeId(null); setExpertOpen(false); setExpertId(null);
     if (item.content_type === 'QUICK_LEARN') setLessonId(item.content_id);
     else if (item.content_type === 'PRACTICE_A_SKILL') setPracticeId(item.content_id);
     else if (item.content_type === 'MYTH_OR_FACT') setMythId(item.content_id);
@@ -139,32 +141,28 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
         </View>
 
       </ScrollView>
-      <Modal visible={expertOpen} animationType="none" onRequestClose={() => { setExpertOpen(false); setExpertId(null); }}>
-        {expertOpen && <SafeAreaProvider><ExpertResources initialContentId={expertId} onClose={() => { setExpertOpen(false); setExpertId(null); }} /></SafeAreaProvider>}
-      </Modal>
-      <Modal visible={challengeId !== null} animationType="none" onRequestClose={() => { if (homeChallenge) returnToCDay(); else setChallengeId(null); }}>
-        {challengeId && <SafeAreaProvider><RealLifeChallenge backLabel={homeChallenge ? "‹ Back to Home" : undefined} publishedOnly={publishedOnly} key={challengeId} contentId={challengeId} onClose={() => { if (homeChallenge) returnToCDay(); else setChallengeId(null); }} onOpen={openContent} /></SafeAreaProvider>}
-      </Modal>
-      <Modal visible={practiceId !== null} animationType="slide" onRequestClose={() => setPracticeId(null)}>
-        {practiceId && <SafeAreaProvider><PracticeScenario publishedOnly={publishedOnly} key={practiceId} contentId={practiceId} catalog={catalog} onClose={() => setPracticeId(null)} onOpen={openContent} /></SafeAreaProvider>}
-      </Modal>
-      <Modal visible={mythId !== null} animationType="slide" onRequestClose={() => setMythId(null)}>
-        {mythId && <SafeAreaProvider><MythOrFact publishedOnly={publishedOnly} key={mythId} contentId={mythId} catalog={catalog} onClose={() => setMythId(null)} onOpen={openContent} /></SafeAreaProvider>}
-      </Modal>
-      <Modal visible={lessonId !== null} animationType="slide" onRequestClose={() => setLessonId(null)}>
-        {lessonId && <SafeAreaProvider><QuickLearn publishedOnly={publishedOnly} key={lessonId} contentId={lessonId} catalog={catalog} onClose={() => setLessonId(null)} onNext={setLessonId} onPractice={(item) => { if (item) openContent(item); else { setLessonId(null); setSelected('Practice a Skill'); } }} /></SafeAreaProvider>}
-      </Modal>
-      <Modal visible={selected !== null} transparent animationType="fade" onRequestClose={() => setSelected(null)}>
-        <SafeAreaProvider><SafeAreaView style={{ flex: 1 }}>
-        <View style={styles.overlay}>
-          <View style={styles.dialog} accessibilityViewIsModal>
-            <Text accessibilityRole="header" style={styles.heading}>{selected}</Text>
-            <ExploreActivityCatalog key={selected} kind={selectedType}
+      <Modal visible={selected !== null || expertOpen || !!challengeId || !!practiceId || !!mythId || !!lessonId}
+        animationType="slide" onRequestClose={() => {
+          if (expertOpen) { setExpertOpen(false); setExpertId(null); }
+          else if (challengeId) { if (homeChallenge) returnToCDay(); else setChallengeId(null); }
+          else if (practiceId) setPracticeId(null);
+          else if (mythId) setMythId(null);
+          else if (lessonId) setLessonId(null);
+          else setSelected(null);
+        }}>
+        <SafeAreaProvider>
+          {expertOpen ? <ExpertResources initialContentId={expertId} onClose={() => { setExpertOpen(false); setExpertId(null); }} />
+          : challengeId ? <RealLifeChallenge backLabel={homeChallenge ? '‹ Back to Home' : selected ? '‹ Back to collection' : undefined} publishedOnly={publishedOnly} key={challengeId} contentId={challengeId} onClose={() => { if (homeChallenge) returnToCDay(); else setChallengeId(null); }} onOpen={openContent} />
+          : practiceId ? <PracticeScenario publishedOnly={publishedOnly} key={practiceId} contentId={practiceId} catalog={catalog} onClose={() => setPracticeId(null)} onOpen={openContent} />
+          : mythId ? <MythOrFact publishedOnly={publishedOnly} key={mythId} contentId={mythId} catalog={catalog} onClose={() => setMythId(null)} onOpen={openContent} />
+          : lessonId ? <QuickLearn publishedOnly={publishedOnly} key={lessonId} contentId={lessonId} catalog={catalog} onClose={() => setLessonId(null)} onNext={setLessonId} onPractice={item => { if (item) openContent(item); else { setLessonId(null); setSelected('Practice a Skill'); } }} />
+          : selected ? <SafeAreaView style={styles.screen}>
+            <ExploreActivityCatalog key={selected} kind={selectedType} title={selected}
+              initialOffset={catalogOffsets.current[selected] ?? 0} onOffsetChange={y => { catalogOffsets.current[selected] = y; }}
               items={catalog.filter(item => item.content_type === selectedType)} loading={loading} failed={failed}
               onRetry={() => setRetry(v => v + 1)} onOpen={openContent} onClose={() => setSelected(null)} />
-          </View>
-        </View>
-        </SafeAreaView></SafeAreaProvider>
+          </SafeAreaView> : null}
+        </SafeAreaProvider>
       </Modal>
     </SafeAreaView>
   );
