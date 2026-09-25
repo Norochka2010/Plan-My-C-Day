@@ -63,3 +63,12 @@ export const Spacing = {
 
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
 export const MaxContentWidth = 800;
+
+/** Shared typography for the five main tab headings. */
+export const TabTitle = {
+  fontFamily: Fonts.rounded,
+  fontSize: 30,
+  lineHeight: 38,
+  fontWeight: '600',
+  color: '#241638',
+} as const;

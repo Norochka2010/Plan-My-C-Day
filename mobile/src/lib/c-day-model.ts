@@ -275,3 +275,10 @@ export function eventTimezoneIndicator(iso: string, zone: string, phoneZone?: st
     return "";
   }
 }
+
+export function formatCardMoment(iso: string, zone: string): string {
+  const instant = new Date(iso);
+  const date = new Intl.DateTimeFormat('en-US', {timeZone:zone,weekday:'short',month:'short',day:'numeric',year:new Intl.DateTimeFormat('en-US',{timeZone:zone,year:'numeric'}).format(instant)!==new Intl.DateTimeFormat('en-US',{timeZone:zone,year:'numeric'}).format(new Date())?'numeric':undefined}).format(instant);
+  const time = new Intl.DateTimeFormat('en-US', {timeZone:zone,hour:'numeric',minute:'2-digit',hour12:true}).format(instant);
+  return `${date} · ${time}${eventTimezoneIndicator(iso,zone)}`;
+}

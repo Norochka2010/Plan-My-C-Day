@@ -11,11 +11,12 @@ export const acknowledgements = [
 ];
 export const disclaimer = 'Shared by a community member. Not expert reviewed. Always check current ingredient labels, brands, preparation methods, and cross-contact considerations for yourself.';
 export type Recipe = {
+ author_username?: string | null;
  id: string; title: string; category: string; effort_level: string;
  ingredients: {ingredient_text:string; amount_text:string}[]; steps:string[];
  double_check_tags:string[]; use_case_tags:string[]; friend_tip:string;
  status:'draft'|'pending_review'|'published'|'flagged'|'hidden'|'removed'; revision:number;
- is_author:boolean; saved:boolean; helpful:boolean; submitted_at?:string; published_at?:string;
+ is_author:boolean; saved:boolean; helpful:boolean; like_count?:number; submitted_at?:string; published_at?:string;
  review_required?:boolean; prescreen_status?:string; prescreen_flags?:unknown[];
  acknowledgements?:boolean[]; acknowledgement_version?:string;
  reports?:{reason:string;note:string;status:string;created_at:string}[];

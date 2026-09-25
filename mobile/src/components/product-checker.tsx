@@ -1,3 +1,4 @@
+import { BackButton } from './back-button';
 import { useEffect, useRef, useState, type ComponentType } from 'react';
 import { ActivityIndicator, AppState, Image, Keyboard, Linking, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { requireOptionalNativeModule } from 'expo';
@@ -11,13 +12,17 @@ import { PracticeScenario } from './practice-scenario';
 const LABEL_LESSON='b89f6056-96ac-5248-8bf1-c85369e3cad8';
 const note='Product information can change. Check the current package label and source when it matters.';
 function Button({label,onPress,disabled=false,secondary=false}:{label:string;onPress:()=>void;disabled?:boolean;secondary?:boolean}) {
+ if (/^(‹|Back\b|Previous step)/.test(label)) return <BackButton label={label} onPress={onPress} disabled={disabled}/>;
  return <Pressable accessibilityRole="button" accessibilityState={{disabled}} disabled={disabled} onPress={onPress} style={({pressed})=>[s.button,secondary&&s.secondary,(disabled||pressed)&&{opacity:.55}]}><Text style={[s.buttonText,secondary&&{color:'#365379'}]}>{label}</Text></Pressable>;
 }
 export function ProductCheckerEntry() {
  const [open,setOpen]=useState(false);
- return <View style={s.wrap}><Text accessibilityRole="header" style={s.heading}>CHECK</Text><View style={s.card}>
- <Text style={s.heading}>Check a Food / Product</Text><Text style={s.body}>Find external product and label information, with each source shown separately.</Text>
- <Button label="Check a Food / Product →" onPress={()=>setOpen(true)}/></View>
+ return <View style={{gap:14,marginTop:16,padding:22,borderRadius:24,borderWidth:2,borderColor:'#B39ACB',backgroundColor:'#EEE5F6'}}>
+ <Text style={{fontSize:12,lineHeight:18,letterSpacing:1,fontWeight:'700',color:'#674781'}}>YOUR FOOD TOOL</Text>
+ <Text accessibilityRole="header" style={[s.heading,{fontSize:24,lineHeight:32,color:'#35204E'}]}>Check a food or product</Text>
+ <Text style={s.body}>Something in your cupboard catch your eye? Look up its barcode to explore product and label information.</Text>
+ <Pressable accessibilityRole="button" onPress={()=>setOpen(true)} style={({pressed})=>({minHeight:52,padding:16,borderRadius:16,backgroundColor:'#604378',opacity:pressed?.75:1})}><Text style={{fontSize:17,lineHeight:24,fontWeight:'700',color:'#FFFFFF',textAlign:'center'}}>Check a product →</Text></Pressable>
+ <Text style={{fontSize:13,lineHeight:20,color:'#62556E'}}>A starting point for checking—not a guarantee that a food is gluten-free.</Text>
  <Modal visible={open} animationType="none" onRequestClose={()=>setOpen(false)}>{open&&<SafeAreaProvider><ProductChecker onClose={()=>setOpen(false)}/></SafeAreaProvider>}</Modal></View>;
 }
 function ProductChecker({onClose}:{onClose:()=>void}) {

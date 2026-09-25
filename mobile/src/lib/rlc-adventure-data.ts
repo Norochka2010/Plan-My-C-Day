@@ -12,6 +12,6 @@ export async function getRLCAdventure(contentId:string,challengeId:string,publis
  }
  if(!row)return null;
  const adventure=parseRLCAdventure(row,contentId,challengeId);
- if(!adventure)throw Error('Adventure content needs attention. Please try again later.');
+ if(!adventure)throw Error('Journey content needs attention. Please try again later.');
  return adventure;
 }

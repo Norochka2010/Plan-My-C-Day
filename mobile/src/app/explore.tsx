@@ -1,5 +1,5 @@
+import { TabTitle } from '@/constants/theme';
 import { ExploreActivityCatalog } from '@/components/explore-activity-catalog';
-import { ExploreGrowthCard } from '@/components/explore-growth-card';
 import { ExpertResources } from '@/components/expert-resources';
 import { RealLifeChallenge } from '@/components/real-life-challenge';
 import { PracticeScenario } from '@/components/practice-scenario';
@@ -27,9 +27,9 @@ export default function ExploreScreen() {
   return <ExploreContents key={typeof params.supportEntry === 'string' ? params.supportEntry : 'browse'}
     supportId={typeof params.supportContentId === 'string' ? params.supportContentId : undefined}
     homeChallenge={params.homeChallenge === '1' && params.returnTo === 'home'}
-    returnTo={params.returnTo === 'home' ? 'home' : 'plan'} />;
+    returnTo={params.returnTo === 'home' ? 'home' : params.returnTo === 'me' ? 'me' : 'plan'} />;
 }
-function ExploreContents({ supportId, returnTo, homeChallenge = false }: { supportId?: string; returnTo: 'home' | 'plan'; homeChallenge?: boolean }) {
+function ExploreContents({ supportId, returnTo, homeChallenge = false }: { supportId?: string; returnTo: 'home' | 'plan' | 'me'; homeChallenge?: boolean }) {
   const router = useRouter();
   const navigation = useNavigation();
   const handledEntry = useRef(false);
@@ -42,7 +42,8 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
     setSelected(null); setLessonId(null); setMythId(null); setPracticeId(null); setChallengeId(null); setExpertOpen(false); setExpertId(null);
     setSupportSession(false);
     // Switching back preserves the already-mounted Plan and its HOME return context.
-    if (returnTo === 'home') router.push('/');
+    if (returnTo === 'me') router.push({pathname:'/me',params:{growthEntry:String(Date.now())}});
+    else if (returnTo === 'home') router.push('/');
     else navigation.dispatch({ type: 'NAVIGATE', payload: { name: 'plan', merge: true } });
   }
   const [expertOpen, setExpertOpen] = useState(false);
@@ -88,20 +89,13 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
   }
   const selectedType = selected === 'Real-Life Challenges' ? 'REAL_LIFE_CHALLENGE' : selected === 'Quick Learn' ? 'QUICK_LEARN' : selected === 'Practice a Skill' ? 'PRACTICE_A_SKILL' : 'MYTH_OR_FACT';
   const scroll = useRef<ScrollView>(null);
-  const growthTop = useRef(0);
-  const scrollToGrowth = useRef(false);
   const recommended = catalog[0];
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.screen}>
-      <ScrollView ref={scroll} contentContainerStyle={styles.content} onContentSizeChange={() => {
-        if (scrollToGrowth.current) {
-          scrollToGrowth.current = false;
-          scroll.current?.scrollTo({ y: growthTop.current, animated: true });
-        }
-      }}>
+      <ScrollView ref={scroll} contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <View style={styles.copy}>
-            <Text accessibilityRole="header" style={styles.title}>Explore</Text>
+            <Text accessibilityRole="header" style={TabTitle}>Explore</Text>
             <Text style={styles.subtitle}>Learn. Practice. Build confidence.</Text>
           </View>
           <LeafCharacter size={64} />
@@ -118,10 +112,10 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
         </View>
 
         {supportSession && <View style={styles.recommendation}>
-          <Text style={styles.heading}>Optional support for your C-Day</Text>
-          <Text style={styles.body}>{supportMessage || 'Explore if you’d like. You can return to your C-Day at any time without completing an activity.'}</Text>
+          <Text style={styles.heading}>{returnTo==='me'?'Practice from Your Growth':'Optional support for your C-Day'}</Text>
+          <Text style={styles.body}>{supportMessage || (returnTo==='me'?'Practice at your own pace, then return to see your growth.':'Explore if you’d like. You can return to your C-Day at any time without completing an activity.')}</Text>
           <Pressable accessibilityRole="button" style={styles.closeButton} onPress={returnToCDay}>
-            <Text style={styles.closeLabel}>{returnTo === 'home' ? 'Back to Home' : 'Back to My Plan'}</Text>
+            <Text style={styles.closeLabel}>{returnTo === 'me' ? 'Back to Your Growth' : returnTo === 'home' ? 'Back to Home' : 'Back to My Plan'}</Text>
           </Pressable>
         </View>}
         <View style={styles.recommendation}>
@@ -135,10 +129,7 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
           </Pressable> : <Text style={styles.body}>New things to explore are on their way.</Text>}
         </View>
 
-        <View onLayout={event => { growthTop.current = event.nativeEvent.layout.y; }}>
-        <ExploreGrowthCard onOpen={openContent} onExpand={() => { scrollToGrowth.current = true; }} catalog={catalog} catalogLoading={loading} catalogFailed={failed}
-          refreshKey={[lessonId, mythId, practiceId, challengeId, selected].join('|')} />
-        </View>
+        <Pressable accessibilityRole="button" onPress={()=>router.push({pathname:'/me',params:{growthEntry:String(Date.now())}})} style={styles.closeButton}><Text style={styles.closeLabel}>View your growth →</Text></Pressable>
 
       </ScrollView>
       <Modal visible={selected !== null || expertOpen || !!challengeId || !!practiceId || !!mythId || !!lessonId}

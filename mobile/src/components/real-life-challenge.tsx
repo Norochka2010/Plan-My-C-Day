@@ -1,3 +1,4 @@
+import { LearningTitle } from './learning-title';
 import { ExploreDetails } from './explore-details';
 import { RLCAdventureFlow } from './rlc-adventure-flow';
 import { getRLCAdventure } from '@/lib/rlc-adventure-data';
@@ -41,7 +42,7 @@ export function RealLifeChallenge({contentId,onClose,onOpen,publishedOnly=false,
     <Action variant="back" label={backLabel} onPress={onClose} disabled={busy}/>
     <Text style={s.small}>REAL-LIFE CHALLENGE</Text>
     {loading?<Text style={s.body}>Loading challenge…</Text>:failed?<><Text style={s.body}>This challenge couldn’t load.</Text><Action label="Try again" onPress={()=>setRetry(v=>v+1)}/></>:!card?<Text style={s.body}>This challenge isn’t available right now.</Text>:<>
-      <Text accessibilityRole="header" style={s.title}>{card.title}</Text>
+      <LearningTitle title={card.title}/>
       {preview && <Text style={s.small}>Preview · Expert review required</Text>}
       {!adventureActive && progress?.status !== 'completed' && <Text style={s.body}>{card.instruction}</Text>}
       {!adventure&&progress?.status!=='completed'&&<View style={s.card}><Text style={s.heading}>How to Try It</Text>{card.steps.map((step,i)=><View key={i} style={s.step}><Text style={s.body}>{i+1}.</Text><Text style={[s.body,{flex:1}]}>{step}</Text></View>)}</View>}

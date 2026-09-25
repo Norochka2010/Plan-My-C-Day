@@ -1,3 +1,4 @@
+import { BackButton } from './back-button';
 import { ProductCheckerEntry } from './product-checker';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -5,6 +6,7 @@ import { Fonts } from '@/constants/theme';
 import { getNutritionHub, type NutritionHub, type NutritionSection } from '@/lib/nutrition-content';
 import { NutritionArtwork } from './nutrition-artwork';
 function Button({ label, onPress }: { label: string; onPress: () => void }) {
+ if (/^(‹|Back\b|Previous step)/.test(label)) return <BackButton label={label} onPress={onPress}/>;
   return <Pressable accessibilityRole="button" onPress={onPress} style={({ pressed }) => [s.button, pressed && { opacity: 0.65 }]}><Text style={s.buttonText}>{label}</Text></Pressable>;
 }
 function NutritionCard({ section }: { section: NutritionSection }) {
@@ -33,7 +35,6 @@ export function NutritionMiniHub() {
   }, [retry]);
   const section = hub?.sections.find(item => item.id === selected);
   return <View style={s.wrap}>
-    <Text accessibilityRole="header" style={s.heading}>Learn in Plan My C-Day</Text>
     {loading ? <ActivityIndicator accessibilityLabel="Loading nutrition education" /> : failed ? <View style={s.card}>
       <Text style={s.body}>Nutrition learning couldn’t load right now. You can still explore the trusted resources below.</Text>
       <Button label="Try again" onPress={() => setRetry(n => n + 1)} />
@@ -42,6 +43,7 @@ export function NutritionMiniHub() {
       <NutritionCard section={section} />
       <Button label="Back to Nutrition & Eating Well" onPress={() => setSelected(null)} />
     </> : <View style={s.card}>
+      <Text style={s.label}>FOOD BASICS</Text>
       <Text accessibilityRole="header" style={s.title}>{hub.title}</Text>
       <Text style={s.body}>{hub.subtitle}</Text>
       {hub.sections.map(item => <Pressable key={item.id} accessibilityRole="button" accessibilityLabel={item.title} onPress={() => setSelected(item.id)} style={({ pressed }) => [s.section, pressed && { opacity: 0.65 }]}>
@@ -54,13 +56,13 @@ export function NutritionMiniHub() {
 const s = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   grain: { flexGrow: 1, flexBasis: '45%', minWidth: 130, padding: 14, gap: 8, borderRadius: 16, borderWidth: 1, borderColor: '#D4D5C3', backgroundColor: '#FFFCF7' },
-  wrap: { gap: 14 }, card: { padding: 20, gap: 16, backgroundColor: '#F4F6E9', borderWidth: 1, borderColor: '#CCD7BD', borderRadius: 22 },
+  wrap: { gap: 20 }, card: { padding: 20, gap: 16, backgroundColor: '#F4F6E9', borderWidth: 1, borderColor: '#CCD7BD', borderRadius: 22 },
   title: { fontFamily: Fonts.rounded, fontSize: 24, lineHeight: 32, fontWeight: '600', color: '#344B38' },
   heading: { fontFamily: Fonts.rounded, fontSize: 18, lineHeight: 26, fontWeight: '600', color: '#344B38' },
   body: { fontSize: 16, lineHeight: 25, color: '#4C594B' }, small: { fontSize: 14, lineHeight: 21, color: '#566353' },
   label: { fontSize: 14, lineHeight: 21, letterSpacing: 0.5, fontWeight: '700', color: '#566353' },
   context: { borderWidth: 1, borderColor: '#D4D5C3', borderRadius: 14, padding: 14, backgroundColor: '#FFFCF7' },
-  section: { minHeight: 64, flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#FFFCF7', borderWidth: 1, borderColor: '#CCD7BD', borderRadius: 16, padding: 16 },
+  section: { minHeight: 64, flexDirection: 'row', alignItems: 'center', gap: 12, borderTopWidth: 1, borderColor: '#CCD7BD', paddingVertical: 16, paddingHorizontal: 4 },
   item: { flexDirection: 'row', gap: 10 }, itemText: { flex: 1, gap: 4 }, bullet: { fontSize: 18, lineHeight: 25, color: '#64715C' }, arrow: { fontSize: 28, color: '#64715C' },
   button: { minHeight: 48, padding: 14, borderRadius: 14, backgroundColor: '#E2ECD9', alignItems: 'center', justifyContent: 'center' },
   buttonText: { fontSize: 16, lineHeight: 23, fontWeight: '600', color: '#355338' },

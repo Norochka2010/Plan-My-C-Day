@@ -1,3 +1,4 @@
+import { LearningTitle } from './learning-title';
 import { ExploreDetails } from './explore-details';
 import { ExploreActionButton as Action } from '@/components/explore-action-button';
 import { useEffect, useRef, useState } from 'react';
@@ -36,7 +37,7 @@ export function PracticeScenario({contentId,catalog,onClose,onOpen,publishedOnly
     <Text style={s.small}>PRACTICE A SKILL</Text>
     {preview&&<Text style={s.small}>Preview · Expert review required</Text>}
     {loading?<Text style={s.body}>Loading scenario…</Text>:failed?<><Text style={s.body}>This scenario couldn’t load.</Text><Action label="Try again" onPress={()=>setRetry(v=>v+1)}/></>:!scenario?<Text style={s.body}>This scenario isn’t ready yet. Choose another activity.</Text>:<>
-      <Text accessibilityRole="header" style={s.title}>{scenario.title}</Text>
+      <LearningTitle title={scenario.title}/>
       <Text style={s.small}>{[scenario.category,scenario.domain,scenario.skill,scenario.difficulty].filter(Boolean).join(' · ')}</Text>
       {!!scenario.setting&&<Text style={s.heading}>{scenario.setting}</Text>}
       <Text style={s.body}>{scenario.setup}</Text>

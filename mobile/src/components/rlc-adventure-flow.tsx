@@ -13,14 +13,14 @@ export function RLCAdventureFlow({adventure,busy,onStart,onFinish,onAdvance,repl
  return <View style={s.wrap}>
  {node.type==='opening'&&<Text style={s.small}>You can complete this challenge on screen, then reflect. Choices are not scored.</Text>}
  <View style={s.card}>
- <Text accessibilityRole="header" style={s.heading}>{node.type==='opening'?'Your situation':node.type==='consequence'?'Here’s what happens next…':node.type==='ending'?'Your adventure':node.text}</Text>
+ <Text accessibilityRole="header" style={s.heading}>{node.type==='opening'?'Your situation':node.type==='consequence'?'Here’s what happens next…':node.type==='ending'?'Your journey':node.text}</Text>
  {node.type!=='decision'&&<Text style={s.body}>{node.text}</Text>}
  {node.type==='decision'&&node.choices.map(choice=><Action key={choice.id} variant="choice" label={choice.text} disabled={busy||working} onPress={()=>next(choice.next_node_id)}/>)}
  {node.type==='opening'&&<Action label={working?'Starting…':'Start Challenge'} disabled={busy||working} onPress={()=>void start()}/>}
  {node.type==='consequence'&&<Action label="Continue" disabled={busy||working} onPress={()=>next(node.next_node_id)}/>}
  {node.type==='ending'&&<>
  <Text style={s.heading}>Skills practiced</Text><Text style={s.body}>{node.skill_tags.join(' • ')}</Text>
- <Text style={s.small}>These describe the skills in this adventure, not a score.</Text>
+ <Text style={s.small}>These describe the skills in this journey, not a score.</Text>
  <Action label={working?'Saving…':replay?'Back to your completion':'How did it go?'} disabled={busy||working} onPress={()=>void finish()}/>
  </>}
  </View>

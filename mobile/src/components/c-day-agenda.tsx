@@ -2,7 +2,7 @@ import { SwipeDeleteCard } from "./swipe-delete-card";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Fonts } from "@/constants/theme";
-import { formatEventMoment, type CDayEvent } from "@/lib/c-day-model";
+import { formatEventMoment, formatCardMoment, type CDayEvent } from "@/lib/c-day-model";
 import {
   agendaGroups,
   eventsByDate,
@@ -63,7 +63,7 @@ export function CDayAgenda({
       <SwipeDeleteCard key={event.id} disabled={busy} onDelete={() => onDelete(event)}><Pressable
         key={event.id}
         accessibilityRole="button"
-        accessibilityLabel={`${event.title}, ${event.status === "draft" ? "Draft" : "Planned"}, ${formatEventMoment(event.event_start_at, event.event_timezone)}`}
+        accessibilityLabel={`${event.title}, ${event.status === "draft" ? "Draft" : "Planned"}, ${formatCardMoment(event.event_start_at, event.event_timezone)}`}
         disabled={busy}
         accessibilityState={{ disabled: busy }}
         onPress={() => onOpen(event)}
@@ -79,7 +79,7 @@ export function CDayAgenda({
         </Text>
         <Text style={s.eventTitle}>{event.title}</Text>
         <Text style={s.body}>
-          {formatEventMoment(event.event_start_at, event.event_timezone)}
+          {formatCardMoment(event.event_start_at, event.event_timezone)}
         </Text>
         <Text style={s.openText}>
           {event.status === "draft" ? "Continue draft ›" : "View plan ›"}
@@ -90,13 +90,13 @@ export function CDayAgenda({
   function compactCard(event: CDayEvent) {
     return (
       <SwipeDeleteCard key={event.id} disabled={busy} onDelete={() => onDelete(event)}><Pressable key={event.id} accessibilityRole="button"
-        accessibilityLabel={`${event.title}, ${event.status}, ${formatEventMoment(event.event_start_at, event.event_timezone)}`}
+        accessibilityLabel={`${event.title}, ${event.status}, ${formatCardMoment(event.event_start_at, event.event_timezone)}`}
         accessibilityState={{ disabled: busy }} disabled={busy} onPress={() => onOpen(event)}
         style={({ pressed }) => [s.eventCard, s.compactCard, event.status === "draft" ? s.draftCard : s.plannedCard, pressed && s.pressed, busy && s.disabled]}>
         <View style={s.compactContent}>
           <Text style={[s.status, event.status === "draft" && s.draftBadge]}>{event.status === "draft" ? "○ Draft" : "★ Planned"}</Text>
           <Text style={s.eventTitle}>{event.title}</Text>
-          <Text style={s.body}>{formatEventMoment(event.event_start_at, event.event_timezone)}</Text>
+          <Text style={s.body}>{formatCardMoment(event.event_start_at, event.event_timezone)}</Text>
         </View>
         <Text style={s.arrow}>›</Text>
       </Pressable></SwipeDeleteCard>

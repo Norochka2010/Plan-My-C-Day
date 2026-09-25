@@ -1,3 +1,4 @@
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useCallback, useRef, useState } from 'react';
 import { useFocusEffect } from 'expo-router';
 import { Modal, Platform, ScrollView, AppState, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -29,7 +30,7 @@ const celebrationColors = [
   { backgroundColor: '#EEE7FA', color: '#705294', fill: '#A187C1' },
   { backgroundColor: '#FCECDF', color: '#945B36', fill: '#C9966B' },
 ];
-export function ExploreGrowthCard({ catalog, catalogLoading, catalogFailed, refreshKey, onOpen, onExpand }: { catalog: ExploreSummary[]; catalogLoading: boolean; catalogFailed: boolean; refreshKey: string; onOpen: (item: ExploreSummary) => void; onExpand: () => void }) {
+export function ExploreGrowthCard({ catalog, catalogLoading, catalogFailed, refreshKey, onOpen, onExpand, onViewHistory, initiallyExpanded = false }: { onViewHistory?: () => void; initiallyExpanded?: boolean; catalog: ExploreSummary[]; catalogLoading: boolean; catalogFailed: boolean; refreshKey: string; onOpen: (item: ExploreSummary) => void; onExpand: () => void }) {
   const [selected, setSelected] = useState<{ domain: Domain; colorIndex: number } | null>(null);
   const pendingPractice = useRef<ExploreSummary | null>(null);
   const practice = selected ? catalog.find(item => item.content_id === practiceIds[selected.domain] && !item.development_preview && (item.xp_value ?? 0) > 0) : undefined;
@@ -44,7 +45,7 @@ export function ExploreGrowthCard({ catalog, catalogLoading, catalogFailed, refr
     setSelected(null);
     if (Platform.OS !== 'ios') finishDismiss();
   }
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(initiallyExpanded);
   const [bars, setBars] = useState<GrowthBar[] | null>(null), [failed, setFailed] = useState(false), [retry, setRetry] = useState(0);
   useFocusEffect(useCallback(() => {
     let active = true, request = 0;
@@ -75,7 +76,7 @@ export function ExploreGrowthCard({ catalog, catalogLoading, catalogFailed, refr
     <Text style={s.small}>Tap any category card to see the skills it builds.</Text>
     <Text style={s.encouragement}>Every little step is worth celebrating.</Text>
     <Text style={s.explanation}>Activities completed in each area—not a score of your health or ability. An activity can count in more than one area.</Text>
-    {catalogFailed ? <Text style={s.small}>Growth needs the activity list. Use Try again above to reload Explore.</Text> : failed ? <>
+    {catalogFailed ? <Text style={s.small}>Growth needs the activity list. Use the retry button above to reload.</Text> : failed ? <>
       <Text style={s.small}>Your saved progress couldn’t load right now.</Text>
       <Pressable accessibilityRole="button" style={s.retry} onPress={() => setRetry(n => n + 1)}><Text style={s.small}>Try again</Text></Pressable>
     </> : catalogLoading || !bars ? <Text style={s.small}>Loading your progress…</Text> : <View style={s.row}>{bars.map((bar, index) => <Pressable key={bar.domain} accessibilityRole="button" accessibilityLabel={`${bar.domain}, ${bar.completed} of ${bar.available} completed`} accessibilityHint="Shows the skills this area builds" onPress={() => setSelected({ domain: bar.domain, colorIndex: index % 6 })} style={({ pressed }) => [s.domain, { backgroundColor: celebrationColors[index % 6].backgroundColor, opacity: pressed ? 0.75 : 1 }]}>
@@ -86,9 +87,10 @@ export function ExploreGrowthCard({ catalog, catalogLoading, catalogFailed, refr
       <Text style={s.status}>{bar.available ? `${bar.completed} of ${bar.available} completed` : 'More to come'}</Text>
     </Pressable>)}</View>}
     <Text style={s.explanation}>Based on available Quick Learn, Myth or Fact, Practice, and Challenges. Saved to your account.</Text>
+    {onViewHistory && <Pressable accessibilityRole="button" onPress={onViewHistory} style={{minHeight:48,padding:14,borderRadius:14,backgroundColor:"#E5DDF0",justifyContent:"center"}}><Text style={{color:"#5D4277",fontSize:16,lineHeight:24,fontWeight:"600"}}>View learning history →</Text></Pressable>}
     </>}
     <Modal onDismiss={finishDismiss} visible={selected !== null} transparent animationType="fade" onRequestClose={() => setSelected(null)}>
-      <View style={s.backdrop}>
+      <SafeAreaProvider><SafeAreaView style={s.backdrop}>
         <Pressable style={StyleSheet.absoluteFill} accessible={false} onPress={() => setSelected(null)} />
         {selected && <View accessibilityViewIsModal onAccessibilityEscape={() => setSelected(null)} style={[s.popup, { backgroundColor: celebrationColors[selected.colorIndex].backgroundColor }]}>
           <ScrollView contentContainerStyle={s.popupContent} bounces={false}>
@@ -107,7 +109,7 @@ export function ExploreGrowthCard({ catalog, catalogLoading, catalogFailed, refr
             </View> : <Text style={s.practiceCaption}>More practice is on its way.</Text>}
           </ScrollView>
         </View>}
-      </View>
+      </SafeAreaView></SafeAreaProvider>
     </Modal>
   </View>;
 }

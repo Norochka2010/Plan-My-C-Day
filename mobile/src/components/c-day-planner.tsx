@@ -1,3 +1,6 @@
+import { BackButton } from './back-button';
+import { TabTitle } from '@/constants/theme';
+import { PlannedActionCarousel } from './planned-action-carousel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { isArchivedCDay } from '@/lib/c-day-archive';
 import { SwipeDeleteCard } from "./swipe-delete-card";
@@ -62,6 +65,7 @@ import {
   eventTypes,
   formatMoment,
   formatEventMoment,
+  formatCardMoment,
   localFields,
   newId,
   relativeSchedule,
@@ -86,6 +90,7 @@ function Button({
   secondary?: boolean;
   polished?: boolean;
 }) {
+  if (/^(‹|Back\b)/.test(label)) return <BackButton label={label} onPress={onPress} disabled={disabled}/>;
   return (
     <Pressable
       accessibilityRole="button"
@@ -221,7 +226,7 @@ export function CDayPlanner(entry: PlanEntry = {}) {
       <SafeAreaView edges={["top", "left", "right"]} style={s.screen}>
         <View style={s.content}>
           <LeafCharacter size={120} />
-          <Text style={s.title}>Plan My C-Day</Text>
+          <Text accessibilityRole="header" style={TabTitle}>Plan My C-Day</Text>
           <Text style={s.body}>
             Sign in through the Me tab to save your plans to your account. Then
             return here to get started.
@@ -1007,10 +1012,10 @@ function Planner({
         {step !== "home" && (
           <Button label="‹ Back" onPress={back} disabled={busy} secondary />
         )}
-        <View style={s.headerRow}>
+        {step !== "home" && <View style={s.headerRow}>
           <Text style={s.eyebrow}>PLAN MY C-DAY</Text>
-          {step !== "home" && <LeafCharacter size={48} />}
-        </View>
+          <LeafCharacter size={48} />
+        </View>}
         {busy && (
           <Text accessibilityLiveRegion="polite" style={s.statusBox}>
             {step === "reflection"
@@ -1024,8 +1029,8 @@ function Planner({
           <>
             <View style={s.welcomeRow}>
               <View style={s.welcomeText}>
-                <Text style={s.title}>Plan My C-Day</Text>
-                <Text style={s.body}>What’s coming up? Let’s make a plan.</Text>
+                <Text accessibilityRole="header" style={TabTitle}>Plan My C-Day</Text>
+                <Text style={s.body}>{"What’s coming up?\nLet’s make a plan."}</Text>
               </View>
               <LeafCharacter size={76} />
             </View>
@@ -1036,7 +1041,7 @@ function Planner({
                 <Text style={[s.statusBadge, { backgroundColor: "#E4D6EE", color: "#63497B" }]}>○ Your next draft</Text>
                 <Text style={s.heading}>{nextEvent.title}</Text>
                 <Text style={s.body}>
-                  {formatEventMoment(
+                  {formatCardMoment(
                     nextEvent.event_start_at,
                     nextEvent.event_timezone,
                   )}
@@ -1113,7 +1118,7 @@ function Planner({
                     <SwipeDeleteCard key={e.id} disabled={busy} onDelete={() => confirmDelete(e)}><View style={{ backgroundColor: "#FFFCF7" }}><Button
                       key={e.id}
                       secondary
-                      label={`${e.title} · ${formatEventMoment(e.event_start_at, e.event_timezone)}${isArchivedCDay(e, now) ? " · Archived without reflection" : ""}`}
+                      label={`${e.title} · ${formatCardMoment(e.event_start_at, e.event_timezone)}${isArchivedCDay(e, now) ? " · Archived without reflection" : ""}`}
                       onPress={() => void openDraft(e)}
                       disabled={busy}
                     /></View></SwipeDeleteCard>
@@ -1266,7 +1271,7 @@ function Planner({
                 <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"><LeafCharacter size={72} /></View>
               </View>
               <Text style={s.customMenuTitle} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>Create My Own C-Day</Text>
-              <Text style={s.customMenuBody}>Something coming up that doesn’t fit the list? Let’s build your C-Day.</Text>
+              <Text style={s.customMenuBody}>{"Something coming up that doesn’t fit the list?\nLet’s build your C-Day."}</Text>
               <View style={s.customMenuCta}><Text style={s.customMenuCtaText}>BUILD MY C-DAY</Text><Text style={s.customMenuArrow}>→</Text></View>
             </Pressable>
           </>
@@ -1274,7 +1279,7 @@ function Planner({
         {step === "details" && (
           <>
             <Text style={s.title}>{detailsConfig.heading}</Text>
-            {draftType === "custom" && <Text style={s.body}>Something coming up that doesn’t fit the list? Let’s build your C-Day.</Text>}
+            {draftType === "custom" && <Text style={s.body}>{"Something coming up that doesn’t fit the list?\nLet’s build your C-Day."}</Text>}
             <Field
               label={detailsConfig.titlePrompt}
               value={title}
@@ -1318,7 +1323,7 @@ function Planner({
         {step === "categories" && (
           <>
             <Text style={s.title}>What could help you get ready?</Text>
-            <Text style={s.body}>Choose 2–6 actions. Pick what helps you; you don’t need one from every category.</Text>
+            <Text style={s.body}>{"Choose 2–6 actions.\nPick what helps you; you don’t need one from every category."}</Text>
             <Text accessibilityLiveRegion="polite" style={s.selectionCount}>
               {activeActions.length} actions selected · Choose 2–6
             </Text>
@@ -1556,7 +1561,7 @@ function Planner({
             {event.status === "planned" && (
               <View style={s.card}>
                 {Date.parse(event.event_start_at) <= now ? (
-                  <View style={s.gap}><Text style={s.body}>How did it go? You can reflect even if your actions aren’t marked done.</Text><Button polished
+                  <View style={s.gap}><Text style={s.body}>{"How did it go?\nYou can reflect even if your actions aren’t marked done."}</Text><Button polished
                     label="Reflect on this C-Day"
                     onPress={beginReflection}
                     disabled={busy}
@@ -1817,22 +1822,11 @@ function Planner({
             <Text style={s.body}>{activeActions.length} actions planned</Text>
             {(() => {
               const scheduled = activeActions.filter(a => a.completion_status === "planned" && a.scheduled_at);
-              const index = Math.min(quickActionIndex, Math.max(0, scheduled.length - 1));
-              const current = scheduled[index];
-              return current ? (
-                <View style={s.card}>
-                  <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between', gap:8}}>
-                    <Text style={[s.small,{flex:1}]}>Action {index + 1} of {scheduled.length}</Text>
-                    {scheduled.length > 1 && <View style={{flexDirection:'row',gap:8}}>
-                      <Pressable accessibilityRole="button" accessibilityLabel="Previous planned action" accessibilityState={{disabled:index === 0}} disabled={index === 0} onPress={() => setQuickActionIndex(index - 1)} style={{minWidth:44,minHeight:44,borderRadius:14,backgroundColor:'#DCEACF',alignItems:'center',justifyContent:'center',opacity:index === 0 ? 0.35 : 1}}><Text style={{fontSize:28,color:'#405D35'}}>‹</Text></Pressable>
-                      <Pressable accessibilityRole="button" accessibilityLabel="Next planned action" accessibilityState={{disabled:index === scheduled.length - 1}} disabled={index === scheduled.length - 1} onPress={() => setQuickActionIndex(index + 1)} style={{minWidth:44,minHeight:44,borderRadius:14,backgroundColor:'#DCEACF',alignItems:'center',justifyContent:'center',opacity:index === scheduled.length - 1 ? 0.35 : 1}}><Text style={{fontSize:28,color:'#405D35'}}>›</Text></Pressable>
-                    </View>}
-                  </View>
-                  <View accessibilityLiveRegion="polite" style={s.gap}>
-                    <Text style={s.heading}>{current.action_text_snapshot}</Text>
-                    <Text style={s.body}>{formatMoment(current.scheduled_at!, event.event_timezone)}</Text>
-                  </View>
-                </View>
+              return scheduled.length ? (
+                <PlannedActionCarousel
+                  items={scheduled.map(action => ({ id: action.id, title: action.action_text_snapshot, time: formatMoment(action.scheduled_at!, event.event_timezone) }))}
+                  index={quickActionIndex} onIndexChange={setQuickActionIndex}
+                />
               ) : <Text style={s.body}>No scheduled actions.</Text>;
             })()}
             <Button label="View My Plan" onPress={() => setStep("plan")} />

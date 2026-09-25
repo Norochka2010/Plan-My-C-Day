@@ -1,14 +1,19 @@
+import { BackButton } from './back-button';
+import { TabTitle } from '@/constants/theme';
+import { ExpertResources } from './expert-resources';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, AppState, Keyboard, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ActivityIndicator, Alert, AppState, Keyboard, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import { newId } from '@/lib/c-day-model';
 import { LeafCharacter } from './leaf-character';
+import { CommunityRules } from './community-rules';
 import { Fonts } from '@/constants/theme';
 import { acknowledgements, checks, communityRpc, disclaimer, efforts, readCommunity, reasons, recipeCategories, recipeIssue, statusLabel, uses, type ListMode, type Recipe } from '@/lib/community-model';
 
 function Button({label,onPress,disabled=false,secondary=false,accessibilityLabel}:{accessibilityLabel?:string;label:string;onPress:()=>void;disabled?:boolean;secondary?:boolean}) {
+ if (/^(‹|Back\b|Previous step)/.test(label)) return <BackButton label={label} onPress={onPress} disabled={disabled}/>;
  return <Pressable accessibilityLabel={accessibilityLabel??label} accessibilityRole="button" accessibilityState={{disabled}} disabled={disabled} onPress={()=>{Keyboard.dismiss();onPress();}}
  style={({pressed})=>[s.button,secondary&&s.secondary,disabled&&s.disabled,pressed&&!disabled&&{opacity:.75}]}>
  <Text style={[s.buttonText,secondary&&s.secondaryText,disabled&&s.disabledText]}>{label}</Text></Pressable>;
@@ -31,10 +36,11 @@ export function CommunityRecipes() {
  return()=>{active=false;subscription.unsubscribe();};
  },[]);
  if(!ready)return <SafeAreaView style={s.screen}><ActivityIndicator accessibilityLabel="Loading Community" /></SafeAreaView>;
- if(!userId)return <SafeAreaView style={s.screen}><View style={s.content}><LeafCharacter size={90}/><Text style={s.title}>Community</Text><Text style={s.body}>Sign in to browse and share community recipes.</Text><Button label="Go to Me to sign in" onPress={()=>router.push('/me')}/></View></SafeAreaView>;
+ if(!userId)return <SafeAreaView style={s.screen}><View style={s.content}><LeafCharacter size={90}/><Text accessibilityRole="header" style={TabTitle}>Community</Text><Text style={s.body}>Sign in to browse and share community recipes.</Text><Button label="Go to Me to sign in" onPress={()=>router.push('/me')}/></View></SafeAreaView>;
  return <Community key={userId} />;
 }
 function Community() {
+ const [nutritionOpen,setNutritionOpen]=useState(false);
  const [page,setPage]=useState<'home'|'list'|'detail'|'edit'|'report'>('home');
  const [mode,setMode]=useState<ListMode>('browse'),[list,setList]=useState<Recipe[]>([]),[more,setMore]=useState(false);
  const [recipe,setRecipe]=useState<Recipe|null>(null),[step,setStep]=useState(0),[ack,setAck]=useState([false,false,false]);
@@ -60,6 +66,8 @@ function Community() {
  if(!alive.current||token!==generation.current)return;
  setList(append?[...list,...rows.filter(r=>!list.some(x=>x.id===r.id))]:rows);setMore(rows.length===30);setMode(target);setPage('list');
  }
+ // Returning from a recipe refreshes the selected collection.
+ useEffect(()=>{if(page==='home')void run(()=>loadList(mode));},[page]);
  async function open(id:string) {
  const value=await readCommunity<Recipe>('detail',id);
  if(!alive.current)return;
@@ -86,10 +94,10 @@ function Community() {
  Alert.alert('Save your draft?', 'Save your changes so you can return later.',[
  {text:'Keep editing',style:'cancel'},
  {text:'Leave without saving',style:'destructive',onPress:()=>{setPage('home');setRecipe(null);}},
- {text:'Save and leave',onPress:()=>void run(async()=>{await saveDraft();if(alive.current){setPage('home');setNotice('Draft saved in My Recipes.');}})},
+ {text:'Save and leave',onPress:()=>void run(async()=>{await saveDraft();if(alive.current){setMode('mine');setPage('home');setNotice('Draft saved in My Recipes.');}})},
  ]);return;}
  if(page==='report'){setPage('detail');return;}
- setPage('home');setError('');setNotice('');
+ if(mode==='queue')setMode('browse');setPage('home');setError('');setNotice('');
  }
  async function interact(action:string,enabled=true) {
  if(!recipe)return;
@@ -101,36 +109,46 @@ function Community() {
  async function moderate(action:string) {
  if(!recipe)return;
  await communityRpc('community_moderate',{p_id:recipe.id,p_action:action,p_reason:reason,p_note:note});
- if(!alive.current)return;await loadList('queue');if(alive.current)setNotice('Moderation decision saved.');
+ if(!alive.current)return;await loadList('queue');if(alive.current)setNotice(action==='approve'?'Recipe approved and published. It is now visible in Discover.':'Moderation decision saved.');
  }
  const listTitle={browse:'Recipes',mine:'My Recipes',saved:'Saved Recipes',queue:'Moderator review'}[mode];
  return <SafeAreaView edges={['top','left','right']} style={s.screen}><ScrollView ref={scroll} contentContainerStyle={s.content} keyboardShouldPersistTaps="handled" automaticallyAdjustKeyboardInsets keyboardDismissMode="on-drag">
- {page!=='home'&&<Button label="‹ Back" onPress={back} disabled={busy} secondary/>}
+ {(page==='detail'||page==='edit'||page==='report'||(page==='list'&&mode==='queue'))&&<Button label="‹ Back" onPress={back} disabled={busy} secondary/>}
  {!!error&&<Text accessibilityLiveRegion="polite" style={s.error}>{error}</Text>}
  {!!notice&&<Text accessibilityLiveRegion="polite" style={s.info}>{notice}</Text>}
  {busy&&<View style={s.row}><ActivityIndicator/><Text accessibilityLiveRegion="polite" style={s.body}>Please wait…</Text></View>}
- {page==='home'&&<>
- <View style={s.row}><View style={{flex:1}}><Text style={s.title}>Community</Text><Text style={s.body}>Real ideas and experiences shared by the My C-Day community.</Text></View><LeafCharacter size={76}/></View>
- <Text style={s.small}>Community posts are shared by members, not medical experts. Always check current ingredient labels, brands, preparation methods, and cross-contact considerations for yourself.</Text>
- <View style={s.card}><Text style={s.heading}>Recipes</Text><Text style={s.body}>Browse ideas or share a recipe for review.</Text><Button label="Browse recipes" disabled={busy} onPress={()=>void run(()=>loadList('browse'))}/><Button secondary label="Create a recipe" disabled={busy} onPress={newRecipe}/></View>
- <View style={s.card}><Text style={s.heading}>My Community</Text><Button secondary label="My Recipes" disabled={busy} onPress={()=>void run(()=>loadList('mine'))}/><Button secondary label="Saved Recipes" disabled={busy} onPress={()=>void run(()=>loadList('saved'))}/></View>
- <View style={s.card}><Text style={s.heading}>Community Topics</Text><Text style={s.small}>Coming soon</Text></View>
+ {(page==='home'||page==='list')&&<>
+ <View style={s.gap}>
+ <View style={s.row}><Text accessibilityRole="header" style={[TabTitle,{flex:1}]}>Community</Text><LeafCharacter size={64}/></View>
+ <Text style={s.body}>{'Recipe ideas from the\n'}<Text style={{fontWeight:'600',color:'#426B43'}}>Plan My C‑Day</Text>{' community.'}</Text>
+ </View>
+ <CommunityRules welcome/>
+ <Text style={s.small}>Member-shared recipes aren’t medical guidance. Check ingredient labels and preparation for cross-contact.</Text>
+ <Pressable accessibilityRole="button" accessibilityLabel="A little food inspiration. Explore nutrition and eating well." onPress={()=>setNutritionOpen(true)} style={({pressed})=>({minHeight:48,padding:16,gap:8,backgroundColor:'#EDF3E6',borderRadius:20,opacity:pressed?0.75:1})}>
+ <Text style={s.heading}>A little food inspiration 🌿</Text>
+ <Text style={s.body}>Curious about what goes on your plate? Explore food basics and ideas for eating well.</Text>
+ <Text style={s.link}>Let’s explore →</Text>
+ </Pressable>
+ <Button label="Share a recipe" disabled={busy} onPress={newRecipe}/>
+ <View style={s.tabs} accessibilityRole="tablist">
+ {([['browse','Discover'],['saved','Saved'],['mine','My Recipes']] as const).map(([target,label])=><Pressable key={target}
+ accessibilityRole="tab" accessibilityState={{selected:mode===target,disabled:busy}} disabled={busy}
+ onPress={()=>void run(()=>loadList(target))} style={[s.tab,mode===target&&s.activeTab]}>
+ <Text style={[s.tabText,mode===target&&s.activeTabText]}>{label}</Text></Pressable>)}
+ </View>
  {moderator&&<Button secondary label="Moderator review queue" disabled={busy} onPress={()=>void run(()=>loadList('queue'))}/>}
- </>}
- {page==='list'&&<>
- <Text style={s.title}>{listTitle}</Text>
- <Button secondary label="Refresh" disabled={busy} onPress={()=>void run(()=>loadList(mode))}/>
- {mode==='mine'&&<Button label="Create a recipe" disabled={busy} onPress={newRecipe}/>}
- {!list.length&&!busy&&<Text style={s.body}>{mode==='queue'?'No recipes need review here.':mode==='saved'?'Recipes you save will appear here.':mode==='mine'?'Start a recipe and save a draft to return to it later.':'No published recipes yet. Shared recipes appear after moderator review.'}</Text>}
+ <View style={s.row}><Text accessibilityRole="header" style={[s.heading,{flex:1}]}>{mode==='browse'?'Discover recipes':listTitle}</Text>
+ <Pressable accessibilityRole="button" accessibilityLabel="Refresh recipes" disabled={busy} onPress={()=>void run(()=>loadList(mode))} style={{minHeight:44,justifyContent:'center'}}><Text style={s.link}>{error?'Try again':'Refresh'}</Text></Pressable></View>
+ {!list.length&&!busy&&!error&&page==='list'&&<Text style={s.body}>{mode==='queue'?'No recipes need review here.':mode==='saved'?'Recipes you save will appear here.':mode==='mine'?'Start a recipe and save a draft to return to it later.':'No published recipes yet. Shared recipes appear after moderator review.'}</Text>}
  {list.map(r=><Pressable key={r.id} accessibilityRole="button" disabled={busy} onPress={()=>void run(()=>open(r.id))} style={s.card}>
- <Text style={s.badge}>COMMUNITY SHARED</Text><Text style={s.heading}>{r.title||'Untitled draft'}</Text><Text style={s.small}>Community member</Text>
+ <Text style={s.badge}>COMMUNITY SHARED</Text><Text style={s.heading}>{r.title||'Untitled draft'}</Text><Text style={s.small}>{r.author_username ? `@${r.author_username}` : 'Community member'}</Text>
  <Text style={s.body}>{[r.category,r.effort_level].filter(Boolean).join(' · ')}</Text>
  <Text style={s.small}>{statusLabel(r.status)}{mode==='queue'&&r.review_required?' · Review requested':''}</Text><Text style={s.link}>Open recipe ›</Text>
  </Pressable>)}
  {more&&<Button secondary label="Load more" disabled={busy} onPress={()=>void run(()=>loadList(mode,true))}/>}
  </>}
  {page==='detail'&&recipe&&<>
- <Text style={s.badge}>COMMUNITY SHARED</Text><Text style={s.title}>{recipe.title||'Untitled draft'}</Text><Text style={s.small}>Community member · {statusLabel(recipe.status)}</Text>
+ <Text style={s.badge}>COMMUNITY SHARED</Text><Text style={s.title}>{recipe.title||'Untitled draft'}</Text><Text style={s.small}>{recipe.author_username ? `@${recipe.author_username}` : 'Community member'} · {statusLabel(recipe.status)}</Text>
  <Text style={s.info}>{disclaimer}</Text>
  <Text style={s.body}>{[recipe.category,recipe.effort_level].filter(Boolean).join(' · ')}</Text>
  <Text style={s.heading}>Ingredients</Text>{recipe.ingredients.map((i,n)=><Text key={n} style={s.body}>• {i.amount_text} {i.ingredient_text}</Text>)}
@@ -142,7 +160,10 @@ function Community() {
  {recipe.is_author&&recipe.status!=='draft'&&<Text style={s.small}>Submitted recipes are read-only. Publication review is not medical verification.</Text>}
  {recipe.status==='published'&&<>
  <Button label={recipe.saved?'Saved ✓ · Unsave':'Save recipe'} disabled={busy} onPress={()=>void run(()=>interact('save',!recipe.saved))}/>
- <Button secondary label={recipe.helpful?'Helpful ✓ · Undo':'Helpful'} disabled={busy} onPress={()=>void run(()=>interact('helpful',!recipe.helpful))}/>
+ <Pressable accessibilityRole="button" accessibilityLabel={`${recipe.helpful?'Unlike':'Like'} recipe. ${recipe.like_count??0} likes.`} accessibilityState={{selected:recipe.helpful,disabled:busy}} disabled={busy} onPress={()=>void run(()=>interact('helpful',!recipe.helpful))} style={({pressed})=>[s.button,{backgroundColor:recipe.helpful?'#E9DDF4':'#F4EDF8',borderWidth:1,borderColor:'#D6C0E5'},(busy||pressed)&&{opacity:.6}]}>
+ <Text style={[s.buttonText,{color:'#604378'}]}>{recipe.helpful?'♥':'♡'} {recipe.helpful?'Liked':'Like'} · {recipe.like_count??0}</Text>
+ </Pressable>
+ <Text style={s.small}>Likes show appreciation, not a guarantee of food safety.</Text>
  <Button secondary label="Hide" disabled={busy} onPress={()=>void run(()=>interact('hide'))}/>
  <Button secondary label="Report" disabled={busy} onPress={()=>{setReason('');setNote('');setPage('report');}}/>
  </>}
@@ -157,8 +178,8 @@ function Community() {
  {recipe.reports?.map((r,i)=><View key={i} style={s.infoCard}><Text style={s.body}>{r.reason} · {r.status}</Text><Text style={s.small}>{r.note}</Text></View>)}
  <Field label="Decision reason (required except approval)" value={reason} onChange={setReason} disabled={busy}/>
  <Field label="Internal decision note (optional)" value={note} onChange={setNote} max={1000} multiline disabled={busy}/>
- {recipe.status==='pending_review'&&<Button label="Approve for publication" disabled={busy} onPress={()=>void run(()=>moderate('approve'))}/>}
- {recipe.status!=='hidden'&&<Button secondary label="Hide globally" disabled={busy||!reason.trim()} onPress={()=>void run(()=>moderate('hide'))}/>}
+ {recipe.status==='pending_review'&&<Button label="Approve & publish to Community" disabled={busy} onPress={()=>Alert.alert('Publish this recipe?','This will make the recipe visible in Community Discover.',[{text:'Cancel',style:'cancel'},{text:'Approve & publish',onPress:()=>void run(()=>moderate('approve'))}])}/>}
+ {recipe.status!=='hidden'&&<Button secondary label="Hide from Community" disabled={busy||!reason.trim()} onPress={()=>void run(()=>moderate('hide'))}/>}
  {recipe.status!=='removed'&&<Button secondary label="Remove" disabled={busy||!reason.trim()} onPress={()=>void run(()=>moderate('remove'))}/>}
  {['hidden','removed','flagged'].includes(recipe.status)&&<Button secondary label={recipe.published_at?'Restore publication':'Return to review'} disabled={busy||!reason.trim()} onPress={()=>void run(()=>moderate('restore'))}/>}
  {recipe.review_required&&recipe.status==='published'&&<Button secondary label="Resolve reports · Keep published" disabled={busy||!reason.trim()} onPress={()=>void run(()=>moderate('resolve_reports'))}/>}
@@ -191,7 +212,8 @@ function Community() {
  <Text style={s.heading}>When might you make it? (optional)</Text><Chips values={uses} selected={recipe.use_case_tags} busy={busy} onSelect={v=>toggle('use_case_tags',v)}/>
  </>}
  {step===3&&<>
- <Text style={s.info}>Recipes here are shared by members of the My C-Day community. They are not reviewed or approved by a doctor, dietitian, or My C-Day unless specifically stated.</Text>
+ <CommunityRules/>
+ <Text style={s.info}>Recipes here are shared by members of the Plan My C-Day community. They are not reviewed or approved by a doctor, dietitian, or Plan My C-Day unless specifically stated.</Text>
  <Text style={s.heading}>{recipe.title}</Text><Text style={s.body}>{recipe.ingredients.length} ingredients · {recipe.steps.length} steps</Text>
  {acknowledgements.map((v,i)=><Pressable key={v} accessibilityRole="checkbox" accessibilityState={{checked:ack[i],disabled:busy}} disabled={busy} onPress={()=>setAck(x=>x.map((a,n)=>n===i?!a:a))} style={[s.card,ack[i]&&s.selected]}><Text style={s.body}>{ack[i]?'☑':'☐'} {v}</Text></Pressable>)}
  <Button label="SUBMIT FOR REVIEW" disabled={busy||!ack.every(Boolean)} onPress={()=>void run(async()=>{
@@ -202,15 +224,19 @@ function Community() {
  </>}
  {step>0&&<Button secondary label="Previous step" disabled={busy} onPress={()=>setStep(v=>v-1)}/>}
  {step<3&&<Button label="Save & continue" disabled={busy} onPress={()=>void run(async()=>{const issue=recipeIssue(recipe,step);if(issue)throw Error(issue);await saveDraft();if(alive.current)setStep(v=>v+1);})}/>}
- <Button secondary label="Save draft & leave" disabled={busy} onPress={()=>void run(async()=>{await saveDraft();if(alive.current){setPage('home');setNotice('Draft saved in My Recipes.');}})}/>
+ <Button secondary label="Save draft & leave" disabled={busy} onPress={()=>void run(async()=>{await saveDraft();if(alive.current){setMode('mine');setPage('home');setNotice('Draft saved in My Recipes.');}})}/>
  <Text style={s.small}>Keep names, contact details, school, location and social handles out of your recipe. Drafts save when you tap a save button.</Text>
  </>}
  {page==='report'&&recipe&&<><Text style={s.title}>Report recipe</Text><Text style={s.body}>Your identity will not be shared with the recipe author. Reporting also hides this recipe for you.</Text>
  <Chips values={reasons} selected={[reason]} onSelect={setReason} busy={busy}/><Field label="Additional information (optional)" value={note} onChange={setNote} max={500} multiline disabled={busy}/>
  <Button label="Send report" disabled={busy||!reason} onPress={()=>void run(()=>interact('report'))}/></>}
- </ScrollView></SafeAreaView>;
+ </ScrollView>
+ <Modal visible={nutritionOpen} animationType="slide" presentationStyle="fullScreen" onRequestClose={()=>setNutritionOpen(false)}>
+ <SafeAreaProvider>{nutritionOpen&&<ExpertResources nutritionOnly onClose={()=>setNutritionOpen(false)}/>}</SafeAreaProvider>
+ </Modal></SafeAreaView>;
 }
 const s=StyleSheet.create({
+ tabs:{flexDirection:'row',gap:4,padding:4,borderRadius:18,backgroundColor:'#F1EAF5'},tab:{flex:1,minHeight:48,paddingVertical:12,paddingHorizontal:4,alignItems:'center',justifyContent:'center',borderRadius:14},activeTab:{backgroundColor:'#DFECD5'},tabText:{fontSize:14,lineHeight:20,color:'#62556E',textAlign:'center'},activeTabText:{color:'#345333',fontWeight:'700'},
  screen:{flex:1,backgroundColor:'#FFFCF7'},content:{padding:20,paddingBottom:36,gap:16,width:'100%',maxWidth:620,alignSelf:'center'},
  title:{fontFamily:Fonts.rounded,fontSize:28,lineHeight:36,fontWeight:'600',color:'#302040'},heading:{fontFamily:Fonts.rounded,fontSize:19,lineHeight:27,fontWeight:'600',color:'#302040'},
  body:{fontSize:16,lineHeight:24,color:'#62556E'},small:{fontSize:14,lineHeight:21,color:'#716579'},badge:{fontSize:14,lineHeight:21,fontWeight:'700',color:'#63497B',letterSpacing:1},

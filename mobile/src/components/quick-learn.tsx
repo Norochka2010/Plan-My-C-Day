@@ -1,3 +1,4 @@
+import { LearningTitle } from './learning-title';
 import { ExploreDetails } from './explore-details';
 import { ExploreActionButton as Action } from '@/components/explore-action-button';
 import { useEffect, useRef, useState } from "react";
@@ -172,9 +173,7 @@ export function QuickLearn({
           <Text style={s.body}>This lesson isn’t available right now.</Text>
         ) : (
           <>
-            <Text accessibilityRole="header" style={s.title}>
-              {row.title}
-            </Text>
+            <LearningTitle title={row.title}/>
             {!!row.subtitle && <Text style={s.subtitle}>{row.subtitle}</Text>}
             <View style={s.meta}>
               {!!lesson.estimatedTime && <Text style={s.small}>{lesson.estimatedTime}</Text>}
@@ -300,7 +299,7 @@ const s = StyleSheet.create({
   },
   body: { color: "#62556E", fontSize: 16, lineHeight: 26 },
   small: { color: "#716579", fontSize: 14, lineHeight: 21 },
-  section: { gap: 8, paddingVertical: 4 },
+  section: { gap: 10, paddingTop: 18, paddingBottom: 8, borderTopWidth: 1, borderTopColor: "#DDD2E4" },
   card: {
     borderRadius: 22,
     padding: 20,

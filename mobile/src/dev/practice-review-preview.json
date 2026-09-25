@@ -712,7 +712,7 @@
       "preferred_choice": null,
       "safety_issues": null
     },
-    "teaching_point": "My C-Day helps you notice whether you're missing information, experiencing uncertainty, or choosing not to eat. It does not decide whether you should eat something.",
+    "teaching_point": "Plan My C-Day helps you notice whether you're missing information, experiencing uncertainty, or choosing not to eat. It does not decide whether you should eat something.",
     "next_step": null,
     "related_content_ids": null,
     "xp_value": 10,
@@ -1298,7 +1298,7 @@
       "by_choice_id": {
         "A": "Mistakes and uncertain situations can happen. Focus on what you need now.",
         "B": "Support can be useful, especially if you feel unwell or unsure what to do.",
-        "C": "My C-Day should not create a new treatment plan for an exposure.",
+        "C": "Plan My C-Day should not create a new treatment plan for an exposure.",
         "D": "For urgent or severe symptoms, use appropriate medical/emergency care rather than relying on the app.",
         "E": "Reflection can help future planning without turning the event into blame."
       },

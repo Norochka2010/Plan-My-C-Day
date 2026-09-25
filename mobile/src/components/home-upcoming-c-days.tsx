@@ -12,7 +12,7 @@ import {
 import { useFocusEffect, useRouter } from "expo-router";
 import { supabase } from "@/lib/supabase";
 import {
-  formatEventMoment,
+  formatCardMoment,
   formatMoment,
   newId,
 } from "@/lib/c-day-model";
@@ -246,7 +246,7 @@ function UpcomingCards({ userId }: { userId: string }) {
                     >
                       <Text style={s.title}>{event.title}</Text>
                       <Text style={s.body}>
-                        {formatEventMoment(
+                        {formatCardMoment(
                           event.event_start_at,
                           event.event_timezone,
                         )}

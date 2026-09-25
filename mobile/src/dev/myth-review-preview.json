@@ -679,7 +679,7 @@
         "medical_review_required": "true",
         "content_version": "1.0",
         "active": "true",
-        "explanation": "My C-Day should never pressure you to eat. You can notice whether information is still missing, whether you are feeling uncertain, or whether you simply prefer another option.",
+        "explanation": "Plan My C-Day should never pressure you to eat. You can notice whether information is still missing, whether you are feeling uncertain, or whether you simply prefer another option.",
         "takeaway": "Confidence is not measured by forcing yourself to eat.",
         "source_organization": "Teen lived-experience synthesis; expert/clinical review required",
         "source_url": null,
@@ -690,7 +690,7 @@
     "choices": [],
     "feedback": {
       "answer_type": "MYTH",
-      "summary": "My C-Day should never pressure you to eat. You can notice whether information is still missing, whether you are feeling uncertain, or whether you simply prefer another option."
+      "summary": "Plan My C-Day should never pressure you to eat. You can notice whether information is still missing, whether you are feeling uncertain, or whether you simply prefer another option."
     },
     "teaching_point": "Confidence is not measured by forcing yourself to eat.",
     "next_step": null,
@@ -739,7 +739,7 @@
         "medical_review_required": "true",
         "content_version": "1.0",
         "active": "true",
-        "explanation": "A major dietary and health change can change how someone thinks or feels about food. My C-Day does not label that reaction as good or bad. If food-related fear or avoidance is causing significant distress or limiting eating, support from a caregiver and celiac healthcare team may be helpful.",
+        "explanation": "A major dietary and health change can change how someone thinks or feels about food. Plan My C-Day does not label that reaction as good or bad. If food-related fear or avoidance is causing significant distress or limiting eating, support from a caregiver and celiac healthcare team may be helpful.",
         "takeaway": "Adjustment can be emotional as well as practical.",
         "source_organization": "Teen lived-experience synthesis; clinical review required",
         "source_url": null,
@@ -750,7 +750,7 @@
     "choices": [],
     "feedback": {
       "answer_type": "LETS_RETHINK_IT",
-      "summary": "A major dietary and health change can change how someone thinks or feels about food. My C-Day does not label that reaction as good or bad. If food-related fear or avoidance is causing significant distress or limiting eating, support from a caregiver and celiac healthcare team may be helpful."
+      "summary": "A major dietary and health change can change how someone thinks or feels about food. Plan My C-Day does not label that reaction as good or bad. If food-related fear or avoidance is causing significant distress or limiting eating, support from a caregiver and celiac healthcare team may be helpful."
     },
     "teaching_point": "Adjustment can be emotional as well as practical.",
     "next_step": null,

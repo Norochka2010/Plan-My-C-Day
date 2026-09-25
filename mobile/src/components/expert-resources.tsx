@@ -1,3 +1,4 @@
+import { BackButton } from './back-button';
 import { NutritionMiniHub } from './nutrition-mini-hub';
 import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -19,6 +20,7 @@ const categoryArtwork: Record<ExpertCategory, { icon: string; background: string
 };
 
 function Button({ label, onPress, disabled = false }: { label: string; onPress: () => void; disabled?: boolean }) {
+ if (/^(‹|Back\b|Previous step)/.test(label)) return <BackButton label={label} onPress={onPress} disabled={disabled}/>;
   return <Pressable accessibilityRole="button" accessibilityState={{ disabled }} disabled={disabled} onPress={onPress}
     style={({ pressed }) => [s.button, (pressed || disabled) && s.dim]}><Text style={s.buttonText}>{label}</Text></Pressable>;
 }
@@ -33,13 +35,13 @@ function ResourceCopy({ resource }: { resource: ExpertResource }) {
     <View style={s.tags}>{resource.tags.map(tag => <View key={tag} style={s.tag}><Text style={s.small}>{tag}</Text></View>)}</View>
   </>;
 }
-export function ExpertResources({ onClose, initialContentId = null }: { onClose: () => void; initialContentId?: string | null }) {
+export function ExpertResources({ onClose, initialContentId = null, nutritionOnly = false }: { onClose: () => void; initialContentId?: string | null; nutritionOnly?: boolean }) {
   const [resources, setResources] = useState<ExpertResource[]>([]);
   const [selected, setSelected] = useState<string | null>(initialContentId);
   const [categoryVisit, setCategoryVisit] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(0);
   const pendingCategoryScroll = useRef(false);
-  const [category, setCategory] = useState<ExpertCategory | null>(null);
+  const [category, setCategory] = useState<ExpertCategory | null>(nutritionOnly ? 'Nutrition & Eating Well' : null);
   const [loading, setLoading] = useState(true), [failed, setFailed] = useState(false), [retry, setRetry] = useState(0);
   const [opening, setOpening] = useState(false), [linkError, setLinkError] = useState('');
   const generation = useRef(0), linkBusy = useRef(false), scroll = useRef<ScrollView>(null);
@@ -68,9 +70,9 @@ export function ExpertResources({ onClose, initialContentId = null }: { onClose:
   }
   return <SafeAreaView style={s.screen}>
     <ScrollView ref={scroll} contentContainerStyle={s.content} onLayout={event => setViewportHeight(event.nativeEvent.layout.height)}>
-      <Button label={selected ? 'Back to resources' : 'Back to Explore'} onPress={selected ? () => setSelected(null) : onClose} />
-      <View style={s.header}><View style={s.copy}><Text accessibilityRole="header" style={s.title}>Trusted Resources</Text>
-        {!selected && <Text style={s.body}>Go deeper with a trusted outside source.</Text>}</View><LeafCharacter size={70} /></View>
+      <Button label={selected ? 'Back to resources' : nutritionOnly ? 'Back to Community' : 'Back to Explore'} onPress={selected ? () => setSelected(null) : onClose} />
+      <View style={s.header}><View style={s.copy}><Text accessibilityRole="header" style={s.title}>{nutritionOnly ? 'Nutrition & Eating Well' : 'Trusted Resources'}</Text>
+        {!selected && !nutritionOnly && <Text style={s.body}>Go deeper with a trusted outside source.</Text>}</View><LeafCharacter size={70} /></View>
       {loading ? <ActivityIndicator accessibilityLabel="Loading trusted resources" /> : failed ? <View style={s.card}>
         <Text style={s.body}>Trusted resources couldn’t load right now.</Text><Button label="Try again" onPress={() => setRetry(v => v + 1)} />
       </View> : selected ? resource ? <View style={s.card}>
@@ -82,6 +84,7 @@ export function ExpertResources({ onClose, initialContentId = null }: { onClose:
         {!!linkError && <Text accessibilityRole="alert" style={s.body}>{linkError}</Text>}
         <Button label={opening ? 'Opening source…' : 'Read from the source ↗'} onPress={() => void openSource(resource)} disabled={opening} />
       </View> : <View style={s.card}><Text style={s.body}>This resource isn’t available right now.</Text><Button label="Browse resources" onPress={() => setSelected(null)} /></View> : <>
+        {!nutritionOnly && <>
         <Text accessibilityRole="header" style={s.heading}>Featured collection</Text>
         <View style={s.collections}>{expertMiniHubs.map(hub => <Pressable key={hub} accessibilityRole="button" accessibilityState={{ selected: category === hub }} onPress={() => chooseCategory(hub)} style={[s.collection, category === hub && s.selected]}>
           <Text style={s.cardTitle}>{hub}</Text><Text style={s.small}>{hub === 'Nutrition & Eating Well' ? 'Learn and explore trusted resources →' : 'Explore trusted resources →'}</Text>
@@ -105,6 +108,7 @@ export function ExpertResources({ onClose, initialContentId = null }: { onClose:
             </Pressable>)}
           </View>)}
         </View>
+        </>}
         <View key={categoryVisit} style={{ gap: 16, minHeight: Math.max(0, viewportHeight - 48) }}
           onLayout={event => {
             if (!pendingCategoryScroll.current) return;
@@ -115,18 +119,26 @@ export function ExpertResources({ onClose, initialContentId = null }: { onClose:
               pendingCategoryScroll.current = false;
             });
           }}>
-        <Text accessibilityRole="header" style={s.heading}>{category ?? 'All resources'}</Text>
-        {category === 'Nutrition & Eating Well' && <><NutritionMiniHub /><Text accessibilityRole="header" style={s.heading}>Go Deeper with Trusted Experts</Text></>}
+        {!nutritionOnly && <Text accessibilityRole="header" style={s.heading}>{category ?? 'All resources'}</Text>}
+        {category === 'Nutrition & Eating Well' && <NutritionMiniHub />}
+        <View style={category === 'Nutrition & Eating Well' ? s.expertSection : {gap:16}}>
+        {category === 'Nutrition & Eating Well' && <>
+          <Text style={s.badge}>TRUSTED READING</Text>
+          <Text accessibilityRole="header" style={s.heading}>Go deeper with experts</Text>
+          <Text style={s.body}>Ready to learn more? These links take you to the original sources.</Text>
+        </>}
         <Text style={s.small}>{visible.length} {visible.length === 1 ? 'resource' : 'resources'}</Text>
         {visible.length === 0 ? <View style={s.card}><Text style={s.body}>No resources are available in this category yet.</Text><Button label="See all resources" onPress={() => chooseCategory(null)} /></View> : visible.map(item => <View key={item.contentId} style={s.card}>
           <ResourceCopy resource={item} /><Button label="View resource" onPress={() => setSelected(item.contentId)} />
         </View>)}
+        </View>
         </View>
       </>}
     </ScrollView>
   </SafeAreaView>;
 }
 const s = StyleSheet.create({
+  expertSection: {marginTop:24,padding:18,gap:16,borderTopWidth:4,borderWidth:1,borderColor:"#A6BCD8",borderRadius:24,backgroundColor:"#F0F4FA"},
   screen: { flex: 1, backgroundColor: '#FFFCF7' },
   content: { padding: 24, paddingBottom: 32, gap: 16, width: '100%', maxWidth: 640, alignSelf: 'center' },
   header: { flexDirection: 'row', gap: 12, alignItems: 'center' }, copy: { flex: 1, gap: 8 },

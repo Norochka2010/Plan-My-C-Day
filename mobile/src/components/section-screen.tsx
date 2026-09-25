@@ -18,7 +18,7 @@ export function SectionScreen({ title }: { title: string }) {
     <ThemedView style={styles.container}>
       <SafeAreaView edges={['top', 'left', 'right']} style={styles.container}>
         <ScrollView contentContainerStyle={styles.content}>
-          <ThemedText type="small" themeColor="textSecondary" style={styles.eyebrow}>MY C-DAY</ThemedText>
+          <ThemedText type="small" themeColor="textSecondary" style={styles.eyebrow}>PLAN MY C-DAY</ThemedText>
           <ThemedText type="title" style={styles.title}>{title}</ThemedText>
           <ThemedText themeColor="textSecondary">{section.subtitle}</ThemedText>
           <View style={[styles.card, { backgroundColor: section.color, borderColor: section.border }]}>

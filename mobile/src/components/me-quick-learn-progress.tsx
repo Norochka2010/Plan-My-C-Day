@@ -30,7 +30,7 @@ export function MeQuickLearnProgress() {
     return () => { focused.current = false; generation.current++; listener.remove(); };
   }, [refresh]));
   return <View style={s.card}>
-    <Text accessibilityRole="header" style={s.heading}>Your Explore progress</Text>
+    <Text accessibilityRole="header" style={s.heading}>Your learning history</Text>
     <Text style={s.note}>Saved to your account · Separate from your Plan XP</Text>
     {legacyCount>0 && <View style={s.row}>
       <Text style={s.body}>{legacyCount} earlier activity records are still on this phone. Import them to include them in your account totals.</Text>

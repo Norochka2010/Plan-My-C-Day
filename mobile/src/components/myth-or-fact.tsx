@@ -1,3 +1,4 @@
+import { LearningTitle } from './learning-title';
 import { ExploreDetails } from './explore-details';
 import { ExploreActionButton as Action } from '@/components/explore-action-button';
 import { useEffect, useRef, useState } from 'react';
@@ -44,7 +45,7 @@ export function MythOrFact({ contentId, catalog, onClose, onOpen, publishedOnly 
     {loading ? <Text style={s.body}>Loading activity…</Text> : failed ? <><Text style={s.body}>This activity couldn’t load.</Text><Action label="Try again" onPress={() => setRetry(v => v + 1)} /></> : !card ? <Text style={s.body}>This activity isn’t ready yet. Please choose another one.</Text> : <>
       {!!card.topic && <Text style={s.small}>{card.topic}</Text>}
       {__DEV__ && card.development_preview && <Text style={s.small}>Development preview · Expert review required</Text>}
-      <View style={s.card}><Text accessibilityRole="header" style={s.title}>{card.statement}</Text></View>
+      <View style={s.card}><LearningTitle title={card.statement}/></View>
       {!revealed ? choices ? <><Text style={s.body}>What do you think?</Text>{(['FACT', 'MYTH'] as const).map(value => <Action variant="choice" key={value} label={value === 'FACT' ? 'Fact' : 'Myth'} onPress={() => { setGuess(value); setRevealed(true); }} />)}</> : <><Text style={s.body}>Take a moment to reflect. This one has room for context, not a right-or-wrong score.</Text><Action label="Reveal" onPress={() => setRevealed(true)} /></> : <>
         <View style={[s.card, s.green]} accessibilityLiveRegion="polite"><Text style={s.heading}>{responseHeading(card.answer_type, guess)}</Text><Text style={s.body}>{card.explanation}</Text></View>
         <ExploreDetails title="Takeaway & source">
