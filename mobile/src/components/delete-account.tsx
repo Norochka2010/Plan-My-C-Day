@@ -17,11 +17,11 @@ export function DeleteAccount({userId,onDeleted}:{userId:string;onDeleted:()=>vo
       const {error}=await supabase.rpc('delete_own_account',{p_expected_user:userId});
       if(error)throw error;
     }catch{
-      setMessage('Your account could not be deleted. Please check your connection and try again. If this continues, contact info@mycday.com.');
+      setMessage('Your account could not be deleted. Please check your connection and try again. If this continues, contact support@mycday.com.');
       lock.current=false;setBusy(false);return;
     }
     // Deletion has succeeded; a local cleanup failure must not invite another deletion.
-    await AsyncStorage.removeItem(`me-look:v1:${userId}`).catch(()=>{});
+    await AsyncStorage.multiRemove([`me-look:v1:${userId}`, `leaf-collection:v1:${userId}`]).catch(()=>{});
     await AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys.filter(key => key.startsWith(`explain-message:v1:${userId}:`)))).catch(()=>{});
     await supabase.auth.signOut({scope:'local'}).catch(()=>{});
     onDeleted();

@@ -1,6 +1,6 @@
 import { signupErrorMessage } from '@/lib/signup-error';
 import { useEffect, useRef, useState } from 'react';
-import { Keyboard, Linking, Modal, ScrollView, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Keyboard, Modal, ScrollView, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { PasswordInput } from '@/components/password-input';
 import { formatUSPhone, normalizeUSPhone } from '@/lib/us-phone';
@@ -79,17 +79,15 @@ export function AccountSetup({ userId, onSaved }: { userId: string; onSaved: () 
 }
 
 type AuthStep = 'welcome' | 'signin' | 'age' | 'signup' | 'verify' | 'forgot' | 'sent' | 'existing';
-const TERMS_URL = process.env.EXPO_PUBLIC_TERMS_URL || '';
-const PRIVACY_URL = process.env.EXPO_PUBLIC_PRIVACY_URL || '';
-const hostedPoliciesReady = [TERMS_URL, PRIVACY_URL].every(url=>/^https:\/\/[^\s]+$/.test(url));
 const AUTH_RETURN = 'https://mycday.com/auth/';
 export function AccountSignIn({ onStepChange }: { onStepChange?: (welcome: boolean) => void }) {
   const [termsAccepted,setTermsAccepted]=useState(false);
   const [privacyAccepted,setPrivacyAccepted]=useState(false);
+  const [usResident,setUsResident]=useState(false);
+  const [parentApproved,setParentApproved]=useState(false);
   const [policy,setPolicy]=useState<'terms'|'privacy'|null>(null);
-  async function openPolicy(kind:'terms'|'privacy'){
-    if(!hostedPoliciesReady){Keyboard.dismiss();setPolicy(kind);return;}
-    try{await Linking.openURL(kind==='terms'?TERMS_URL:PRIVACY_URL);}catch{setMessage('Could not open the policy. Please check your connection and try again.');}
+  function openPolicy(kind:'terms'|'privacy'){
+    Keyboard.dismiss();setPolicy(kind);
   }
   const [step,setStep]=useState<AuthStep>('welcome');
   useEffect(()=>{onStepChange?.(step==='welcome');},[step,onStepChange]);
@@ -110,7 +108,9 @@ export function AccountSignIn({ onStepChange }: { onStepChange?: (welcome: boole
     const birthday=parseBirthday(dob);
     if(action==='signup'){
       if(!termsAccepted||!privacyAccepted){setMessage('Please review and acknowledge both the Terms of Service and Privacy Policy.');return;}
-      if(!birthday||!oldEnough(birthday,18)){setMessage('Beta Round 1 is for adults age 18 and older.');return;}
+      if(!birthday||!oldEnough(birthday,13)){setMessage('You must be 13 or older to join this beta.');return;}
+      if(!usResident){setMessage('This beta is for US residents. Please confirm that you live in the United States.');return;}
+      if(!oldEnough(birthday,18)&&!parentApproved){setMessage('Ask your parent or guardian to review the Terms and Privacy Policy and approve your participation before joining.');return;}
       if(!first.trim()){setMessage('Enter your first name.');return;}
       if(!last.trim()){setMessage('Enter your last name.');return;}
       if(!/^[a-z][a-z0-9_]{2,23}$/.test(username)||/(admin|moderator|official|support)/.test(username)){setMessage('Choose a username of 3–24 characters: start with a letter, then use letters, numbers or underscores. Avoid staff names.');return;}
@@ -137,7 +137,7 @@ export function AccountSignIn({ onStepChange }: { onStepChange?: (welcome: boole
       }else{
         const credentials={email:email.trim(),password};
         const {data,error}=action==='signup'
-          ?await supabase.auth.signUp({...credentials,options:{emailRedirectTo:AUTH_RETURN,data:{legal_acknowledgment:{terms_url:hostedPoliciesReady?TERMS_URL:null,privacy_url:hostedPoliciesReady?PRIVACY_URL:null,policy_source:hostedPoliciesReady?'hosted':'bundled_beta',terms_version:hostedPoliciesReady?null:betaPolicies.terms.version,privacy_version:hostedPoliciesReady?null:betaPolicies.privacy.version,terms_accepted:true,privacy_acknowledged:true,acknowledged_at:new Date().toISOString()},username,first_name:first.trim(),last_name:last.trim(),phone_number:normalizeUSPhone(phone),date_of_birth:birthday}}})
+          ?await supabase.auth.signUp({...credentials,options:{emailRedirectTo:AUTH_RETURN,data:{legal_acknowledgment:{policy_source:'bundled_beta',terms_version:betaPolicies.terms.version,privacy_version:betaPolicies.privacy.version,us_resident_confirmed:usResident,parent_permission_confirmed:birthday&&!oldEnough(birthday,18)?parentApproved:null,parent_permission_method:birthday&&!oldEnough(birthday,18)?'teen_self_confirmation':null,terms_accepted:true,privacy_acknowledged:true,acknowledged_at:new Date().toISOString()},username,first_name:first.trim(),last_name:last.trim(),phone_number:normalizeUSPhone(phone),date_of_birth:birthday}}})
           :await supabase.auth.signInWithPassword(credentials);
         if(error)throw error;
         if(alive.current){
@@ -157,6 +157,8 @@ export function AccountSignIn({ onStepChange }: { onStepChange?: (welcome: boole
       else setMessage(action==='signin'?'Could not sign in. Check your email and password, or use Forgot password. If you’re offline, reconnect and try again.':action==='signup'?signupErrorMessage(error,signupStage):'Could not send the email. Check your connection and try again shortly.');
     }finally{lock.current=false;if(alive.current)setBusy(false);}
   }
+  const signupBirthday=parseBirthday(dob);
+  const teen=!!signupBirthday&&oldEnough(signupBirthday,13)&&!oldEnough(signupBirthday,18);
   const button=(label:string,onPress:()=>void,secondary=false,disabled=false)=><Pressable accessibilityRole="button" accessibilityState={{disabled:busy||disabled}} disabled={busy||disabled} onPress={onPress} style={({pressed})=>[styles.action,secondary?styles.secondary:styles.primary,(busy||disabled)&&{opacity:0.5},pressed&&{opacity:0.75}]}><ThemedText style={[styles.actionText,{color:secondary?'#3E6342':'#FFFFFF'}]}>{label}</ThemedText></Pressable>;
   const emailField=<><ThemedText>Email</ThemedText><TextInput accessibilityLabel="Email" style={input} value={email} onChangeText={setEmail} autoComplete="email" autoCapitalize="none" autoCorrect={false} keyboardType="email-address" editable={!busy}/></>;
   const titles={welcome:'Welcome to Plan My C-Day',signin:'Welcome back',age:'When’s your birthday?',signup:'Make it yours',verify:'Check your email',forgot:'Forgot your password?',sent:'Check your email',existing:'Already have an account?'};
@@ -165,7 +167,7 @@ export function AccountSignIn({ onStepChange }: { onStepChange?: (welcome: boole
     {(step==='verify'||step==='sent')&&<View style={{alignSelf:'center',padding:20,borderRadius:28,backgroundColor:'#EDF4E6'}}><ThemedText style={{fontSize:44,lineHeight:52}} accessible={false}>✉</ThemedText></View>}
     <ThemedText type={step==='verify'||step==='sent'?'title':'subtitle'} accessibilityRole="header">{titles[step]}</ThemedText>
     {step==='welcome'&&<><ThemedText>Make a plan, practice skills, and save your progress.</ThemedText>{button('Create account',()=>go('age'))}{button('I already have an account',()=>go('signin'),true)}</>}
-    {step==='age'&&<><ThemedText>Step 1 of 2 · About you</ThemedText><ThemedText>Beta Round 1 is for invited adults age 18 and older in the US and Israel. Your birthday stays private.</ThemedText><ThemedText>Birthday · MM-DD-YYYY</ThemedText><TextInput style={input} accessibilityLabel="Birthday" placeholder="MM-DD-YYYY" keyboardType="numbers-and-punctuation" value={dob} onChangeText={v=>setDob(formatBirthdayInput(v))}/>{button('Continue',()=>{const birthday=parseBirthday(dob);if(!birthday){setMessage('Enter a valid birthday using MM-DD-YYYY.');return;}if(!oldEnough(birthday,18)){setMessage('You need to be 18 or older for Beta Round 1.');return;}go('signup');})}</>}
+    {step==='age'&&<><ThemedText>Step 1 of 2 · About you</ThemedText><ThemedText>This beta is for invited US residents ages 13 and older. If you are 13–17, you need a parent or guardian’s permission. Your birthday stays private.</ThemedText><ThemedText>Birthday · MM-DD-YYYY</ThemedText><TextInput style={input} accessibilityLabel="Birthday" placeholder="MM-DD-YYYY" keyboardType="numbers-and-punctuation" value={dob} onChangeText={v=>{setDob(formatBirthdayInput(v));setParentApproved(false);}}/>{button('Continue',()=>{const birthday=parseBirthday(dob);if(!birthday){setMessage('Enter a valid birthday using MM-DD-YYYY.');return;}if(!oldEnough(birthday,13)){setMessage('You must be 13 or older to join this beta.');return;}go('signup');})}</>}
     {(step==='signup'||step==='signin')&&<>
       {step==='signup'&&<><ThemedText>Step 2 of 2 · Your account</ThemedText><ThemedText>First name · private</ThemedText><TextInput style={input} accessibilityLabel="First name" autoComplete="given-name" maxLength={80} value={first} onChangeText={setFirst} editable={!busy}/>
       <ThemedText>Last name · required · private</ThemedText><TextInput style={input} accessibilityLabel="Last name, required" autoComplete="family-name" maxLength={80} value={last} onChangeText={setLast} editable={!busy}/>
@@ -180,9 +182,11 @@ export function AccountSignIn({ onStepChange }: { onStepChange?: (welcome: boole
         <Pressable accessibilityRole="checkbox" accessibilityState={{checked:termsAccepted,disabled:busy}} disabled={busy} onPress={()=>setTermsAccepted(v=>!v)} style={{minHeight:48,justifyContent:'center'}}><ThemedText>{termsAccepted?'☑':'☐'} I have read and agree to the Terms of Service.</ThemedText></Pressable>
         <Pressable accessibilityRole="link" onPress={()=>void openPolicy('privacy')} style={{minHeight:48,justifyContent:'center'}}><ThemedText style={{textDecorationLine:'underline',color:'#3E6342'}}>Read Privacy Policy ↗</ThemedText></Pressable>
         <Pressable accessibilityRole="checkbox" accessibilityState={{checked:privacyAccepted,disabled:busy}} disabled={busy} onPress={()=>setPrivacyAccepted(v=>!v)} style={{minHeight:48,justifyContent:'center'}}><ThemedText>{privacyAccepted?'☑':'☐'} I have read and acknowledge the Privacy Policy.</ThemedText></Pressable>
-        {!hostedPoliciesReady&&<ThemedText>Beta Round 1 · Effective September 28, 2026.</ThemedText>}
+        <Pressable accessibilityRole="checkbox" accessibilityState={{checked:usResident,disabled:busy}} disabled={busy} onPress={()=>setUsResident(v=>!v)} style={{minHeight:48,justifyContent:'center'}}><ThemedText>{usResident?'☑':'☐'} I live in the United States.</ThemedText></Pressable>
+        {teen&&<Pressable accessibilityRole="checkbox" accessibilityState={{checked:parentApproved,disabled:busy}} disabled={busy} onPress={()=>setParentApproved(v=>!v)} style={{minHeight:48,justifyContent:'center'}}><ThemedText>{parentApproved?'☑':'☐'} My parent or guardian has reviewed the Terms and Privacy Policy with me and approved my participation.</ThemedText></Pressable>}
+        <ThemedText>US Beta · Ages 13+ · Effective November 7, 2026.</ThemedText>
       </View>}
-      {button(busy?'Please wait…':step==='signup'?'Create account':'Sign in',()=>void request(step==='signup'?'signup':'signin'),false,step==='signup'&&(!termsAccepted||!privacyAccepted))}
+      {button(busy?'Please wait…':step==='signup'?'Create account':'Sign in',()=>void request(step==='signup'?'signup':'signin'),false,step==='signup'&&(!termsAccepted||!privacyAccepted||!usResident||(teen&&!parentApproved)))}
       {button(step==='signin'?'Forgot password?':'Already have an account? Sign in',()=>go(step==='signin'?'forgot':'signin'),true)}
     </>}
     {step==='existing'&&<>
