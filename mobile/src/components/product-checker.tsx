@@ -1,3 +1,4 @@
+import type { ComponentRef } from 'react';
 import { BackButton } from './back-button';
 import { useEffect, useRef, useState, type ComponentType } from 'react';
 import { ActivityIndicator, AppState, Image, Keyboard, Linking, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -29,7 +30,7 @@ function ProductChecker({onClose}:{onClose:()=>void}) {
  const [barcode,setBarcode]=useState(''),[result,setResult]=useState<LookupResult|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState('');
  const [scanner,setScanner]=useState<ComponentType<{onBarcode:(code:string)=>void;onCancel:()=>void}>|null>(null);
  const [imageFailed,setImageFailed]=useState(false),[catalog,setCatalog]=useState<ExploreSummary[]>([]),[learning,setLearning]=useState<ExploreSummary|null>(null);
- const lock=useRef(false),alive=useRef(true),request=useRef<AbortController|null>(null),scroll=useRef<ScrollView>(null),input=useRef<TextInput>(null);
+ const lock=useRef(false),alive=useRef(true),request=useRef<AbortController|null>(null),scroll=useRef<ComponentRef<typeof ScrollView>>(null),input=useRef<ComponentRef<typeof TextInput>>(null);
  useEffect(()=>{alive.current=true;const sub=AppState.addEventListener('change',state=>{if(state!=='active'){setScanner(null);request.current?.abort();setResult(null);setBarcode('');}});return()=>{alive.current=false;request.current?.abort();sub.remove();};},[]);
  async function lookup(value:string) {
   if(lock.current)return;Keyboard.dismiss();setScanner(null);setError('');setResult(null);setImageFailed(false);

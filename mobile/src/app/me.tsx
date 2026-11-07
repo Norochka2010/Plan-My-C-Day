@@ -1,3 +1,4 @@
+import type { ComponentRef } from 'react';
 import { BackButton } from '@/components/back-button';
 import { TabTitle } from '@/constants/theme';
 import { MeGrowth } from '@/components/me-growth';
@@ -22,7 +23,7 @@ export default function HomeScreen() {
   const growthY=useRef(0);
   const growthPending=useRef(false);
   const revealGrowth=useCallback(()=>{growthPending.current=true;requestAnimationFrame(()=>accountScroll.current?.scrollTo({y:growthY.current,animated:true}));},[]);
-  const accountScroll = useRef<ScrollView>(null);
+  const accountScroll = useRef<ComponentRef<typeof ScrollView>>(null);
   const [authWelcome,setAuthWelcome] = useState(true);
   const authStepChanged = useCallback((welcome:boolean)=>{
     setAuthWelcome(welcome);
@@ -69,7 +70,7 @@ export default function HomeScreen() {
       if (state === 'active') supabase.auth.startAutoRefresh();
       else supabase.auth.stopAutoRefresh();
     };
-    if (Platform.OS !== 'web') refresh(AppState.currentState);
+    if (Platform.OS !== 'web') refresh(AppState.currentState ?? 'active');
     const listener = Platform.OS !== 'web' ? AppState.addEventListener('change', refresh) : null;
     return () => {
       active = false;

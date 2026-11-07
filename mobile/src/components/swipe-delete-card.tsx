@@ -10,8 +10,8 @@ export function SwipeDeleteCard({ children, disabled, onDelete }: { children: Re
       enabled={!disabled}
       friction={1}
       rightThreshold={16}
-      dragOffsetFromRightEdge={6}
-      dragOffsetFromLeftEdge={6}
+      dragOffsetFromRight={-6}
+      dragOffsetFromLeft={6}
       overshootLeft={false}
       overshootRight={false}
       animationOptions={{ damping: 28, stiffness: 320, mass: 0.7, overshootClamping: true }}

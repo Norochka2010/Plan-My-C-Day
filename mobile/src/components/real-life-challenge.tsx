@@ -1,3 +1,5 @@
+import type { ComponentRef } from 'react';
+import { needsExpertReview, reviewCardStyle, reviewLabelStyle } from '@/lib/explore-review';
 import { LearningTitle } from './learning-title';
 import { ExploreDetails } from './explore-details';
 import { RLCAdventureFlow } from './rlc-adventure-flow';
@@ -14,7 +16,7 @@ import { readChallengeProgress, updateChallengeProgress, type ChallengeProgress 
 export function RealLifeChallenge({contentId,onClose,onOpen,publishedOnly=false,backLabel='‹ Back to Explore'}:{contentId:string;onClose:()=>void;onOpen:(item:ExploreSummary)=>void;publishedOnly?:boolean;backLabel?:string}) {
   const [adventureActive,setAdventureActive]=useState(false),[preview,setPreview]=useState(false);
   const [adventure,setAdventure]=useState<RLCAdventure|null>(null),[replay,setReplay]=useState(false);
-  const scroll=useRef<ScrollView>(null),adventureY=useRef(0);
+  const scroll=useRef<ComponentRef<typeof ScrollView>>(null),adventureY=useRef(0);
   const [card,setCard]=useState<Challenge|null>(null),[progress,setProgress]=useState<ChallengeProgress|null>(null);
   const [loading,setLoading]=useState(true),[failed,setFailed]=useState(false),[ready,setReady]=useState(false),[busy,setBusy]=useState(false),[retry,setRetry]=useState(0),[message,setMessage]=useState('');
   const [related,setRelated]=useState<ExploreSummary[]>([]),[relatedFailed,setRelatedFailed]=useState(false);
@@ -22,7 +24,7 @@ export function RealLifeChallenge({contentId,onClose,onOpen,publishedOnly=false,
   useEffect(()=>{
     const request=++generation.current;let active=true;
     setLoading(true);setFailed(false);setReady(false);setCard(null);setProgress(null);setRelated([]);setRelatedFailed(false);setMessage('');setAdventure(null);setReplay(false);setAdventureActive(false);setPreview(false);
-    getExploreContent(contentId,{publishedOnly}).then(async row=>{const parsed=parseRealLifeChallenge(row);const branch=parsed?await getRLCAdventure(contentId,parsed.challenge_id,publishedOnly):null;if(active){setCard(parsed);setAdventure(branch);setPreview(__DEV__ && (row?.development_preview === true || branch?.development_preview === true));}}).catch(()=>{if(active)setFailed(true)}).finally(()=>{if(active)setLoading(false)});
+    getExploreContent(contentId,{publishedOnly}).then(async row=>{const parsed=parseRealLifeChallenge(row);const branch=parsed?await getRLCAdventure(contentId,parsed.challenge_id,publishedOnly):null;if(active){setCard(parsed);setAdventure(branch);setPreview((!!row && needsExpertReview(row)) || branch?.development_preview === true);}}).catch(()=>{if(active)setFailed(true)}).finally(()=>{if(active)setLoading(false)});
     readChallengeProgress(contentId).then(p=>{if(active){setProgress(p);setReady(true)}}).catch(()=>{if(active)setMessage('Your saved progress couldn’t load. Please retry before continuing.')});
     return()=>{active=false;if(generation.current===request)generation.current++};
   },[contentId,publishedOnly,retry]);
@@ -43,7 +45,7 @@ export function RealLifeChallenge({contentId,onClose,onOpen,publishedOnly=false,
     <Text style={s.small}>REAL-LIFE CHALLENGE</Text>
     {loading?<Text style={s.body}>Loading challenge…</Text>:failed?<><Text style={s.body}>This challenge couldn’t load.</Text><Action label="Try again" onPress={()=>setRetry(v=>v+1)}/></>:!card?<Text style={s.body}>This challenge isn’t available right now.</Text>:<>
       <LearningTitle title={card.title}/>
-      {preview && <Text style={s.small}>Preview · Expert review required</Text>}
+      {preview && <View style={[{padding:14,borderRadius:14},reviewCardStyle]}><Text style={reviewLabelStyle}>Expert review required</Text></View>}
       {!adventureActive && progress?.status !== 'completed' && <Text style={s.body}>{card.instruction}</Text>}
       {!adventure&&progress?.status!=='completed'&&<View style={s.card}><Text style={s.heading}>How to Try It</Text>{card.steps.map((step,i)=><View key={i} style={s.step}><Text style={s.body}>{i+1}.</Text><Text style={[s.body,{flex:1}]}>{step}</Text></View>)}</View>}
       {!adventureActive && progress?.status !== 'completed' ? <View style={[s.card,s.green]}><Text style={s.heading}>Keep in mind</Text><Text style={s.body}>{card.safety_note}</Text></View> : <ExploreDetails title="Keep in mind"><Text style={s.body}>{card.safety_note}</Text></ExploreDetails>}

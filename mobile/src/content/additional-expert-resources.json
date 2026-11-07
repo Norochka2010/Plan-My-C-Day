@@ -1,0 +1,221 @@
+[
+  {
+    "content_id": "1ead88b5-d18d-5590-8dc1-9d7d09897ba5",
+    "content_type": "EXPERT_RESOURCE",
+    "source_type": "EXPERT",
+    "review_status": "APPROVED",
+    "active": true,
+    "title": "Beyond Celiac Ambassador Program",
+    "source_organization": "Beyond Celiac",
+    "source_url": "https://www.beyondceliac.org/ambassador-program/",
+    "content_body": {
+      "format": "expert_resource_v1",
+      "content_type": "EXPERT_RESOURCE",
+      "source_type": "AUTHORITATIVE_EXTERNAL_RESOURCE",
+      "active": true,
+      "resource_id": "EXP_101",
+      "title": "Beyond Celiac Ambassador Program",
+      "organization": "Beyond Celiac",
+      "category": "Advocacy & Getting Involved",
+      "description": "Explore ways to raise awareness, share your experiences, and build a more supportive celiac community through the Reach Beyond Celiac Ambassador Program.",
+      "good_for_tags": [
+        "Community involvement",
+        "Sharing your story",
+        "Advocacy"
+      ],
+      "url": "https://www.beyondceliac.org/ambassador-program/",
+      "domain": [
+        "LEAD",
+        "SPEAK"
+      ],
+      "reviewed_date": "2026-11-07"
+    }
+  },
+  {
+    "content_id": "ce58d4e6-7904-58b3-a441-1328206a066f",
+    "content_type": "EXPERT_RESOURCE",
+    "source_type": "EXPERT",
+    "review_status": "APPROVED",
+    "active": true,
+    "title": "Beyond Celiac Getting Started Guide",
+    "source_organization": "Beyond Celiac",
+    "source_url": "https://www.beyondceliac.org/gluten-free-diet/getting-started/",
+    "content_body": {
+      "format": "expert_resource_v1",
+      "content_type": "EXPERT_RESOURCE",
+      "source_type": "AUTHORITATIVE_EXTERNAL_RESOURCE",
+      "active": true,
+      "resource_id": "EXP_102",
+      "title": "Beyond Celiac Getting Started Guide",
+      "organization": "Beyond Celiac",
+      "category": "Newly Diagnosed",
+      "description": "Start with the basics of living gluten-free, including food choices, reading labels, and dining out. Visit Beyond Celiac to access their free Getting Started Guide.",
+      "good_for_tags": [
+        "Getting started",
+        "Gluten-free basics",
+        "Reading labels"
+      ],
+      "url": "https://www.beyondceliac.org/gluten-free-diet/getting-started/",
+      "domain": [
+        "KNOW",
+        "MANAGE"
+      ],
+      "reviewed_date": "2026-11-07"
+    }
+  },
+  {
+    "content_id": "2ffc2f2a-d1cd-53c7-8cbb-92613dbb1488",
+    "content_type": "EXPERT_RESOURCE",
+    "source_type": "EXPERT",
+    "review_status": "APPROVED",
+    "active": true,
+    "title": "Protecting Students with Celiac Disease",
+    "source_organization": "Beyond Celiac",
+    "source_url": "https://www.beyondceliac.org/?resources=protecting-students-with-celiac-disease",
+    "content_body": {
+      "format": "expert_resource_v1",
+      "content_type": "EXPERT_RESOURCE",
+      "source_type": "AUTHORITATIVE_EXTERNAL_RESOURCE",
+      "active": true,
+      "resource_id": "EXP_103",
+      "title": "Protecting Students with Celiac Disease",
+      "organization": "Beyond Celiac",
+      "category": "School & 504 Plans",
+      "description": "A guide to share with teachers, with practical ways to support students and space to add your own needs and information.",
+      "good_for_tags": [
+        "Teachers",
+        "Personalized support"
+      ],
+      "url": "https://www.beyondceliac.org/?resources=protecting-students-with-celiac-disease",
+      "domain": [
+        "KNOW",
+        "SPEAK"
+      ],
+      "reviewed_date": "2026-11-07"
+    }
+  },
+  {
+    "content_id": "cbeb948d-442a-5631-aee2-94cc9b4cf231",
+    "content_type": "EXPERT_RESOURCE",
+    "source_type": "EXPERT",
+    "review_status": "APPROVED",
+    "active": true,
+    "title": "Celiac Disease in the Classroom",
+    "source_organization": "Beyond Celiac",
+    "source_url": "https://www.beyondceliac.org/?resources=celiac-disease-in-the-classroom",
+    "content_body": {
+      "format": "expert_resource_v1",
+      "content_type": "EXPERT_RESOURCE",
+      "source_type": "AUTHORITATIVE_EXTERNAL_RESOURCE",
+      "active": true,
+      "resource_id": "EXP_104",
+      "title": "Celiac Disease in the Classroom",
+      "organization": "Beyond Celiac",
+      "category": "School & 504 Plans",
+      "description": "An overview to share with teachers about how celiac disease can affect participation in the classroom.",
+      "good_for_tags": [
+        "Teachers",
+        "Classroom inclusion"
+      ],
+      "url": "https://www.beyondceliac.org/?resources=celiac-disease-in-the-classroom",
+      "domain": [
+        "KNOW",
+        "SPEAK"
+      ],
+      "reviewed_date": "2026-11-07"
+    }
+  },
+  {
+    "content_id": "5dc8729f-4808-5800-bfd2-335664d849a3",
+    "content_type": "EXPERT_RESOURCE",
+    "source_type": "EXPERT",
+    "review_status": "APPROVED",
+    "active": true,
+    "title": "Celiac Disease 101 for School Nurses",
+    "source_organization": "Beyond Celiac",
+    "source_url": "https://www.beyondceliac.org/?resources=celiac-disease-101-for-school-nurses",
+    "content_body": {
+      "format": "expert_resource_v1",
+      "content_type": "EXPERT_RESOURCE",
+      "source_type": "AUTHORITATIVE_EXTERNAL_RESOURCE",
+      "active": true,
+      "resource_id": "EXP_105",
+      "title": "Celiac Disease 101 for School Nurses",
+      "organization": "Beyond Celiac",
+      "category": "School & 504 Plans",
+      "description": "A school nurse resource covering the basics of supporting students with celiac disease.",
+      "good_for_tags": [
+        "School nurses",
+        "Student support"
+      ],
+      "url": "https://www.beyondceliac.org/?resources=celiac-disease-101-for-school-nurses",
+      "domain": [
+        "KNOW",
+        "SPEAK"
+      ],
+      "reviewed_date": "2026-11-07"
+    }
+  },
+  {
+    "content_id": "cba681c7-a380-50f1-a22f-e5e4c0162438",
+    "content_type": "EXPERT_RESOURCE",
+    "source_type": "EXPERT",
+    "review_status": "APPROVED",
+    "active": true,
+    "title": "Celiac Disease Safety on Field Trips",
+    "source_organization": "Beyond Celiac",
+    "source_url": "https://www.beyondceliac.org/?resources=celiac-disease-safety-on-field-trips",
+    "content_body": {
+      "format": "expert_resource_v1",
+      "content_type": "EXPERT_RESOURCE",
+      "source_type": "AUTHORITATIVE_EXTERNAL_RESOURCE",
+      "active": true,
+      "resource_id": "EXP_106",
+      "title": "Celiac Disease Safety on Field Trips",
+      "organization": "Beyond Celiac",
+      "category": "School & 504 Plans",
+      "description": "A printable guide to share with teachers when planning for celiac needs on a field trip.",
+      "good_for_tags": [
+        "Field trips",
+        "Planning ahead"
+      ],
+      "url": "https://www.beyondceliac.org/?resources=celiac-disease-safety-on-field-trips",
+      "domain": [
+        "KNOW",
+        "SPEAK"
+      ],
+      "reviewed_date": "2026-11-07"
+    }
+  },
+  {
+    "content_id": "63d66aa5-f93b-5c86-a07e-70495e0ac4ea",
+    "content_type": "EXPERT_RESOURCE",
+    "source_type": "EXPERT",
+    "review_status": "APPROVED",
+    "active": true,
+    "title": "Celiac Disease Training for School Staff",
+    "source_organization": "Beyond Celiac",
+    "source_url": "https://www.beyondceliac.org/?resources=celiac-disease-training-for-school-staff",
+    "content_body": {
+      "format": "expert_resource_v1",
+      "content_type": "EXPERT_RESOURCE",
+      "source_type": "AUTHORITATIVE_EXTERNAL_RESOURCE",
+      "active": true,
+      "resource_id": "EXP_107",
+      "title": "Celiac Disease Training for School Staff",
+      "organization": "Beyond Celiac",
+      "category": "School & 504 Plans",
+      "description": "Training slides, a facilitator guide, and a learning packet to help school staff accommodate and include students with celiac disease.",
+      "good_for_tags": [
+        "School staff",
+        "Training"
+      ],
+      "url": "https://www.beyondceliac.org/?resources=celiac-disease-training-for-school-staff",
+      "domain": [
+        "KNOW",
+        "SPEAK"
+      ],
+      "reviewed_date": "2026-11-07"
+    }
+  }
+]

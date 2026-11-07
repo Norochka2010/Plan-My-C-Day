@@ -1,3 +1,4 @@
+import { needsExpertReview, reviewCardStyle, reviewLabelStyle } from '@/lib/explore-review';
 import { ScrollView, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { ExploreSummary } from '@/lib/explore-content';
 import { Fonts } from '@/constants/theme';
@@ -23,11 +24,11 @@ export function ExploreActivityCatalog({ kind = 'MYTH_OR_FACT', title, items, lo
         <Text style={s.intro}>Activities could not load.</Text><ExploreActionButton label="Try again" onPress={onRetry} />
       </> : !items.length ? <Text style={s.intro}>New activities are on their way.</Text> : items.map(item =>
         <Pressable key={item.content_id} accessibilityRole="button" accessibilityHint="Opens this activity" onPress={() => onOpen(item)}
-          style={({ pressed }) => [s.card, { backgroundColor: presentation.color, borderColor: presentation.border }, pressed && { opacity: 0.7 }]}>
+          style={({ pressed }) => [s.card, { backgroundColor: presentation.color, borderColor: presentation.border }, needsExpertReview(item) && reviewCardStyle, pressed && { opacity: 0.7 }]}>
           <View style={s.row}><Text style={s.cardTitle}>{item.title}</Text><Text accessible={false} style={s.arrow}>›</Text></View>
           {!!item.subtitle && <Text numberOfLines={2} style={s.intro}>{item.subtitle}</Text>}
           {typeof item.estimated_minutes === 'number' && item.estimated_minutes > 0 && <Text style={s.small}>{item.estimated_minutes} min</Text>}
-          {__DEV__ && item.development_preview && <Text style={s.small}>Preview · Expert review required</Text>}
+          {needsExpertReview(item) && <Text style={reviewLabelStyle}>Expert review required</Text>}
         </Pressable>)}
     </ScrollView>
   </View>;

@@ -1,8 +1,12 @@
+import type { ComponentProps } from 'react';
 import type { Href } from 'expo-router';
 import { Tabs, TabList, TabTrigger, TabSlot, type TabTriggerSlotProps } from 'expo-router/ui';
 import { SymbolView, type SymbolViewProps } from 'expo-symbols';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+// Router's slot ref still uses the pre-RN 0.88 View type.
+type NavigationSlotProps = Omit<TabTriggerSlotProps, 'ref'> & { ref?: ComponentProps<typeof Pressable>['ref'] };
 
 const items = [
   { name: 'home', href: '/', label: 'Home', ios: 'house', selected: 'house.fill', icon: 'home' },
@@ -12,7 +16,7 @@ const items = [
   { name: 'me', href: '/me', label: 'Me', ios: 'person', selected: 'person.fill', icon: 'person' },
 ] as const;
 
-function NavigationButton({ isFocused, label, icon, ...props }: TabTriggerSlotProps & { label: string; icon: SymbolViewProps['name'] }) {
+function NavigationButton({ isFocused, label, icon, ...props }: NavigationSlotProps & { label: string; icon: SymbolViewProps['name'] }) {
   return (
     <Pressable {...props} accessibilityRole="tab" accessibilityLabel={label}
       accessibilityState={{ selected: !!isFocused }}
@@ -39,7 +43,7 @@ export default function BottomNavigation() {
   );
 }
 
-function IconTab({ item, isFocused, ...props }: TabTriggerSlotProps & { item: typeof items[number] }) {
+function IconTab({ item, isFocused, ...props }: NavigationSlotProps & { item: typeof items[number] }) {
   return <NavigationButton {...props} isFocused={isFocused} label={item.label}
     icon={{ ios: isFocused ? item.selected : item.ios, android: item.icon, web: item.icon }} />;
 }

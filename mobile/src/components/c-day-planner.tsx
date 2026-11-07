@@ -1,3 +1,4 @@
+import type { ComponentRef } from 'react';
 import { BackButton } from './back-button';
 import { TabTitle } from '@/constants/theme';
 import { PlannedActionCarousel } from './planned-action-carousel';
@@ -335,7 +336,7 @@ function Planner({
   useEffect(() => { setQuickActionIndex(0); }, [step, event?.id]);
   const locked = useRef(false),
     alive = useRef(true),
-    scroll = useRef<ScrollView>(null);
+    scroll = useRef<ComponentRef<typeof ScrollView>>(null);
   useEffect(() => {
     alive.current = true;
     return () => {
@@ -381,6 +382,7 @@ function Planner({
     async function remove(removeCalendar: boolean) {
       if (locked.current) return;
       locked.current = true; setBusy(true); setError("");
+      let calendarFailure: string | null = null;
       try {
         if (removeCalendar) {
           const plan = await getPlan(selected.id, false);
@@ -390,14 +392,17 @@ function Planner({
           ];
           for (const request of requests) {
             const result = await cDayCalendar.remove(request);
-            if (result.status !== 'not_requested') throw Error('calendar');
+            if (result.status !== 'not_requested') {
+              calendarFailure = result.message || 'Calendar cleanup could not finish.';
+              throw Error('calendar');
+            }
           }
         }
         await deleteCDay(selected.id);
         if (alive.current) { setEvents(current => current.filter(item => item.id !== selected.id)); setNotice("C-Day deleted."); }
       } catch {
-        if (alive.current) setError(removeCalendar
-          ? "Deletion could not finish. Your plan is still saved; some calendar entries may already be removed. Check calendar access and your connection, then retry."
+        if (alive.current) setError(calendarFailure
+          ? `${calendarFailure} Your C-Day has not been deleted. Retry after fixing calendar access, or choose “Delete plan only” to keep any remaining calendar entries.`
           : "Could not delete this C-Day. It is still saved. Check your connection and try again.");
       } finally { locked.current = false; if (alive.current) setBusy(false); }
     }

@@ -19,8 +19,6 @@ export function RLCAdventureFlow({adventure,busy,onStart,onFinish,onAdvance,repl
  {node.type==='opening'&&<Action label={working?'Starting…':'Start Challenge'} disabled={busy||working} onPress={()=>void start()}/>}
  {node.type==='consequence'&&<Action label="Continue" disabled={busy||working} onPress={()=>next(node.next_node_id)}/>}
  {node.type==='ending'&&<>
- <Text style={s.heading}>Skills practiced</Text><Text style={s.body}>{node.skill_tags.join(' • ')}</Text>
- <Text style={s.small}>These describe the skills in this journey, not a score.</Text>
  <Action label={working?'Saving…':replay?'Back to your completion':'How did it go?'} disabled={busy||working} onPress={()=>void finish()}/>
  </>}
  </View>

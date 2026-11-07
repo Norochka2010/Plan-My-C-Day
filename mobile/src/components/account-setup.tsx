@@ -1,3 +1,4 @@
+import { signupErrorMessage } from '@/lib/signup-error';
 import { useEffect, useRef, useState } from 'react';
 import { Keyboard, Linking, Modal, ScrollView, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
@@ -119,12 +120,14 @@ export function AccountSignIn({ onStepChange }: { onStepChange?: (welcome: boole
     }
     if(action==='signin'&&!password){setMessage('Enter your password.');return;}
     lock.current=true;setBusy(true);setMessage('');Keyboard.dismiss();
+    let signupStage: 'username' | 'account' = 'username';
     try{
       if(action==='signup'){
         const {data:available,error:checkError}=await supabase.rpc('username_available',{p_username:username});
         if(checkError)throw checkError;
         if(!available){setMessage('That username is unavailable. Please choose another.');return;}
       }
+      signupStage = 'account';
       if(action==='reset'||action==='resend'){
         const {error}=action==='reset'
           ?await supabase.auth.resetPasswordForEmail(email.trim(),{redirectTo:AUTH_RETURN})
@@ -151,7 +154,7 @@ export function AccountSignIn({ onStepChange }: { onStepChange?: (welcome: boole
       if(action==='signup'&&(code==='user_already_exists'||code==='email_exists')){setPassword('');setConfirm('');setStep('existing');}
       else if(code==='email_not_confirmed'){setStep('verify');setMessage('Confirm your email before signing in.');}
       else if(code==='over_email_send_rate_limit'||code==='over_request_rate_limit'){setCooldown(60);setMessage('Please wait a minute before trying again.');}
-      else setMessage(action==='signin'?'Could not sign in. Check your email and password, or use Forgot password. If you’re offline, reconnect and try again.':action==='signup'?'Could not create your account. Check your connection and details, or sign in if you already have an account.':'Could not send the email. Check your connection and try again shortly.');
+      else setMessage(action==='signin'?'Could not sign in. Check your email and password, or use Forgot password. If you’re offline, reconnect and try again.':action==='signup'?signupErrorMessage(error,signupStage):'Could not send the email. Check your connection and try again shortly.');
     }finally{lock.current=false;if(alive.current)setBusy(false);}
   }
   const button=(label:string,onPress:()=>void,secondary=false,disabled=false)=><Pressable accessibilityRole="button" accessibilityState={{disabled:busy||disabled}} disabled={busy||disabled} onPress={onPress} style={({pressed})=>[styles.action,secondary?styles.secondary:styles.primary,(busy||disabled)&&{opacity:0.5},pressed&&{opacity:0.75}]}><ThemedText style={[styles.actionText,{color:secondary?'#3E6342':'#FFFFFF'}]}>{label}</ThemedText></Pressable>;

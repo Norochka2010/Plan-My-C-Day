@@ -1,3 +1,4 @@
+import type { ComponentRef } from 'react';
 import { CDayExploreSupport } from "./c-day-explore-support";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -80,7 +81,7 @@ function UpcomingCards({ userId }: { userId: string }) {
   const [cardHeights, setCardHeights] = useState<Record<string, number>>({});
   const generation = useRef(0),
     mounted = useRef(true),
-    carousel = useRef<ScrollView>(null);
+    carousel = useRef<ComponentRef<typeof ScrollView>>(null);
   useEffect(() => {
     mounted.current = true;
     return () => {

@@ -1,3 +1,4 @@
+import type { ComponentRef } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -6,7 +7,7 @@ export function PlannedActionCarousel({ items, index, onIndexChange }: {
   index: number;
   onIndexChange: (index: number) => void;
 }) {
-  const scroll = useRef<ScrollView>(null);
+  const scroll = useRef<ComponentRef<typeof ScrollView>>(null);
   const [width, setWidth] = useState(0);
   const page = Math.max(0, Math.min(index, items.length - 1));
   useEffect(() => {

@@ -8,8 +8,12 @@
     "scheme": "mobile",
     "userInterfaceStyle": "automatic",
     "ios": {
+      "bundleIdentifier": "com.norochka.planmycday",
+      "buildNumber": "2",
       "icon": "./assets/images/icon.png",
-      "bundleIdentifier": "com.norochka.planmycday"
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "predictiveBackGestureEnabled": false
@@ -23,9 +27,10 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#FFFCF7",
+          "image": "./assets/images/leaf.png",
+          "imageWidth": 160,
+          "resizeMode": "contain"
         }
       ],
       [
@@ -48,6 +53,9 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "expertReviewBeta": true
     }
   }
 }

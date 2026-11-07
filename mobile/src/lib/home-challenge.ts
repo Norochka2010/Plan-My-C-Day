@@ -1,4 +1,5 @@
-import { developmentChallengePreviews } from './explore-content';
+import { expertReviewBeta, needsExpertReview } from './explore-review';
+import { getExploreCatalog, getExploreContent, developmentChallengePreviews } from './explore-content';
 import { supabase } from './supabase';
 import { publishedSupport } from './c-day-explore-support';
 import { upcomingCDays, type UpcomingCDay } from './c-day-upcoming';
@@ -39,6 +40,13 @@ export function chooseHomeChallenge(candidates: ChallengeCandidate[], events: Up
 }
 export async function getHomeChallenge(userId: string | null, now = Date.now()): Promise<ChallengeSuggestion | null> {
   const candidates: ChallengeCandidate[] = [];
+  if (expertReviewBeta) {
+    for (const item of (await getExploreCatalog()).filter(row => row.content_type === 'REAL_LIFE_CHALLENGE')) {
+      const row = await getExploreContent(item.content_id);
+      const card = parseRealLifeChallenge(row);
+      if (card) candidates.push({card, developmentPreview: needsExpertReview(item), progress: userId ? await readChallengeProgress(card.content_id) : null});
+    }
+  } else {
   for (let offset = 0; ; offset += 100) {
     const { data, error } = await supabase.from('explore_content').select('*')
       .eq('content_type', 'REAL_LIFE_CHALLENGE').eq('active', true).eq('review_status', 'APPROVED')
@@ -58,6 +66,7 @@ export async function getHomeChallenge(userId: string | null, now = Date.now()):
     if (idsSeen.has(row.content_id)) continue;
     const card = parseRealLifeChallenge(row);
     if (card) { candidates.push({ card, developmentPreview: true, progress: await readChallengeProgress(card.content_id) }); idsSeen.add(card.content_id); }
+  }
   }
   let events: UpcomingCDay[] = [];
   if (userId) {

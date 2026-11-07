@@ -1,3 +1,4 @@
+import { needsExpertReview, reviewCardStyle, reviewLabelStyle } from '@/lib/explore-review';
 import { LearningTitle } from './learning-title';
 import { ExploreDetails } from './explore-details';
 import { ExploreActionButton as Action } from '@/components/explore-action-button';
@@ -179,7 +180,7 @@ export function QuickLearn({
               {!!lesson.estimatedTime && <Text style={s.small}>{lesson.estimatedTime}</Text>}
               <Action variant="back" label={progress.saved ? 'Saved ✓ · Unsave' : 'Save lesson'} onPress={() => update('saved')} disabled={busy || !storageReady} />
             </View>
-            {__DEV__ && row.development_preview && <Text style={s.small}>Preview · Expert review required</Text>}
+            {needsExpertReview(row) && <View style={[{padding:14,borderRadius:14},reviewCardStyle]}><Text style={reviewLabelStyle}>Expert review required</Text></View>}
             {!!row.intro && <Text style={s.body}>{row.intro}</Text>}
             {lesson.cards.map((card, i) => (
               <View key={i} style={s.section}>
@@ -195,6 +196,7 @@ export function QuickLearn({
                 ))}
               </View>
             ))}
+            <KitchenCheck key={row.content_id} body={row.content_body} />
             {!!row.teaching_point && (
               <View style={[s.card, s.green]}>
                 <Text accessibilityRole="header" style={s.heading}>
@@ -215,7 +217,7 @@ export function QuickLearn({
               <Text style={s.heading}>Want to practice?</Text>
               {related.map(item => <Action key={item.content_id} variant="navigation" label={item.title} onPress={() => onPractice(item)} disabled={busy} />)}
             </View>}
-            <Text style={s.small}>{row.expert_reviewer ? `Reviewed by ${row.expert_reviewer}` : 'Source-informed content · No expert review recorded'}</Text>
+            {!!row.expert_reviewer && <Text style={s.small}>Reviewed by {row.expert_reviewer}</Text>}
             <ExploreDetails>
               {lesson.sourceEvidence ? (
                 <Text style={s.body}>{lesson.sourceEvidence}</Text>
@@ -332,3 +334,15 @@ const s = StyleSheet.create({
   },
   actions: { gap: 10 },
 });
+
+function KitchenCheck({body}: {body: unknown}) {
+  const [answer,setAnswer] = useState<number | null>(null);
+  const check = (body as {kitchen_check?: {question:string;options:{text:string;feedback:string}[]}} | null)?.kitchen_check;
+  if (!check || typeof check.question !== 'string' || !Array.isArray(check.options) || !check.options.every(option => typeof option.text === 'string' && typeof option.feedback === 'string')) return null;
+  return <View style={[s.card,s.green]}>
+    <Text accessibilityRole="header" style={s.heading}>A kitchen moment</Text>
+    <Text style={s.body}>{check.question}</Text>
+    {check.options.map((option,index) => <Action key={option.text} label={`${answer === index ? '✓ ' : ''}${option.text}`} onPress={() => setAnswer(index)} />)}
+    {answer !== null && <Text accessibilityLiveRegion="polite" style={s.body}>{check.options[answer].feedback}</Text>}
+  </View>;
+}

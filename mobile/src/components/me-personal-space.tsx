@@ -1,3 +1,5 @@
+import { LeafAccessory, LeafCollection } from './leaf-collection';
+import { getCompletedCDayHistory, summarizeCDayHistory } from '@/lib/c-day-progress';
 import { useCallback, useEffect, useState } from 'react';
 import { useFocusEffect } from 'expo-router';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -25,6 +27,8 @@ export function MePersonalSpace({ userId, firstName, revision }: { userId: strin
   const [ready, setReady] = useState(false), [saving, setSaving] = useState(false), [saveError, setSaveError] = useState('');
   const [rows, setRows] = useState<AccountProgress[] | null>(null), [titles, setTitles] = useState<Record<string,string>>({});
   const [username, setUsername] = useState(''), [failed, setFailed] = useState(false), [retry, setRetry] = useState(0);
+  const [accessory, setAccessory] = useState<string | null>(null);
+  const [actionXP, setActionXP] = useState<number | null>(null);
   const key = `me-look:v1:${userId}`;
   useEffect(() => {
     let active = true;
@@ -50,7 +54,8 @@ export function MePersonalSpace({ userId, firstName, revision }: { userId: strin
       const request = ++generation;
       setFailed(false);
       try {
-        const progress = await readAccountProgress();
+        const [progress, history] = await Promise.all([readAccountProgress(), getCompletedCDayHistory(userId).catch(() => null)]);
+        if (active && request === generation) setActionXP(history ? summarizeCDayHistory(history, userId).earnedXP : null);
         if (active && request === generation) setRows(progress.filter(row => row.status === 'completed'));
       } catch { if (active && request === generation) { setRows(null); setFailed(true); } }
     }
@@ -66,7 +71,7 @@ export function MePersonalSpace({ userId, firstName, revision }: { userId: strin
   return <View style={s.stack}>
     <View style={[s.hero, {backgroundColor: theme.bg}]}>
       <View style={s.profileRow}>
-        <Image source={looks[look].source} contentFit="contain" accessibilityLabel={`Leaf · ${looks[look].name}`} accessible style={s.profileLeaf}/>
+        <View><Image source={looks[look].source} contentFit="contain" accessibilityLabel={`Leaf · ${looks[look].name}`} accessible style={s.profileLeaf}/><LeafAccessory id={accessory} size={21}/></View>
         <View style={s.profileCopy}>
           <Text accessibilityRole="header" style={[s.title,{textAlign:'left',fontSize:26,lineHeight:33}]}>Hey, {firstName || 'you'}!</Text>
           {!!username && <Text style={[s.label,{color:theme.ink}]}>@{username}</Text>}
@@ -95,6 +100,7 @@ export function MePersonalSpace({ userId, firstName, revision }: { userId: strin
         <Text style={s.caption}>{rows.length ? 'Every step you’ve taken counts. Keep going at your pace.' : 'Your first little step is worth celebrating. Explore whenever you’re ready.'}</Text>
       </>}
     </View>
+    <LeafCollection key={userId} userId={userId} xp={rows === null || actionXP === null ? null : rows.reduce((n, row) => n + row.xp_awarded, 0) + actionXP} onEquip={setAccessory} />
     <View style={[s.card,{backgroundColor:theme.bg}]}>
       <Text accessibilityRole="header" style={s.heading}>My proud moments ★</Text>
       {failed ? <Text style={s.caption}>Your moments will return when progress loads.</Text> : rows === null ? <Text style={s.caption}>Finding your moments…</Text> : recent.length ? recent.map(row => <View key={row.content_id} style={s.moment}><Text accessible={false} style={{fontSize:24,color:theme.ink}}>✦</Text><View style={{flex:1,gap:4}}><Text style={s.label}>{titles[row.content_id] || 'An Explore activity completed'}</Text><Text style={s.caption}>{row.completed_at ? new Date(row.completed_at).toLocaleDateString(undefined,{month:'short',day:'numeric'}) + ' · ' : ''}{row.xp_awarded} XP earned</Text></View></View>) : <Text style={s.caption}>A space for the things you try and finish. Your recent completions will appear here.</Text>}

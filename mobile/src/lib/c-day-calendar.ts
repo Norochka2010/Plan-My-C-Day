@@ -14,14 +14,29 @@ async function perform(request: CalendarRequest, remove: boolean): Promise<Calen
  let link: Link | null = null;
  try {
   link = JSON.parse(await AsyncStorage.getItem(key) || 'null');
+  // Native identifiers are device-local. No journal means this device created no entry.
+  // Do not ask for permissions (or search unrelated calendars) just to delete a draft.
+  if (remove && !link) return {status:'not_requested',nativeEventId:null,message:null};
   if (!available()) return {status:'pending',nativeEventId:link?.id ?? null,message:calendarUnavailableMessage};
   // Lazy import prevents missing native modules from crashing the rest of the app.
   const Calendar: typeof import('expo-calendar/legacy') = require('expo-calendar/legacy');
   const permission = await Calendar.requestCalendarPermissionsAsync();
   if (!permission.granted) return {status:'denied',nativeEventId:link?.id ?? null,message:'Calendar access was not granted. Your plan is saved. You can allow Full Access in iPhone Settings and try again.'};
+  const marker = `Plan My C-Day reference: ${request.actionId}`;
+  if (remove && link?.id) {
+   // A missing entry is already removed. Other errors must preserve the journal for retry.
+   try {
+    const existing = await Calendar.getEventAsync(link.id);
+    if (existing.notes !== marker) throw Error('Calendar link does not match');
+    await Calendar.deleteEventAsync(link.id);
+   } catch (error) {
+    if (!(error && typeof error === 'object' && 'code' in error && error.code === 'ERR_EVENT_NOT_FOUND')) throw error;
+   }
+   await AsyncStorage.removeItem(key);
+   return {status:'not_requested',nativeEventId:null,message:'Removed this app’s entry from your iPhone calendar.'};
+  }
   const starts = new Date(request.startsAt);
   if (!Number.isFinite(starts.getTime())) throw Error('Invalid calendar time');
-  const marker = `Plan My C-Day reference: ${request.actionId}`;
   const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
   let calendar = link ? calendars.find(c=>c.id===link!.calendarId && c.allowsModifications) : undefined;
   if (!link) { const preferred = await Calendar.getDefaultCalendarAsync(); calendar = calendars.find(c=>c.id===preferred.id && c.allowsModifications); }

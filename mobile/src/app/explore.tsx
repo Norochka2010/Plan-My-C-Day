@@ -1,3 +1,5 @@
+import type { ComponentRef } from 'react';
+import { expertReviewBeta, needsExpertReview, reviewCardStyle, reviewLabelStyle } from '@/lib/explore-review';
 import { TabTitle } from '@/constants/theme';
 import { ExploreActivityCatalog } from '@/components/explore-activity-catalog';
 import { ExpertResources } from '@/components/expert-resources';
@@ -36,7 +38,7 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
   const [supportSession, setSupportSession] = useState(!!supportId);
   // Keep HOME challenge previews and their linked activities under one access policy.
   // Release builds and ordinary Plan support still require published content.
-  const publishedOnly = supportSession && !(__DEV__ && homeChallenge);
+  const publishedOnly = supportSession && !expertReviewBeta && !(__DEV__ && homeChallenge);
   const [supportMessage, setSupportMessage] = useState('');
   function returnToCDay() {
     setSelected(null); setLessonId(null); setMythId(null); setPracticeId(null); setChallengeId(null); setExpertOpen(false); setExpertId(null);
@@ -67,7 +69,7 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
         setCatalog(items);
         if (!homeChallenge && supportSession && supportId && !handledEntry.current) {
           handledEntry.current = true;
-          const item = items.find(item => item.content_id === supportId && !item.development_preview && ((supportTypes as readonly string[]).includes(item.content_type) || item.content_type === 'REAL_LIFE_CHALLENGE'));
+          const item = items.find(item => item.content_id === supportId && (expertReviewBeta || !item.development_preview) && ((supportTypes as readonly string[]).includes(item.content_type) || item.content_type === 'REAL_LIFE_CHALLENGE'));
           if (item) openContent(item);
           else setSupportMessage('This optional activity isn’t available right now. You can continue with your C-Day.');
         }
@@ -88,7 +90,7 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
     else setSelected(sections.find(section => section.type === item.content_type)?.title ?? null);
   }
   const selectedType = selected === 'Real-Life Challenges' ? 'REAL_LIFE_CHALLENGE' : selected === 'Quick Learn' ? 'QUICK_LEARN' : selected === 'Practice a Skill' ? 'PRACTICE_A_SKILL' : 'MYTH_OR_FACT';
-  const scroll = useRef<ScrollView>(null);
+  const scroll = useRef<ComponentRef<typeof ScrollView>>(null);
   const recommended = catalog[0];
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.screen}>
@@ -123,8 +125,8 @@ function ExploreContents({ supportId, returnTo, homeChallenge = false }: { suppo
           {loading ? <Text style={styles.body}>Finding something for you…</Text> : failed ? <>
             <Text style={styles.body}>We couldn’t load Explore right now.</Text>
             <Pressable accessibilityRole="button" onPress={() => setRetry(value => value + 1)} style={styles.recommendationButton}><Text style={styles.cardTitle}>Try again</Text></Pressable>
-          </> : recommended ? <Pressable accessibilityRole="button" onPress={() => openContent(recommended)} style={styles.recommendationButton}>
-            <View style={styles.copy}><Text style={styles.cardTitle}>{recommended.title}</Text><Text style={styles.small}>{recommended.domain} · From the available collection; not personalized yet.</Text></View>
+          </> : recommended ? <Pressable accessibilityRole="button" onPress={() => openContent(recommended)} style={[styles.recommendationButton, needsExpertReview(recommended) && reviewCardStyle]}>
+            <View style={styles.copy}><Text style={styles.cardTitle}>{recommended.title}</Text>{needsExpertReview(recommended) && <Text style={reviewLabelStyle}>Expert review required</Text>}<Text style={styles.small}>{recommended.domain} · From the available collection; not personalized yet.</Text></View>
             <Text style={styles.arrow}>›</Text>
           </Pressable> : <Text style={styles.body}>New things to explore are on their way.</Text>}
         </View>

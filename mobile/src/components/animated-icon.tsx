@@ -33,7 +33,7 @@ export function AnimatedSplashOverlay() {
     },
   });
 
-  const image = <Image style={styles.image} source={require('@/assets/images/expo-logo.png')} />;
+  const image = <Image style={styles.splashImage} contentFit="contain" source={require('@/assets/images/leaf.png')} accessibilityLabel="Plan My C-Day" />;
 
   return animate ? (
     <Animated.View
@@ -138,9 +138,10 @@ const styles = StyleSheet.create({
     height: 128,
     position: 'absolute',
   },
+  splashImage: { width: 160, height: 160 },
   splashOverlay: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: '#208AEF',
+    backgroundColor: '#FFFCF7',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1000,

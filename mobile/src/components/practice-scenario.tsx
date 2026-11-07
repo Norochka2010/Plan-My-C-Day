@@ -1,3 +1,4 @@
+import { needsExpertReview, reviewCardStyle, reviewLabelStyle } from '@/lib/explore-review';
 import { LearningTitle } from './learning-title';
 import { ExploreDetails } from './explore-details';
 import { ExploreActionButton as Action } from '@/components/explore-action-button';
@@ -19,7 +20,7 @@ export function PracticeScenario({contentId,catalog,onClose,onOpen,publishedOnly
   useEffect(()=>{
     let active=true;
     setPreview(false);setScenario(null);setLoading(true);setFailed(false);setSelected(null);setSubmitted(false);setReady(false);setMessage('');
-    getExploreContent(contentId,{publishedOnly}).then(row=>{if(active){setScenario(parseScenario(row));setPreview(__DEV__ && row?.development_preview === true);}}).catch(()=>{if(active)setFailed(true);}).finally(()=>{if(active)setLoading(false);});
+    getExploreContent(contentId,{publishedOnly}).then(row=>{if(active){setScenario(parseScenario(row));setPreview(!!row && needsExpertReview(row));}}).catch(()=>{if(active)setFailed(true);}).finally(()=>{if(active)setLoading(false);});
     readPracticeProgress().then(value=>{if(active){setProgress(value);setReady(true);}}).catch(()=>{if(active)setMessage('Your progress could not load. Please retry before completing.');});
     return ()=>{active=false;};
   },[contentId,retry,publishedOnly]);
@@ -35,10 +36,9 @@ export function PracticeScenario({contentId,catalog,onClose,onOpen,publishedOnly
   return <SafeAreaView style={s.screen}><ScrollView contentContainerStyle={s.content}>
     <Action variant="back" label="‹ Back" onPress={onClose} disabled={busy}/>
     <Text style={s.small}>PRACTICE A SKILL</Text>
-    {preview&&<Text style={s.small}>Preview · Expert review required</Text>}
+    {preview&&<View style={[{padding:14,borderRadius:14},reviewCardStyle]}><Text style={reviewLabelStyle}>Expert review required</Text></View>}
     {loading?<Text style={s.body}>Loading scenario…</Text>:failed?<><Text style={s.body}>This scenario couldn’t load.</Text><Action label="Try again" onPress={()=>setRetry(v=>v+1)}/></>:!scenario?<Text style={s.body}>This scenario isn’t ready yet. Choose another activity.</Text>:<>
       <LearningTitle title={scenario.title}/>
-      <Text style={s.small}>{[scenario.category,scenario.domain,scenario.skill,scenario.difficulty].filter(Boolean).join(' · ')}</Text>
       {!!scenario.setting&&<Text style={s.heading}>{scenario.setting}</Text>}
       <Text style={s.body}>{scenario.setup}</Text>
       <View style={s.card}><Text accessibilityRole="header" style={s.heading}>{scenario.prompt}</Text>
@@ -52,7 +52,7 @@ export function PracticeScenario({contentId,catalog,onClose,onOpen,publishedOnly
         <ExploreDetails><Text style={s.body}>Source: {scenario.source_name||'Not provided'}</Text>
         {!!scenario.source_url&&/^https?:\/\//i.test(scenario.source_url)&&<Action variant="navigation" label="Read the source ↗" onPress={()=>{Linking.openURL(scenario.source_url!).catch(()=>setMessage('The source link could not open. Please try again.'));}}/>}
         <Text style={s.small}>XP is for completion, regardless of your response, and is awarded once. Your response is not saved.</Text></ExploreDetails>
-        <Text style={s.small}>{scenario.expert_reviewed?'Expert reviewed':'No expert review recorded'}{scenario.medical_review_required&&!scenario.expert_reviewed?' · Medical review required':''}</Text>
+        {scenario.expert_reviewed && <Text style={s.small}>Expert reviewed</Text>}
         {scenario.related_content.map(id=>{const item=catalog.find(c=>c.content_id===id);return item?<Action variant="navigation" key={id} label={`Related: ${item.title}`} onPress={()=>onOpen(item)} disabled={busy}/>:<Text key={id} style={s.small}>Related activity isn’t available yet.</Text>;})}
         <Action label={progress[contentId]?progress[contentId].xp > 0 ? `Completed ✓ · ${progress[contentId].xp} XP` : 'Completed ✓':busy?'Saving…':'Mark complete'} onPress={complete} disabled={busy||!ready||!!progress[contentId]}/>
       </>}

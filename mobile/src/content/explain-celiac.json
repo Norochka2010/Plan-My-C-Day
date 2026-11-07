@@ -1,0 +1,89 @@
+{
+  "sources": [
+    {
+      "id": "niddk",
+      "title": "NIDDK · Treatment for Celiac Disease",
+      "url": "https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease/treatment"
+    },
+    {
+      "id": "cross",
+      "title": "Beyond Celiac · Cross-Contact",
+      "url": "https://www.beyondceliac.org/gluten-free-diet/cross-contact/"
+    },
+    {
+      "id": "foods",
+      "title": "Celiac Disease Foundation · Gluten-Free Foods",
+      "url": "https://celiac.org/gluten-free-living/gluten-free-foods/"
+    },
+    {
+      "id": "dining",
+      "title": "NIDDK · Eating, Diet & Nutrition for Celiac Disease",
+      "url": "https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease/eating-diet-nutrition"
+    }
+  ],
+  "messages": [
+    {
+      "id": "friend",
+      "title": "Tell a friend",
+      "description": "A quick “here’s what celiac means.”",
+      "sources": [
+        "niddk"
+      ],
+      "message": "Hey! I have celiac disease. When I eat gluten (a protein in wheat, barley, and rye), my immune system reacts and damages my small intestine. Eating gluten-free is how I take care of it. I still want to hang out and do things together — I just need to check the food first. Thanks for having my back!"
+    },
+    {
+      "id": "host",
+      "title": "Going to someone’s house",
+      "description": "Reply to “How can we accommodate you?”",
+      "sources": [
+        "niddk",
+        "cross",
+        "foods"
+      ],
+      "message": "Thanks for asking! I have celiac disease and need gluten-free food, including care with how it’s prepared. Could we plan the food together before I come over?\n\n• Please send me photos of ingredient labels, including sauces and seasonings.\n• Wash hands, surfaces, dishes, and utensils before preparing my food, and keep it away from bread crumbs and gluten-containing food.\n• Use fresh pasta water and avoid a shared bread toaster or oil used for breaded food.\n• Please use separate spreads without bread crumbs and a clean serving utensil for my food.\n\nI can help choose something or bring my own meal. I’m really looking forward to seeing you!"
+    },
+    {
+      "id": "restaurant-call",
+      "title": "Call a restaurant",
+      "description": "Feeling nervous? Follow this phone script, one question at a time.",
+      "sources": [
+        "dining",
+        "cross"
+      ],
+      "message": "BEFORE YOU CALL\nPick a dish you’re interested in and keep something nearby to jot down answers. You can read these lines out loud, pause, or ask someone you trust to sit with you.\n\nSTART HERE\nYou: “Hi! I’m planning to eat at your restaurant and I have celiac disease. Could I speak with a manager or someone who knows how the food is prepared?”\n\nIf it’s a busy time:\nYou: “When would be a better time to call with a few questions?”\n\nASK ABOUT OPTIONS\nYou: “Which meals could be made gluten-free for someone with celiac disease? I’m interested in [dish]. Could you check its ingredients, including sauces and seasonings?”\n\nASK ABOUT PREPARATION\nYou: “How would you keep gluten from other food from getting into my meal during preparation and serving?”\n\nChoose the follow-up that fits your meal:\n• “Would you use clean utensils and a clean preparation area?”\n• “Is the fryer also used for breaded foods?”\n• “Would gluten-free pasta be cooked in fresh water and drained separately from regular pasta?”\n• “Does the grill or toaster also touch regular bread or other gluten-containing foods?”\n\nIF THEY SAY “IT’S GLUTEN-FREE”\nYou: “Thank you! Could you also explain how it’s prepared? I need to check both the ingredients and cross-contact.”\n\nIF THEY AREN’T SURE\nYou: “Could you check with the chef? It’s okay to tell me if you can’t accommodate this.”\n\nIF YOU NEED A MOMENT\nYou: “Could you repeat that a little more slowly? I’m writing it down.”\n\nWRAP UP\nYou: “Thanks for checking. Who should I speak with when I arrive so I can confirm the plan before ordering?”\n\nOR, IF IT WON’T WORK\nYou: “Thanks for being honest. I’ll make another food plan.”\n\nYou don’t have to decide during the call. These questions help you gather information; they don’t guarantee a meal is gluten-free. Confirm again with staff when you arrive."
+    },
+    {
+      "id": "crumbs",
+      "title": "Explain why crumbs matter",
+      "description": "When someone offers to pick the bread off.",
+      "sources": [
+        "cross"
+      ],
+      "message": "Thanks for trying to help! Picking off bread or croutons doesn’t remove the gluten that may already be on the food. That transfer is called cross-contact. Could I have a fresh portion made with clean utensils, away from gluten-containing food? If that’s tricky, I can bring something else."
+    },
+    {
+      "id": "menu",
+      "title": "Suggest an easy food plan",
+      "description": "Give a host a starting point.",
+      "sources": [
+        "foods",
+        "cross"
+      ],
+      "message": "We could keep it simple with plain rice or potatoes, vegetables, and an unseasoned protein. Those can start out gluten-free, but sauces, seasonings, and preparation still matter. Could we check the ingredients together and use clean cookware and utensils? I can send a few foods that work for me."
+    },
+    {
+      "id": "group",
+      "title": "Make plans with the group",
+      "description": "Stay included while planning ahead.",
+      "sources": [],
+      "message": "I’m in! Can we choose the food or place ahead of time so I can check what works for my celiac needs? Send me the menu or plan and I’ll take a look. If food is complicated, I’m happy to bring my own and still hang out."
+    },
+    {
+      "id": "boundary",
+      "title": "Say “no thanks” with confidence",
+      "description": "You don’t have to explain everything.",
+      "sources": [],
+      "message": "Thanks for thinking of me! I’m not comfortable eating this because I can’t confirm it works for my celiac needs. I’ll pass on the food, but I’d still love to stay and spend time with you."
+    }
+  ]
+}

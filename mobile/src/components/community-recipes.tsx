@@ -1,3 +1,4 @@
+import type { ComponentRef } from 'react';
 import { BackButton } from './back-button';
 import { TabTitle } from '@/constants/theme';
 import { ExpertResources } from './expert-resources';
@@ -46,7 +47,7 @@ function Community() {
  const [recipe,setRecipe]=useState<Recipe|null>(null),[step,setStep]=useState(0),[ack,setAck]=useState([false,false,false]);
  const [moderator,setModerator]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState('');
  const [reason,setReason]=useState(''),[note,setNote]=useState('');
- const lock=useRef(false),alive=useRef(true),scroll=useRef<ScrollView>(null),generation=useRef(0);
+ const lock=useRef(false),alive=useRef(true),scroll=useRef<ComponentRef<typeof ScrollView>>(null),generation=useRef(0);
  useEffect(()=>{alive.current=true;return()=>{alive.current=false;generation.current++;};},[]);
  useEffect(()=>{scroll.current?.scrollTo({y:0,animated:false});},[page,step]);
  useFocusEffect(useCallback(()=>{

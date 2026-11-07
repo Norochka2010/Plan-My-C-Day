@@ -1,3 +1,4 @@
+import { HomeAccountWelcome } from '@/components/home-account-welcome';
 import { TabTitle } from '@/constants/theme';
 import { HomeInspiration } from '@/components/home-inspiration';
 import { HomeNextChallenge } from '@/components/home-next-challenge';
@@ -20,6 +21,7 @@ export default function HomeScreen() {
             <View style={styles.leafSpace}>
               <LeafCharacter size={180} />
             </View>
+            <HomeAccountWelcome />
             <View style={styles.welcomeCopy}>
             <Text style={styles.welcomeTitle}>Your day, a little more confident.</Text>
             <Text style={styles.subtitle}>A space to prepare, connect, and grow at your own pace.</Text>

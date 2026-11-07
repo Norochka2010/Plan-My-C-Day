@@ -1,3 +1,4 @@
+import { reviewCardStyle, reviewLabelStyle } from '@/lib/explore-review';
 import { useCallback, useState } from 'react';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { AppState, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -26,7 +27,7 @@ export function HomeNextChallenge() {
   }, [retry]));
   return <View style={s.section}>
     <Text accessibilityRole="header" style={s.sectionTitle}>My Next Challenge</Text>
-    <View style={s.card}>
+    <View style={[s.card, suggestion?.developmentPreview && reviewCardStyle]}>
       <View style={s.badge}><Text style={s.icon}>★</Text></View>
       <View style={s.copy}>
         {loading ? <Text style={s.body}>Finding a challenge for you…</Text> : failed ? <>
@@ -34,7 +35,7 @@ export function HomeNextChallenge() {
           <Pressable accessibilityRole="button" style={s.button} onPress={() => setRetry(n => n + 1)}><Text style={s.link}>Try again</Text></Pressable>
         </> : suggestion ? <>
           <Text style={s.title}>{suggestion.card.title}</Text>
-          {__DEV__ && suggestion.developmentPreview && <Text style={s.small}>Development preview · Review required</Text>}
+          {suggestion.developmentPreview && <Text style={reviewLabelStyle}>Expert review required</Text>}
           <Text style={s.body}>{suggestion.card.instruction}</Text>
           <Text style={s.small}>{suggestion.eventTitle ? `Could help with ${suggestion.eventTitle}.` : 'An optional challenge from Explore.'}</Text>
           <Text style={s.small}>Try it if you’d like—your C-Day never depends on completing it.</Text>

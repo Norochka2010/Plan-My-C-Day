@@ -1,3 +1,5 @@
+import type { ComponentRef } from 'react';
+import { ExplainCeliac } from './explain-celiac';
 import { BackButton } from './back-button';
 import { NutritionMiniHub } from './nutrition-mini-hub';
 import { useEffect, useRef, useState } from 'react';
@@ -36,6 +38,7 @@ function ResourceCopy({ resource }: { resource: ExpertResource }) {
   </>;
 }
 export function ExpertResources({ onClose, initialContentId = null, nutritionOnly = false }: { onClose: () => void; initialContentId?: string | null; nutritionOnly?: boolean }) {
+  const [explainOpen, setExplainOpen] = useState(false);
   const [resources, setResources] = useState<ExpertResource[]>([]);
   const [selected, setSelected] = useState<string | null>(initialContentId);
   const [categoryVisit, setCategoryVisit] = useState(0);
@@ -44,7 +47,7 @@ export function ExpertResources({ onClose, initialContentId = null, nutritionOnl
   const [category, setCategory] = useState<ExpertCategory | null>(nutritionOnly ? 'Nutrition & Eating Well' : null);
   const [loading, setLoading] = useState(true), [failed, setFailed] = useState(false), [retry, setRetry] = useState(0);
   const [opening, setOpening] = useState(false), [linkError, setLinkError] = useState('');
-  const generation = useRef(0), linkBusy = useRef(false), scroll = useRef<ScrollView>(null);
+  const generation = useRef(0), linkBusy = useRef(false), scroll = useRef<ComponentRef<typeof ScrollView>>(null);
   useEffect(() => {
     let active = true; setLoading(true); setFailed(false);
     getExpertResources().then(rows => { if (active) setResources(rows); }).catch(() => { if (active) setFailed(true); })
@@ -68,6 +71,7 @@ export function ExpertResources({ onClose, initialContentId = null, nutritionOnl
     setCategory(next);
     setCategoryVisit(value => value + 1);
   }
+  if (explainOpen) return <ExplainCeliac onClose={() => setExplainOpen(false)} backLabel="‹ Back to Trusted Resources" />;
   return <SafeAreaView style={s.screen}>
     <ScrollView ref={scroll} contentContainerStyle={s.content} onLayout={event => setViewportHeight(event.nativeEvent.layout.height)}>
       <Button label={selected ? 'Back to resources' : nutritionOnly ? 'Back to Community' : 'Back to Explore'} onPress={selected ? () => setSelected(null) : onClose} />
@@ -77,7 +81,6 @@ export function ExpertResources({ onClose, initialContentId = null, nutritionOnl
         <Text style={s.body}>Trusted resources couldn’t load right now.</Text><Button label="Try again" onPress={() => setRetry(v => v + 1)} />
       </View> : selected ? resource ? <View style={s.card}>
         <ResourceCopy resource={resource} />
-        {resource.domains && resource.domains.length > 0 && <Text style={s.small}>{resource.domains.join(' · ')}</Text>}
         <Text style={s.small}>Reviewed {resource.reviewedDate}</Text>
         <Text style={s.body}>This opens the original resource outside Plan My C-Day.</Text>
         <Text selectable style={s.url}>{resource.url}</Text>
@@ -85,10 +88,15 @@ export function ExpertResources({ onClose, initialContentId = null, nutritionOnl
         <Button label={opening ? 'Opening source…' : 'Read from the source ↗'} onPress={() => void openSource(resource)} disabled={opening} />
       </View> : <View style={s.card}><Text style={s.body}>This resource isn’t available right now.</Text><Button label="Browse resources" onPress={() => setSelected(null)} /></View> : <>
         {!nutritionOnly && <>
-        <Text accessibilityRole="header" style={s.heading}>Featured collection</Text>
+        <Text accessibilityRole="header" style={s.heading}>Featured Collections</Text>
         <View style={s.collections}>{expertMiniHubs.map(hub => <Pressable key={hub} accessibilityRole="button" accessibilityState={{ selected: category === hub }} onPress={() => chooseCategory(hub)} style={[s.collection, category === hub && s.selected]}>
           <Text style={s.cardTitle}>{hub}</Text><Text style={s.small}>{hub === 'Nutrition & Eating Well' ? 'Learn and explore trusted resources →' : 'Explore trusted resources →'}</Text>
-        </Pressable>)}</View>
+        </Pressable>)}
+        <Pressable accessibilityRole="button" accessibilityHint="Opens messages you can edit and copy" onPress={() => setExplainOpen(true)} style={[s.collection, {backgroundColor:'#FCEFE2',borderColor:'#E7CEB4'}]}>
+          <Text style={s.cardTitle}>Help me explain</Text>
+          <Text style={s.small}>Messages you can make your own—copy, paste, and share →</Text>
+        </Pressable>
+        </View>
         <Text accessibilityRole="header" style={s.heading}>Browse by category</Text>
         <Pressable accessibilityRole="button" accessibilityState={{ selected: category === null }}
           onPress={() => chooseCategory(null)} style={({ pressed }) => [s.allResources, category === null && s.selected, pressed && s.dim]}>

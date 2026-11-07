@@ -22,6 +22,7 @@ export function DeleteAccount({userId,onDeleted}:{userId:string;onDeleted:()=>vo
     }
     // Deletion has succeeded; a local cleanup failure must not invite another deletion.
     await AsyncStorage.removeItem(`me-look:v1:${userId}`).catch(()=>{});
+    await AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys.filter(key => key.startsWith(`explain-message:v1:${userId}:`)))).catch(()=>{});
     await supabase.auth.signOut({scope:'local'}).catch(()=>{});
     onDeleted();
   }

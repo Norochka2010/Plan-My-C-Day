@@ -1,13 +1,33 @@
 import { BackButton } from './back-button';
 import { ProductCheckerEntry } from './product-checker';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Fonts } from '@/constants/theme';
 import { getNutritionHub, type NutritionHub, type NutritionSection } from '@/lib/nutrition-content';
 import { NutritionArtwork } from './nutrition-artwork';
 function Button({ label, onPress }: { label: string; onPress: () => void }) {
  if (/^(‹|Back\b|Previous step)/.test(label)) return <BackButton label={label} onPress={onPress}/>;
   return <Pressable accessibilityRole="button" onPress={onPress} style={({ pressed }) => [s.button, pressed && { opacity: 0.65 }]}><Text style={s.buttonText}>{label}</Text></Pressable>;
+}
+function LabelAdvisories() {
+  const [failed, setFailed] = useState(false);
+  async function openSource(url: string) {
+    setFailed(false);
+    try { await Linking.openURL(url); } catch { setFailed(true); }
+  }
+  return <View style={s.context}>
+    <Text style={s.label}>U.S. LABELS</Text>
+    <Text accessibilityRole="header" style={s.heading}>What about “may contain” or “made in a shared facility”?</Text>
+    <Text style={s.body}>Statements such as “may contain wheat” or “made in a facility that also processes wheat” are voluntary warnings about possible cross-contact. They are different from an ingredient list or a “Contains wheat” statement.</Text>
+    <Text style={s.body}>• A shared-facility warning does not automatically mean the food contains gluten.</Text>
+    <Text style={s.body}>• No warning does not guarantee there was no cross-contact.</Text>
+    <Text style={s.body}>• For FDA-regulated foods, a “gluten-free” claim must still meet FDA requirements—including less than 20 parts per million of gluten—even when a shared-facility warning appears.</Text>
+    <Text accessibilityRole="header" style={s.heading}>Still unsure?</Text>
+    <Text style={s.body}>Check for a gluten-free claim and read the ingredients. If questions remain, contact the manufacturer or choose another option.</Text>
+    <Button label="FDA label guidance ↗" onPress={() => { void openSource('https://www.fda.gov/food/nutrition-food-labeling-and-critical-foods/questions-and-answers-gluten-free-food-labeling-final-rule'); }} />
+    <Button label="Beyond Celiac food safety ↗" onPress={() => { void openSource('https://www.beyondceliac.org/gluten-free-diet/food-safety/'); }} />
+    {failed && <Text accessibilityLiveRegion="polite" style={s.body}>The source could not open. Please check your connection and try again.</Text>}
+  </View>;
 }
 function NutritionCard({ section }: { section: NutritionSection }) {
   return <View style={s.card}>
@@ -21,6 +41,7 @@ function NutritionCard({ section }: { section: NutritionSection }) {
     {section.layout === 'grid' ? <View style={s.grid}>{section.items.map((item, index) => <View key={`${section.id}-${index}`} style={s.grain}>
       <Text style={s.heading}>{item}</Text><Text style={s.label}>{section.itemLabel}</Text><Text style={s.small}>{section.itemNote}</Text>
     </View>)}</View> : section.items.map((item, index) => <View key={`${section.id}-${index}`} style={s.item}>{section.layout !== 'numbered' && <Text style={s.bullet}>•</Text>}<Text style={[s.body, s.itemText]}>{item}</Text></View>)}
+    {section.id === 'NUT_006' && <LabelAdvisories />}
   </View>;
 }
 /** In-app learning and the existing external resources share the Nutrition collection, not their content model. */
