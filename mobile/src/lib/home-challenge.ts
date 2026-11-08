@@ -39,6 +39,8 @@ export function chooseHomeChallenge(candidates: ChallengeCandidate[], events: Up
   return ranked[0] ?? null;
 }
 export async function getHomeChallenge(userId: string | null, now = Date.now()): Promise<ChallengeSuggestion | null> {
+  // Guests (userId null) get a suggestion too; account progress is only read for a signed-in user,
+  // otherwise readChallengeProgress throws "Sign in…" and the Home card showed its error state.
   const candidates: ChallengeCandidate[] = [];
   if (expertReviewBeta) {
     for (const item of (await getExploreCatalog()).filter(row => row.content_type === 'REAL_LIFE_CHALLENGE')) {
@@ -56,7 +58,7 @@ export async function getHomeChallenge(userId: string | null, now = Date.now()):
     for (const row of data) {
       if (!publishedSupport(row)) continue;
       const card = parseRealLifeChallenge(row);
-      if (card) candidates.push({ card, progress: await readChallengeProgress(card.content_id) });
+      if (card) candidates.push({ card, progress: userId ? await readChallengeProgress(card.content_id) : null });
     }
     if (data.length < 100) break;
   }
@@ -65,7 +67,7 @@ export async function getHomeChallenge(userId: string | null, now = Date.now()):
   for (const row of developmentChallengePreviews()) {
     if (idsSeen.has(row.content_id)) continue;
     const card = parseRealLifeChallenge(row);
-    if (card) { candidates.push({ card, developmentPreview: true, progress: await readChallengeProgress(card.content_id) }); idsSeen.add(card.content_id); }
+    if (card) { candidates.push({ card, developmentPreview: true, progress: userId ? await readChallengeProgress(card.content_id) : null }); idsSeen.add(card.content_id); }
   }
   }
   let events: UpcomingCDay[] = [];
