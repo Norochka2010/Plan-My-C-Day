@@ -7,6 +7,10 @@ import { useColorScheme } from 'react-native';
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import AppTabs from '@/components/app-tabs';
 
+import { startLogging } from '@/lib/logger';
+
+// Start structured logging before anything else runs so startup + auth restore are captured.
+startLogging();
 SplashScreen.preventAutoHideAsync();
 
 export default function TabLayout() {

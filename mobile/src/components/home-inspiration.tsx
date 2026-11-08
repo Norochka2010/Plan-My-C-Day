@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useFocusEffect } from 'expo-router';
 import { AppState, StyleSheet, Text, View } from 'react-native';
 import { supabase } from '@/lib/supabase';
+import { createLogger } from '@/lib/logger';
+const authConsumerLog = createLogger('auth_consumer');
 import { readHomeInspiration, type InspirationDisplay } from '@/lib/home-inspiration-data';
 /** One quiet message in the existing HOME For You slot. No navigation or rewards. */
 export function HomeInspiration() {
@@ -19,7 +21,7 @@ export function HomeInspiration() {
         const {data,error}=await supabase.auth.getSession();if(error)throw error;
         const next=await readHomeInspiration(data.session?.user.id??null);
         if(active&&request===generation)setMessage(next);
-      } catch { if(active&&request===generation)setMessage(null); }
+      } catch(error) { authConsumerLog.warn('inspiration_load_failed',{component:'home_inspiration',error}); if(active&&request===generation)setMessage(null); }
     }
     void refresh(true);
     const {data:{subscription}}=supabase.auth.onAuthStateChange(()=>{void refresh(true)});

@@ -7,6 +7,10 @@ import { formatUSPhone, normalizeUSPhone } from '@/lib/us-phone';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { betaPolicies } from '@/lib/beta-policies';
 import { supabase } from '@/lib/supabase';
+import { createLogger, elapsed, maskEmail } from '@/lib/logger';
+
+const authLog = createLogger('auth_ui');
+const profileLog = createLogger('profile');
 
 // Preserve partial input while normalizing month-first dates without guessing a year.
 export function formatBirthdayInput(value: string): string {
@@ -45,24 +49,28 @@ export function AccountSetup({ userId, onSaved }: { userId: string; onSaved: () 
   useEffect(()=>{let active=true;
     Promise.all([supabase.from('users').select('first_name,last_name').eq('id',userId).single(),supabase.from('account_profiles').select('date_of_birth,username').eq('user_id',userId).maybeSingle()]).then(([user,profile])=>{
       if(!active)return;
-      if(user.error||profile.error){setMessage('Profile setup is temporarily unavailable. You can keep using your account.');return;}
+      if(user.error||profile.error){profileLog.warn('profile_load_failed',{user_error:user.error,profile_error:profile.error,user_id:userId});setMessage('Profile setup is temporarily unavailable. You can keep using your account.');return;}
+      profileLog.info('profile_loaded',{has_username:!!profile.data?.username,has_birthday:!!profile.data?.date_of_birth,has_profile_row:!!profile.data});
       setFirst(user.data.first_name||'');setLast(user.data.last_name||'');setUsername(profile.data?.username||'');
       const birthday=profile.data?.date_of_birth;
       if(birthday){const [y,m,d]=birthday.split('-');setDob(`${m}-${d}-${y}`);setLockedDob(true);}
       setReady(true);
-    }).catch(()=>{if(active)setMessage('Could not load profile setup. Please try again later.');});
+    }).catch((error)=>{profileLog.error('profile_load_threw',{error});if(active)setMessage('Could not load profile setup. Please try again later.');});
     return()=>{active=false;};
   },[userId]);
   async function save(){
     const birthday=dob ? parseBirthday(dob) : null;
-    if(!first.trim()){setMessage('Enter your first name.');return;}
-    if(!last.trim()){setMessage('Enter your last name.');return;}
-    if(dob&&(!birthday||!oldEnough(birthday))){setMessage('Enter a valid date of birth. Accounts are for ages 13 and older.');return;}
+    if(!first.trim()){profileLog.info('profile_validation_failed',{reason:'first_name_missing'});setMessage('Enter your first name.');return;}
+    if(!last.trim()){profileLog.info('profile_validation_failed',{reason:'last_name_missing'});setMessage('Enter your last name.');return;}
+    if(dob&&(!birthday||!oldEnough(birthday))){profileLog.info('profile_validation_failed',{reason:birthday?'under_age':'dob_invalid'});setMessage('Enter a valid date of birth. Accounts are for ages 13 and older.');return;}
     setBusy(true);setMessage('');
+    const started=Date.now();
+    profileLog.info('profile_save_attempt',{has_username:!!username,username_length:username.length,sets_birthday:!!birthday&&!lockedDob});
     try{const {error}=await supabase.rpc('save_account_profile',{p_expected_user:userId,p_first_name:first,p_last_name:last,p_dob:birthday,p_username:username});
       if(error)throw error;
+      profileLog.info('profile_save_ok',{duration_ms:elapsed(started)});
       if(alive.current){setMessage('Profile saved.');if(birthday)setLockedDob(true);onSaved();}
-    }catch(e){if(alive.current)setMessage(e instanceof Error?e.message:(e as {message?:string})?.message||'Could not save your profile.');}
+    }catch(e){profileLog.warn('profile_save_failed',{error:e,duration_ms:elapsed(started)});if(alive.current)setMessage(e instanceof Error?e.message:(e as {message?:string})?.message||'Could not save your profile.');}
     finally{if(alive.current)setBusy(false);}
   }
   return <View style={styles.form}>
@@ -91,6 +99,7 @@ export function AccountSignIn({ onStepChange }: { onStepChange?: (welcome: boole
   }
   const [step,setStep]=useState<AuthStep>('welcome');
   useEffect(()=>{onStepChange?.(step==='welcome');},[step,onStepChange]);
+  useEffect(()=>{authLog.info('auth_screen_mounted',{policy_source:'bundled_beta'});return()=>authLog.info('auth_screen_unmounted');},[]);
   const [dob,setDob]=useState(''); const [first,setFirst]=useState('');
   const [last,setLast]=useState(''); const [phone,setPhone]=useState('');
   const [username,setUsername]=useState('');
@@ -100,31 +109,38 @@ export function AccountSignIn({ onStepChange }: { onStepChange?: (welcome: boole
   const lock=useRef(false); const alive=useRef(true);
   useEffect(()=>{alive.current=true;return()=>{alive.current=false;};},[]);
   useEffect(()=>{if(!cooldown)return;const timer=setTimeout(()=>setCooldown(Math.max(0,cooldown-1)),1000);return()=>clearTimeout(timer);},[cooldown]);
-  function go(next:AuthStep){Keyboard.dismiss();setMessage('');setStep(next);setPassword('');setConfirm('');}
-  function validEmail(){if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())){setMessage('Enter a complete email address, like name@example.com.');return false;}return true;}
+  function go(next:AuthStep){authLog.info('auth_step_change',{from:step,to:next});Keyboard.dismiss();setMessage('');setStep(next);setPassword('');setConfirm('');}
+  function validEmail(action:string){if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())){authLog.info('auth_validation_failed',{action,reason:'email_format',email_length:email.trim().length,has_whitespace:/\s/.test(email.trim())});setMessage('Enter a complete email address, like name@example.com.');return false;}return true;}
+  // Validation failures are logged with a reason code only — never the values typed.
+  function invalid(action:string,reason:string,text:string){authLog.info('auth_validation_failed',{action,reason});setMessage(text);}
   async function request(action:'signin'|'signup'|'reset'|'resend'){
-    if(lock.current||!validEmail())return;
-    if((action==='reset'||action==='resend')&&cooldown)return;
+    if(lock.current){authLog.info('auth_request_ignored',{action,reason:'in_flight'});return;}
+    if(!validEmail(action))return;
+    if((action==='reset'||action==='resend')&&cooldown){authLog.info('auth_request_ignored',{action,reason:'cooldown',cooldown_s:cooldown});return;}
     const birthday=parseBirthday(dob);
     if(action==='signup'){
-      if(!termsAccepted||!privacyAccepted){setMessage('Please review and acknowledge both the Terms of Service and Privacy Policy.');return;}
-      if(!birthday||!oldEnough(birthday,13)){setMessage('You must be 13 or older to join this beta.');return;}
-      if(!usResident){setMessage('This beta is for US residents. Please confirm that you live in the United States.');return;}
-      if(!oldEnough(birthday,18)&&!parentApproved){setMessage('Ask your parent or guardian to review the Terms and Privacy Policy and approve your participation before joining.');return;}
-      if(!first.trim()){setMessage('Enter your first name.');return;}
-      if(!last.trim()){setMessage('Enter your last name.');return;}
-      if(!/^[a-z][a-z0-9_]{2,23}$/.test(username)||/(admin|moderator|official|support)/.test(username)){setMessage('Choose a username of 3–24 characters: start with a letter, then use letters, numbers or underscores. Avoid staff names.');return;}
-      if(phone.trim()&&!normalizeUSPhone(phone)){setMessage('Enter a valid 10-digit US phone number, including the area code.');return;}
-      if(password.length<12){setMessage('Use at least 12 characters. A memorable phrase works well.');return;}
-      if(password!==confirm){setMessage('Your passwords don’t match yet. Please check both fields.');return;}
+      if(!termsAccepted||!privacyAccepted){invalid(action,'policies_not_accepted','Please review and acknowledge both the Terms of Service and Privacy Policy.');return;}
+      if(!birthday||!oldEnough(birthday,13)){invalid(action,birthday?'under_13':'birthday_invalid','You must be 13 or older to join this beta.');return;}
+      if(!usResident){invalid(action,'us_residency_not_confirmed','This beta is for US residents. Please confirm that you live in the United States.');return;}
+      if(!oldEnough(birthday,18)&&!parentApproved){invalid(action,'parent_approval_missing','Ask your parent or guardian to review the Terms and Privacy Policy and approve your participation before joining.');return;}
+      if(!first.trim()){invalid(action,'first_name_missing','Enter your first name.');return;}
+      if(!last.trim()){invalid(action,'last_name_missing','Enter your last name.');return;}
+      if(!/^[a-z][a-z0-9_]{2,23}$/.test(username)||/(admin|moderator|official|support)/.test(username)){invalid(action,'username_invalid','Choose a username of 3–24 characters: start with a letter, then use letters, numbers or underscores. Avoid staff names.');return;}
+      if(phone.trim()&&!normalizeUSPhone(phone)){invalid(action,'phone_invalid','Enter a valid 10-digit US phone number, including the area code.');return;}
+      if(password.length<12){invalid(action,'password_too_short','Use at least 12 characters. A memorable phrase works well.');return;}
+      if(password!==confirm){invalid(action,'password_mismatch','Your passwords don’t match yet. Please check both fields.');return;}
     }
-    if(action==='signin'&&!password){setMessage('Enter your password.');return;}
+    if(action==='signin'&&!password){invalid(action,'password_missing','Enter your password.');return;}
     lock.current=true;setBusy(true);setMessage('');Keyboard.dismiss();
     let signupStage: 'username' | 'account' = 'username';
+    const started=Date.now();
+    const maskedEmail=maskEmail(email);
+    authLog.info('auth_request_attempt',{action,email:maskedEmail,email_trimmed_changed:email!==email.trim(),email_has_uppercase:/[A-Z]/.test(email),has_phone:action==='signup'?!!phone.trim():undefined});
     try{
       if(action==='signup'){
         const {data:available,error:checkError}=await supabase.rpc('username_available',{p_username:username});
         if(checkError)throw checkError;
+        authLog.info('username_check',{available:!!available,duration_ms:elapsed(started)});
         if(!available){setMessage('That username is unavailable. Please choose another.');return;}
       }
       signupStage = 'account';
@@ -133,6 +149,7 @@ export function AccountSignIn({ onStepChange }: { onStepChange?: (welcome: boole
           ?await supabase.auth.resetPasswordForEmail(email.trim(),{redirectTo:AUTH_RETURN})
           :await supabase.auth.resend({type:'signup',email:email.trim(),options:{emailRedirectTo:AUTH_RETURN}});
         if(error)throw error;
+        authLog.info('auth_request_ok',{action,email:maskedEmail,duration_ms:elapsed(started)});
         if(alive.current){setCooldown(60);setStep(action==='reset'?'sent':'verify');setMessage(action==='resend'?'Another confirmation email has been requested.':'');}
       }else{
         const credentials={email:email.trim(),password};
@@ -140,6 +157,9 @@ export function AccountSignIn({ onStepChange }: { onStepChange?: (welcome: boole
           ?await supabase.auth.signUp({...credentials,options:{emailRedirectTo:AUTH_RETURN,data:{legal_acknowledgment:{policy_source:'bundled_beta',terms_version:betaPolicies.terms.version,privacy_version:betaPolicies.privacy.version,us_resident_confirmed:usResident,parent_permission_confirmed:birthday&&!oldEnough(birthday,18)?parentApproved:null,parent_permission_method:birthday&&!oldEnough(birthday,18)?'teen_self_confirmation':null,terms_accepted:true,privacy_acknowledged:true,acknowledged_at:new Date().toISOString()},username,first_name:first.trim(),last_name:last.trim(),phone_number:normalizeUSPhone(phone),date_of_birth:birthday}}})
           :await supabase.auth.signInWithPassword(credentials);
         if(error)throw error;
+        const identities=data.user?.identities?.length;
+        const outcome=action==='signup'&&!data.session&&identities===0?'existing_account_obscured':!data.session?'needs_email_confirmation':'signed_in';
+        authLog.info('auth_request_ok',{action,email:maskedEmail,outcome,has_session:!!data.session,user_id:data.user?.id??null,identities_count:identities??null,email_confirmed:data.user?!!data.user.email_confirmed_at:null,expires_at:data.session?.expires_at??null,duration_ms:elapsed(started),mounted:alive.current});
         if(alive.current){
           setPassword('');setConfirm('');
           // Supabase can obscure a duplicate signup with an empty identities list.
@@ -149,11 +169,19 @@ export function AccountSignIn({ onStepChange }: { onStepChange?: (welcome: boole
         }
       }
     }catch(error){
-      if(!alive.current)return;
       const code=(error as {code?:string}).code;
+      const status=(error as {status?:number}).status;
+      // GoTrue answers 500 "Error sending confirmation email" when its SMTP relay (Resend) rejects the
+      // message: a server-side delivery fault, not the user's details. Name it so dashboards can alert on it.
+      const emailDeliveryFailed=status===500&&/sending (confirmation|recovery|magic link|invite|email change)? ?email/i.test((error as {message?:string}).message??'');
+      const shown=action==='signup'&&(code==='user_already_exists'||code==='email_exists')?'existing_account':code==='email_not_confirmed'?'email_not_confirmed':code==='over_email_send_rate_limit'||code==='over_request_rate_limit'?'rate_limited':emailDeliveryFailed?'email_delivery_failed':'generic_failure';
+      // Network failures surface as AuthRetryableFetchError / status 0 — distinguish them from bad credentials.
+      authLog[shown==='email_delivery_failed'?'error':shown==='generic_failure'?'warn':'info']('auth_request_failed',{action,email:maskedEmail,error,code:code??null,status:status??null,ui_outcome:shown,duration_ms:elapsed(started),mounted:alive.current});
+      if(!alive.current)return;
       if(action==='signup'&&(code==='user_already_exists'||code==='email_exists')){setPassword('');setConfirm('');setStep('existing');}
       else if(code==='email_not_confirmed'){setStep('verify');setMessage('Confirm your email before signing in.');}
       else if(code==='over_email_send_rate_limit'||code==='over_request_rate_limit'){setCooldown(60);setMessage('Please wait a minute before trying again.');}
+      else if(shown==='email_delivery_failed')setMessage('We couldn’t send the email just now. This is on our side, not yours — your details are fine. Please try again in a few minutes.');
       else setMessage(action==='signin'?'Could not sign in. Check your email and password, or use Forgot password. If you’re offline, reconnect and try again.':action==='signup'?signupErrorMessage(error,signupStage):'Could not send the email. Check your connection and try again shortly.');
     }finally{lock.current=false;if(alive.current)setBusy(false);}
   }

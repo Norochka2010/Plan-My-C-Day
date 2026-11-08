@@ -47,3 +47,6 @@ example
 
 # Local Supabase CLI cache
 supabase/.temp/
+
+# local logging test output
+.logtest/

@@ -1,0 +1,6 @@
+# Supabase CLI project config. Only what deploys need; everything else uses CLI defaults.
+project_id = "rowewbnnggapsxlcnkwb"
+
+# Called by the database queue, not by users: no user JWT on the request.
+[functions.recipe-moderation-email]
+verify_jwt = false

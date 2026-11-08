@@ -3,6 +3,8 @@ import { useCallback, useState } from 'react';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { AppState, Pressable, StyleSheet, Text, View } from 'react-native';
 import { supabase } from '@/lib/supabase';
+import { createLogger } from '@/lib/logger';
+const authConsumerLog = createLogger('auth_consumer');
 import { newId } from '@/lib/c-day-model';
 import { getHomeChallenge, type ChallengeSuggestion } from '@/lib/home-challenge';
 export function HomeNextChallenge() {
@@ -16,7 +18,7 @@ export function HomeNextChallenge() {
         const { data, error } = await supabase.auth.getSession(); if (error) throw error;
         const result = await getHomeChallenge(data.session?.user.id ?? null);
         if (active && request === generation) setSuggestion(result);
-      } catch { if (active && request === generation) setFailed(true); }
+      } catch (error) { authConsumerLog.warn('challenge_load_failed', { component: 'home_next_challenge', error }); if (active && request === generation) setFailed(true); }
       finally { if (active && request === generation) setLoading(false); }
     }
     void refresh();

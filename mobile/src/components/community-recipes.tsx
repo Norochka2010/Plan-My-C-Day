@@ -7,6 +7,8 @@ import { ActivityIndicator, Alert, AppState, Keyboard, Modal, Pressable, ScrollV
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { supabase } from '@/lib/supabase';
+import { createLogger } from '@/lib/logger';
+const authConsumerLog = createLogger('auth_consumer');
 import { newId } from '@/lib/c-day-model';
 import { LeafCharacter } from './leaf-character';
 import { CommunityRules } from './community-rules';
@@ -33,7 +35,7 @@ export function CommunityRecipes() {
  useEffect(()=>{
  let active=true,changed=false;
  const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>{changed=true;if(active){setUserId(session?.user.id??null);setReady(true);}});
- supabase.auth.getSession().then(({data})=>{if(active&&!changed){setUserId(data.session?.user.id??null);setReady(true);}}).catch(()=>{if(active)setReady(true);});
+ supabase.auth.getSession().then(({data})=>{if(active&&!changed){setUserId(data.session?.user.id??null);setReady(true);}}).catch((error)=>{authConsumerLog.warn('session_lookup_failed',{component:'community_recipes',error});if(active)setReady(true);});
  return()=>{active=false;subscription.unsubscribe();};
  },[]);
  if(!ready)return <SafeAreaView style={s.screen}><ActivityIndicator accessibilityLabel="Loading Community" /></SafeAreaView>;

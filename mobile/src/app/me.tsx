@@ -16,7 +16,10 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { LeafCharacter } from '@/components/leaf-character';
-import { supabase } from '@/lib/supabase';
+import { markIntentionalSignOut, supabase } from '@/lib/supabase';
+import { createLogger, elapsed, setLogUser } from '@/lib/logger';
+
+const log = createLogger('auth_me');
 
 export default function HomeScreen() {
   const {growthEntry}=useLocalSearchParams<{growthEntry?:string}>();
@@ -44,8 +47,11 @@ export default function HomeScreen() {
   useEffect(() => {
     let active = true;
     let authChanged = false;
+    const restoreStarted = Date.now();
+    log.info('session_restore_start');
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
       authChanged = true;
+      log.info('me_auth_event', { event: _event, has_session: !!nextSession, mounted: active });
       if (active) {
         if(nextSession){
           setAccountDeleted(false);
@@ -56,19 +62,23 @@ export default function HomeScreen() {
       }
     });
     supabase.auth.getSession().then(({ data, error }) => {
+      const expiresIn = data.session?.expires_at ? data.session.expires_at - Math.floor(Date.now() / 1000) : null;
+      log[error ? 'warn' : 'info'](error ? 'session_restore_error' : 'session_restore_done', { has_session: !!data.session, user_id: data.session?.user.id ?? null, expires_in_s: expiresIn, error, auth_event_arrived_first: authChanged, duration_ms: elapsed(restoreStarted), mounted: active });
       if (!active) return;
       if (!authChanged) setSession(data.session);
       if (error) setMessage(error.message);
       setInitializing(false);
-    }).catch(() => {
+    }).catch((error) => {
+      log.error('session_restore_threw', { error, duration_ms: elapsed(restoreStarted) });
       if (active) {
         setMessage('Could not restore your session. Please sign in again.');
         setInitializing(false);
       }
     });
     const refresh = (state: string) => {
-      if (state === 'active') supabase.auth.startAutoRefresh();
-      else supabase.auth.stopAutoRefresh();
+      log.info(state === 'active' ? 'auto_refresh_start' : 'auto_refresh_stop', { app_state: state });
+      if (state === 'active') supabase.auth.startAutoRefresh().catch(error => log.error('auto_refresh_start_failed', { error }));
+      else supabase.auth.stopAutoRefresh().catch(error => log.error('auto_refresh_stop_failed', { error }));
     };
     if (Platform.OS !== 'web') refresh(AppState.currentState ?? 'active');
     const listener = Platform.OS !== 'web' ? AppState.addEventListener('change', refresh) : null;
@@ -87,9 +97,10 @@ export default function HomeScreen() {
       Promise.resolve(supabase.from('users').select('first_name, last_name, email').eq('id', session.user.id).single())
         .then(({ data, error }) => {
           if (!active) return;
-          if (error) setMessage('Your account is signed in, but your profile could not load. Make sure the users table setup has been run.');
-          else setProfile(data);
-        }).catch(() => {
+          if (error) { log.warn('me_profile_load_failed', { error, user_id: session.user.id }); setMessage('Your account is signed in, but your profile could not load. Make sure the users table setup has been run.'); }
+          else { setLogUser({ id: session.user.id, firstName: data?.first_name ?? null }); setProfile(data); }
+        }).catch((error) => {
+          log.error('me_profile_load_threw', { error });
           if (active) setMessage('Could not load your profile. Check your connection and reopen the app.');
         });
     }
@@ -99,10 +110,13 @@ export default function HomeScreen() {
   async function signOut() {
     setBusy(true);
     setMessage('');
+    markIntentionalSignOut('user_tapped_sign_out');
     try {
       const { error } = await supabase.auth.signOut({ scope: 'local' });
       if (error) throw error;
+      log.info('sign_out_ok');
     } catch (error) {
+      log.warn('sign_out_failed', { error });
       setMessage(error instanceof Error ? error.message : 'Could not sign out. Please try again.');
     } finally {
       setBusy(false);

@@ -12,6 +12,8 @@ import {
 } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 import { supabase } from "@/lib/supabase";
+import { createLogger } from '@/lib/logger';
+const authConsumerLog = createLogger('auth_consumer');
 import {
   formatCardMoment,
   formatMoment,
@@ -43,7 +45,8 @@ export function HomeUpcomingCDays() {
         if (active && !changed)
           setAccount({ ready: true, id: data.session?.user.id ?? null });
       })
-      .catch(() => {
+      .catch((error) => {
+        authConsumerLog.warn('session_lookup_failed', { component: 'home_upcoming_c_days', error });
         if (active && !changed) setAccount({ ready: true, id: null });
       });
     return () => {

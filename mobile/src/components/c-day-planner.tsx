@@ -38,6 +38,8 @@ import { useFocusEffect, useRouter } from "expo-router";
 import { LeafCharacter } from "@/components/leaf-character";
 import { Fonts } from "@/constants/theme";
 import { supabase } from "@/lib/supabase";
+import { createLogger } from '@/lib/logger';
+const authConsumerLog = createLogger('auth_consumer');
 import {
   getPlan,
   submitCDayReflection,
@@ -208,7 +210,8 @@ export function CDayPlanner(entry: PlanEntry = {}) {
           setReady(true);
         }
       })
-      .catch(() => {
+      .catch((error) => {
+        authConsumerLog.warn('session_lookup_failed', { component: 'c_day_planner', error });
         if (active) setReady(true);
       });
     return () => {

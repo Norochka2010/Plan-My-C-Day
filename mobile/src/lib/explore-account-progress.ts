@@ -1,6 +1,10 @@
 import { supabase } from './supabase';
+import { createLogger } from './logger';
 export type AccountProgress = { content_id:string;content_type:string;status:'started'|'tried'|'completed';saved:boolean;started_at:string;completed_at:string|null;reflection:string|null;xp_awarded:number;imported_from_device:boolean };
-export async function exploreAccountId(){const {data,error}=await supabase.auth.getSession();if(error||!data.session)throw Error('Sign in to save Explore progress to your account.');return data.session.user.id;}
+const authConsumerLog=createLogger('auth_consumer');
+// Signed-out is the normal state for guests (Home polls this every minute), so only a real getSession
+// error is logged; callers already handle the thrown Error.
+export async function exploreAccountId(){const {data,error}=await supabase.auth.getSession();if(error||!data.session){if(error)authConsumerLog.warn('session_lookup_failed',{component:'explore_account_progress',error,has_session:!!data.session});throw Error('Sign in to save Explore progress to your account.');}return data.session.user.id;}
 async function sameAccount(id:string){if(await exploreAccountId()!==id)throw Error('Account changed. Please reopen this screen.');}
 export async function readAccountProgress(contentId?:string):Promise<AccountProgress[]>{
  const user=await exploreAccountId();const rows:AccountProgress[]=[];
