@@ -12,24 +12,45 @@ Same pipeline as BookBuds: clients and edge functions POST batched JSON logs to
 Debug builds ship as `env="staging"` / `build="debug"`; release/TestFlight builds as
 `env="production"` / `build="prod"`. Debug-level entries are dropped in production.
 
-## Deploy
+## Setup status
 
-1. **Bridge** (k8-playground): add the two Plan-My-C-Day secrets, then apply the updated bridge.
-   ```bash
-   source <(grep LOG_BRIDGE_SECRET mobile/.env.local)
-   kubectl patch secret bb-log-bridge-secrets --type merge -p \
-     "{\"stringData\":{\"PMCD_STAGING_SECRET\":\"$EXPO_PUBLIC_LOG_BRIDGE_SECRET_STAGING\",\"PMCD_PROD_SECRET\":\"$EXPO_PUBLIC_LOG_BRIDGE_SECRET_PRODUCTION\"}}"
-   kubectl apply -f bb-log-bridge/configmap.yaml -f bb-log-bridge/deployment.yaml
-   ```
-   BookBuds payloads (no `app` field) keep working unchanged.
-2. **Edge functions**:
-   ```bash
-   supabase secrets set LOG_BRIDGE_SECRET=$EXPO_PUBLIC_LOG_BRIDGE_SECRET_PRODUCTION LOG_ENV=production
-   supabase functions deploy recipe-moderation-email
-   ```
-3. **App**: the `EXPO_PUBLIC_LOG_BRIDGE_*` values live in `.env.local` (gitignored) and are
-   inlined at build time. Restart Metro after changing them. No native changes or new
-   dependencies — a normal JS update/rebuild is enough.
+**Server side is done (2026-11-07). Nothing here needs to be run again to ship a build.**
+
+| Piece | State |
+|---|---|
+| `bb-log-bridge` at `logs.starterschool.com` | Deployed; accepts `app="plan-my-c-day"` |
+| Supabase secrets `LOG_BRIDGE_SECRET`, `LOG_ENV=production` | Already set on the project. Do **not** set them again |
+| Edge function `recipe-moderation-email` | Deployed with logging |
+| Grafana dashboard | Live (see Dashboard below) |
+
+## What a build machine needs for the app to ship logs
+
+The only per-machine step. The app reads three values at **build time** from `mobile/.env.local`
+(gitignored, so every machine that builds needs its own copy; names are in `mobile/.env.example`):
+
+```
+EXPO_PUBLIC_LOG_BRIDGE_URL=https://logs.starterschool.com/v1/logs
+EXPO_PUBLIC_LOG_BRIDGE_SECRET_STAGING=<ask Jason>
+EXPO_PUBLIC_LOG_BRIDGE_SECRET_PRODUCTION=<ask Jason>
+```
+
+- Debug builds (Metro) use the STAGING secret and appear in Grafana as `env="staging"`.
+- Release / TestFlight / App Store builds use the PRODUCTION secret and appear as `env="production"`.
+- **If the secret for the build type is missing, the app still builds and runs normally; it just uploads
+  no logs.** A missing value is never a build or deploy blocker, but that build will be invisible in Grafana.
+- Values are inlined when the JS bundle is built: add them, then rebuild (restart Metro with `--clear`
+  for debug). They are not Supabase secrets and are not set with `supabase secrets set`.
+- Check a build: launch it, then in Grafana Explore run `{app="plan-my-c-day", logger="app"} |= "app_start"`.
+  The line carries `ship_enabled` and `env`.
+
+In production, `debug`-level entries are dropped on the device; everything at info and above ships.
+
+## Rebuilding the server side from scratch (reference only)
+
+Only for a new cluster or a rotated secret. Needs cluster and Supabase admin access; see
+`bb-log-bridge/README.md` in the kubernetes repo for the bridge secret and apply steps. For edge functions,
+set `LOG_BRIDGE_SECRET` (the production bridge secret) and `LOG_ENV=production` as Supabase function
+secrets, then `supabase functions deploy recipe-moderation-email --project-ref rowewbnnggapsxlcnkwb`.
 
 New edge functions: wrap the handler with `withLogging('<name>', async (req, log) => …)`.
 
