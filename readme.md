@@ -38,3 +38,51 @@ The app is built with:
 - React Native and Expo
 - TypeScript
 - Supabase
+
+- ## Run the source code
+
+### Requirements
+
+- Node.js and npm compatible with the project's Expo version
+- Git
+- For an iOS build: a Mac with Xcode and an iOS Simulator
+- A configured Supabase backend for this app
+
+### Setup
+
+1. Download the repository and install dependencies:
+
+   ```bash
+   git clone https://github.com/Norochka2010/Plan-My-C-Day.git
+   cd Plan-My-C-Day/mobile
+   npm install
+   ```
+
+2. Create a `.env.local` file inside `mobile` containing your backend's values:
+
+   ```env
+   EXPO_PUBLIC_SUPABASE_URL=your_supabase_project_url
+   EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
+   ```
+
+   Use a publishable client key, never a service-role key.
+
+3. Build and run on an iOS Simulator:
+
+   ```bash
+   npm run ios
+   ```
+
+   To start the Expo development server separately:
+
+   ```bash
+   npm start
+   ```
+
+### Backend requirements
+
+The app requires its Supabase database schema, content, authentication configuration, and supporting functions. An empty Supabase project is not sufficient.
+
+Database migrations are in `mobile/supabase/migrations`, additional SQL scripts are in `mobile/supabase`, and server functions are in `mobile/supabase/functions`.
+
+A complete fresh-backend setup has not yet been verified. Contact support@mycday.com for development setup assistance. To try the working beta, use the TestFlight instructions above.
